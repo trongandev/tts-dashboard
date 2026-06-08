@@ -1,0 +1,6 @@
+{
+  "name": "TSS Dashboard",
+  "description": "TSS: Teacher Schedule & Salary - Dashboard for scheduling and salary management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

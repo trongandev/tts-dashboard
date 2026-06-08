@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Exo", ui-sans-serif, system-ui, sans-serif;
+  --color-burgundy: #800020;
+  --color-burgundy-hover: #5c0017;
+  --color-burgundy-light: #a31a3f;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #F3F4F6;
+}

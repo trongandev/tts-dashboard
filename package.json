@@ -1,0 +1,14 @@
+{
+    "name": "lrm-bos-app",
+    "version": "1.0.0",
+    "scripts": {
+        "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
+        "install": "cd backend && npm install && cd ../frontend && npm install",
+        "start:backend": "cd backend && npm run dev",
+        "start:frontend": "cd frontend && npm run dev",
+        "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.2.1"
+    }
+}
