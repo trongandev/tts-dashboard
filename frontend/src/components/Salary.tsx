@@ -212,7 +212,7 @@ export default function Salary() {
     mutationFn: async () => {
       let token = getCookie('accessToken') || getCookie('idToken');
       const authHeader = token?.startsWith('Bearer ') ? token : `Bearer ${token}`;
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/salary/calculate`, {
+      const res = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/salary/calculate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
