@@ -363,6 +363,11 @@ export default function Salary() {
     if (match) {
       const m = Number(match[1]);
       const y = Number(match[2]);
+
+      if (period !== 'custom') {
+        setPeriod('custom');
+      }
+
       if (clickStep === 0) {
         setFromMonth(m);
         setFromYear(y);
