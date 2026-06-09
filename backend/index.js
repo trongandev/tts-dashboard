@@ -331,6 +331,7 @@ router.post('/salary/calculate', async (req, res, next) => {
             const timeMs = item.date || item.classSessionAttendance?.startTime;
             if (!timeMs) continue;
             console.log(item)
+            //   status: 'ABSENT_WITH_NOTICE' using this
             const date = new Date(Number(timeMs));
 
             let groupKey;
