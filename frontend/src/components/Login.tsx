@@ -47,11 +47,9 @@ export default function Login() {
                 const resData = await refreshRes.json()
                 const customAttributes = JSON.parse(resData.users[0].customAttributes)
                 if (customAttributes) {
-                    let token = getCookie("accessToken")
-                    if (!token) token = getCookie("idToken")
-                    if (!token) throw new Error("Không tìm thấy token xác thực, vui lòng đăng nhập lại.")
 
-                    const authHeader = token.startsWith("Bearer ") ? token : `Bearer ${token}`
+
+                    const authHeader = "Bearer " + data.idToken
                     const reqInfo = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/find-info`, {
                         method: "POST",
                         headers: {
@@ -151,18 +149,16 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={() => setRole("teacher")}
-                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                                    role === "teacher" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
-                                }`}
+                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${role === "teacher" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
+                                    }`}
                             >
                                 Giáo viên
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setRole("manager")}
-                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                                    role === "manager" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
-                                }`}
+                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${role === "manager" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
+                                    }`}
                             >
                                 Quản lý
                             </button>

@@ -19,6 +19,7 @@
         "express": "^5.1.0",
         "express-session": "^1.18.2",
         "express-validator": "^7.2.1",
+        "firebase-admin": "^14.0.0",
         "graphql-request": "^7.4.0",
         "morgan": "^1.10.1",
         "nodemon": "^3.1.10"

@@ -4,12 +4,29 @@ const compression = require('compression')
 const morgan = require('morgan')
 const dotenv = require('dotenv')
 const { GraphQLClient } = require('graphql-request')
+const { initializeApp, cert } = require('firebase-admin/app')
+const { getFirestore, FieldValue } = require('firebase-admin/firestore')
 const { GET_CLASSES_QUERY, GET_TIMESHEET_QUERY, FIND_INFO_QUERY } = require('./queries')
 const cache = require('./cache')
 const { createClient } = require('./graphqlClient')
+const serviceAccount = require('./firebase-service-account.json');
 
 const app = express()
 dotenv.config()
+
+let db = null;
+try {
+    const firebaseApp = initializeApp({
+        credential: cert(serviceAccount)
+    });
+    db = getFirestore(firebaseApp);
+    console.log("Firebase Admin initialized successfully.");
+} catch (e) {
+    console.log("Firebase Admin not initialized. Using memory cache fallback.", e.message);
+}
+
+const customRanks = new Map();
+const salaryCache = new Map();
 app.use(cors())
 app.use(express.json())
 
@@ -169,6 +186,258 @@ router.post('/find-info', async (req, res, next) => {
         res.status(500).json({ error: error.message })
     }
 })
+
+router.post('/salary/rank', async (req, res, next) => {
+    try {
+        const { teacherId, fromMonth, fromYear, toMonth, toYear, rankId, updates } = req.body;
+        const authorization = req.headers.authorization;
+        if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
+
+        const promises = [];
+
+        if (updates && Array.isArray(updates)) {
+            // Batch update from an array of { month, year, rankId } (Used for Undo)
+            for (const update of updates) {
+                const key = `${teacherId}_${update.month}_${update.year}`;
+                if (db) {
+                    promises.push(db.collection('teacher_ranks').doc(key).set({
+                        teacherId, month: update.month, year: update.year, rankId: update.rankId, updatedAt: FieldValue.serverTimestamp()
+                    }));
+                } else {
+                    customRanks.set(key, update.rankId);
+                }
+            }
+        } else {
+            // Range update
+            let curM = fromMonth;
+            let curY = fromYear;
+            while (curY < toYear || (curY === toYear && curM <= toMonth)) {
+                const key = `${teacherId}_${curM}_${curY}`;
+                if (db) {
+                    promises.push(db.collection('teacher_ranks').doc(key).set({ teacherId, month: curM, year: curY, rankId, updatedAt: FieldValue.serverTimestamp() }));
+                } else {
+                    customRanks.set(key, rankId);
+                }
+                curM++;
+                if (curM > 12) {
+                    curM = 1;
+                    curY++;
+                }
+            }
+        }
+        await Promise.all(promises);
+
+        // Invalidate all salary caches for this teacher to force refresh
+        if (db) {
+            const snapshot = await db.collection('salary_cache').where('teacherId', '==', teacherId).get();
+            const batch = db.batch();
+            snapshot.docs.forEach(doc => batch.delete(doc.ref));
+            await batch.commit();
+        } else {
+            for (const key of salaryCache.keys()) {
+                if (key.startsWith(`${teacherId}_`)) {
+                    salaryCache.delete(key);
+                }
+            }
+        }
+
+        res.json({ success: true, message: 'Rank saved for range' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+router.post('/salary/calculate', async (req, res, next) => {
+    try {
+        const { teacherId, period, fromMonth, fromYear, toMonth, toYear } = req.body;
+        const authorization = req.headers.authorization;
+        if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
+
+        let cacheKey = `${teacherId}_${period}`;
+        if (period === 'custom') {
+            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}`;
+        } else if (period === 'month' && fromMonth && fromYear) {
+            cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}`;
+        }
+
+        // 1. Try to get from Cache (Valid for 24h)
+        if (db) {
+            const cachedDoc = await db.collection('salary_cache').doc(cacheKey).get();
+            if (cachedDoc.exists) {
+                const data = cachedDoc.data();
+                if (Date.now() - data.calculatedAt < 24 * 60 * 60 * 1000) {
+                    return res.json(data.result);
+                }
+            }
+        } else {
+            const cached = salaryCache.get(cacheKey);
+            if (cached && Date.now() - cached.calculatedAt < 24 * 60 * 60 * 1000) {
+                return res.json(cached.result);
+            }
+        }
+
+        // 2. Fetch data from GraphQL
+        const now = new Date();
+        let startDate, endDate;
+        if (period === 'custom' && fromMonth && fromYear && toMonth && toYear) {
+            startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
+            endDate = new Date(toYear, toMonth, 0).getTime().toString();
+        } else if (period === 'month' && fromMonth && fromYear) {
+            startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
+            endDate = new Date(fromYear, fromMonth, 0).getTime().toString();
+        } else if (period === 'month') {
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString();
+            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).getTime().toString();
+        } else if (period === 'quarter') {
+            const currentQuarter = Math.floor(now.getMonth() / 3);
+            startDate = new Date(now.getFullYear(), currentQuarter * 3, 1).getTime().toString();
+            endDate = new Date(now.getFullYear(), currentQuarter * 3 + 3, 0).getTime().toString();
+        } else if (period === 'year') {
+            startDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
+            endDate = new Date(now.getFullYear(), 11, 31).getTime().toString();
+        } else {
+            startDate = new Date(2020, 0, 1).getTime().toString(); // Past arbitrary date
+            endDate = new Date(now.getFullYear() + 1, 11, 31).getTime().toString();
+        }
+
+        const payload = { teacherId, startDate, endDate };
+        const client = createClient(authorization);
+        const rawData = await client.request(GET_TIMESHEET_QUERY, payload);
+
+        // 3. Process Data
+        let timesheetItems = [];
+        if (rawData?.findTimesheetByTeacher) timesheetItems = rawData.findTimesheetByTeacher;
+
+        let totalSalary = 0;
+        let totalSessions = timesheetItems.length;
+        const groups = {};
+        const rankCounts = {};
+
+        const RANKS_RATE = {
+            'T0': 70000,
+            'T1': 90000,
+            'T2': 100000,
+            'T3': 120000,
+            'T4': 140000,
+            'T5': 150000
+        };
+
+        const fetchedRanks = {};
+
+        for (const item of timesheetItems) {
+            // Validate date
+            const timeMs = item.date || item.classSessionAttendance?.startTime;
+            if (!timeMs) continue;
+
+            const date = new Date(Number(timeMs));
+
+            let groupKey;
+            let groupLabel;
+
+            if (period === 'month') {
+                const className = item.classSessionAttendance?.class?.name;
+                if (className) {
+                    groupKey = className;
+                    groupLabel = className;
+                } else {
+                    groupKey = 'Khác';
+                    groupLabel = 'Khác';
+                }
+            } else {
+                groupKey = `${date.getMonth() + 1}_${date.getFullYear()}`;
+                groupLabel = `Tháng ${date.getMonth() + 1}/${date.getFullYear()}`;
+            }
+
+            if (!groups[groupKey]) {
+                groups[groupKey] = { count: 0, salary: 0, month: date.getMonth() + 1, year: date.getFullYear(), ranks: new Set(), label: groupLabel, subTypes: {} };
+            }
+
+            if (groupKey === 'Khác') {
+                let typeName = item.officeHour?.type || item.type || 'Khác';
+                if (typeof typeName === 'string') {
+                    const upperType = typeName.toUpperCase();
+                    if (upperType === 'TRIAL') typeName = 'Trải nghiệm';
+                    else if (upperType === 'MAKEUP' || upperType === 'MAKE_UP') typeName = 'Dạy bù';
+                    else if (upperType === 'TUTORING') typeName = 'Gia sư';
+                    else if (upperType === 'OFFICE_HOUR') typeName = 'Office Hour';
+                }
+                groups[groupKey].subTypes[typeName] = (groups[groupKey].subTypes[typeName] || 0) + 1;
+            }
+
+            // Get custom rank for this month (cached locally to avoid N+1 queries)
+            const rankKey = `${teacherId}_${date.getMonth() + 1}_${date.getFullYear()}`;
+            if (!fetchedRanks[rankKey]) {
+                let customRank = 'T0';
+                if (db) {
+                    const rDoc = await db.collection('teacher_ranks').doc(rankKey).get();
+                    if (rDoc.exists) customRank = rDoc.data().rankId;
+                } else {
+                    if (customRanks.has(rankKey)) customRank = customRanks.get(rankKey);
+                }
+                fetchedRanks[rankKey] = customRank;
+            }
+            const customRank = fetchedRanks[rankKey];
+
+            const rate = RANKS_RATE[customRank] || 70000;
+            const itemSalary = rate * 2; // Assume 2 hours avg
+
+            groups[groupKey].count++;
+            groups[groupKey].salary += itemSalary;
+            groups[groupKey].ranks.add(customRank);
+            totalSalary += itemSalary;
+
+            rankCounts[customRank] = (rankCounts[customRank] || 0) + 1;
+        }
+
+        const chartData = Object.values(groups).map(g => {
+            let description = '';
+            if (g.label === 'Khác' && Object.keys(g.subTypes).length > 0) {
+                const subLabels = Object.entries(g.subTypes).map(([k, v]) => `${k} +${v}`).join(', ');
+                description = subLabels;
+            }
+            return {
+                label: g.label,
+                description,
+                salary: g.salary,
+                sessions: g.count,
+                rank: Array.from(g.ranks).join(', ') || 'T0',
+                month: g.month,
+                year: g.year
+            };
+        });
+
+        if (period !== 'month') {
+            chartData.sort((a, b) => (a.year - b.year) || (a.month - b.month));
+        } else {
+            chartData.sort((a, b) => b.salary - a.salary);
+        }
+
+        let mostUsedRank = 'T0';
+        let maxCount = 0;
+        for (const [r, c] of Object.entries(rankCounts)) {
+            if (c > maxCount) { maxCount = c; mostUsedRank = r; }
+        }
+
+        const result = {
+            chartData,
+            totalSalary,
+            totalSessions,
+            mostUsedRank
+        };
+
+        // 4. Save to Cache
+        if (db) {
+            await db.collection('salary_cache').doc(cacheKey).set({ teacherId, result, calculatedAt: Date.now() });
+        } else {
+            salaryCache.set(cacheKey, { teacherId, result, calculatedAt: Date.now() });
+        }
+
+        res.json(result);
+    } catch (e) {
+        console.error('Salary API Error:', e.message);
+        res.status(500).json({ error: e.message });
+    }
+});
 
 const PORT = 5001
 app.listen(PORT, () => console.log(`Server running in http://localhost:${PORT}`))
