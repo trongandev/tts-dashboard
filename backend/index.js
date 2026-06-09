@@ -252,25 +252,27 @@ router.post('/salary/calculate', async (req, res, next) => {
         const { teacherId, period, fromMonth, fromYear, toMonth, toYear, forceRefresh } = req.body;
         const authorization = req.headers.authorization;
         if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
-
-        let cacheKey = `${teacherId}_${period}`;
+        let cacheKey = `${teacherId}_${period}_${Date.now()}`;
         if (period === 'custom') {
-            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}`;
+            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}_${Date.now()}`;
         } else if (period === 'month' && fromMonth && fromYear) {
-            cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}`;
+            cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}_${Date.now()}`;
         }
-
+        console.log(cacheKey)
         // 1. Try to get from Cache (Permanent until forceRefresh)
         if (!forceRefresh) {
             if (db) {
                 const cachedDoc = await db.collection('salary_cache').doc(cacheKey).get();
                 if (cachedDoc.exists) {
                     const data = cachedDoc.data();
+                    console.log("!!![DATA CACHING LOADDED]!!!")
                     return res.json(data.result);
                 }
             } else {
                 const cached = salaryCache.get(cacheKey);
                 if (cached) {
+                    console.log("!!![NOT DATA CACHING]!!!")
+
                     return res.json(cached.result);
                 }
             }
@@ -323,12 +325,12 @@ router.post('/salary/calculate', async (req, res, next) => {
         };
 
         const fetchedRanks = {};
-
+        let salaryDebug = 0;
         for (const item of timesheetItems) {
             // Validate date
             const timeMs = item.date || item.classSessionAttendance?.startTime;
             if (!timeMs) continue;
-
+            console.log(item)
             const date = new Date(Number(timeMs));
 
             let groupKey;
@@ -363,7 +365,7 @@ router.post('/salary/calculate', async (req, res, next) => {
                 }
                 groups[groupKey].subTypes[typeName] = (groups[groupKey].subTypes[typeName] || 0) + 1;
             }
-
+            // console.log(period)
             // Get custom rank for this month (cached locally to avoid N+1 queries)
             const rankKey = `${teacherId}_${date.getMonth() + 1}_${date.getFullYear()}`;
             if (!fetchedRanks[rankKey]) {
@@ -423,7 +425,10 @@ router.post('/salary/calculate', async (req, res, next) => {
                 }
             }
 
-            // console.log(`[DEBUG Salary] Date: ${date.toLocaleDateString('vi-VN')} | Group: ${groupKey} | Type: ${item.type} | SubType: ${item.officeHour?.type || 'N/A'} | Students: ${item.officeHour?.studentCount || 0} | Hours: ${hours} | itemSalary: ${itemSalary}`);
+            if (groupKey == "3_2026") {
+                console.log(`[DEBUG Salary] Date: ${date.toLocaleDateString('vi-VN')} | Group: ${groupKey} | Type: ${item.type} | SubType: ${item.officeHour?.type || 'N/A'} | Students: ${item.officeHour?.studentCount || 0} | Hours: ${hours} | itemSalary: ${itemSalary.toLocaleString()}`);
+                salaryDebug += itemSalary;
+            }
 
             groups[groupKey].count++;
             groups[groupKey].salary += itemSalary;
@@ -432,7 +437,7 @@ router.post('/salary/calculate', async (req, res, next) => {
 
             rankCounts[customRank] = (rankCounts[customRank] || 0) + 1;
         }
-
+        console.log(`[DEBUG Salary] 3_2026 Debug: ${salaryDebug.toLocaleString()}`);
         const chartData = Object.values(groups).map(g => {
             let description = '';
             if (g.label === 'Khác' && Object.keys(g.subTypes).length > 0) {
