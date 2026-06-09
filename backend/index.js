@@ -249,7 +249,7 @@ router.post('/salary/rank', async (req, res, next) => {
 
 router.post('/salary/calculate', async (req, res, next) => {
     try {
-        const { teacherId, period, fromMonth, fromYear, toMonth, toYear } = req.body;
+        const { teacherId, period, fromMonth, fromYear, toMonth, toYear, forceRefresh } = req.body;
         const authorization = req.headers.authorization;
         if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
 
@@ -260,19 +260,19 @@ router.post('/salary/calculate', async (req, res, next) => {
             cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}`;
         }
 
-        // 1. Try to get from Cache (Valid for 24h)
-        if (db) {
-            const cachedDoc = await db.collection('salary_cache').doc(cacheKey).get();
-            if (cachedDoc.exists) {
-                const data = cachedDoc.data();
-                if (Date.now() - data.calculatedAt < 24 * 60 * 60 * 1000) {
+        // 1. Try to get from Cache (Permanent until forceRefresh)
+        if (!forceRefresh) {
+            if (db) {
+                const cachedDoc = await db.collection('salary_cache').doc(cacheKey).get();
+                if (cachedDoc.exists) {
+                    const data = cachedDoc.data();
                     return res.json(data.result);
                 }
-            }
-        } else {
-            const cached = salaryCache.get(cacheKey);
-            if (cached && Date.now() - cached.calculatedAt < 24 * 60 * 60 * 1000) {
-                return res.json(cached.result);
+            } else {
+                const cached = salaryCache.get(cacheKey);
+                if (cached) {
+                    return res.json(cached.result);
+                }
             }
         }
 
@@ -378,8 +378,52 @@ router.post('/salary/calculate', async (req, res, next) => {
             }
             const customRank = fetchedRanks[rankKey];
 
-            const rate = RANKS_RATE[customRank] || 70000;
-            const itemSalary = rate * 2; // Assume 2 hours avg
+            const rankRate = RANKS_RATE[customRank] || 70000;
+            let itemSalary = 0;
+            let hours = 2;
+
+            if (item.type === 'ATTENDANCE_CLASS') {
+                itemSalary = rankRate * 2;
+            } else if (item.type === 'OFFICE_HOUR' && item.officeHour) {
+                const ohType = item.officeHour.type || '';
+                const studentCount = item.officeHour.studentCount || 0;
+
+                if (item.officeHour.startTime && item.officeHour.endTime) {
+                    const start = Number(item.officeHour.startTime);
+                    const end = Number(item.officeHour.endTime);
+                    if (!isNaN(start) && !isNaN(end)) {
+                        hours = (end - start) / 3600000;
+                    }
+                }
+
+                const typeLower = ohType.toLowerCase();
+
+                if (typeLower === 'ta') {
+                    itemSalary = 0.75 * rankRate * hours;
+                } else if (typeLower === 'makeup' || typeLower === 'dạy bù') {
+                    itemSalary = studentCount <= 3 ? (0.75 * rankRate * hours) : (1.0 * rankRate * hours);
+                } else if (typeLower.includes('trial') || typeLower.includes('trải nghiệm')) {
+                    if (typeLower.includes('online')) {
+                        if (studentCount === 1) itemSalary = 40000;
+                        else if (studentCount === 2) itemSalary = 60000;
+                        else if (studentCount >= 3) itemSalary = 80000;
+                    } else {
+                        itemSalary = 80000 + (studentCount * 30000);
+                    }
+                } else if (typeLower === 'workshop') {
+                    itemSalary = 1.0 * rankRate * hours;
+                } else if (typeLower === 'event' || typeLower === 'sự kiện') {
+                    itemSalary = 1.0 * rankRate * 2;
+                } else if (typeLower === 'main judge' || typeLower === 'bgk chính') {
+                    itemSalary = 1.0 * rankRate * 2;
+                } else if (typeLower === 'sub judge' || typeLower === 'bgk phụ') {
+                    itemSalary = Math.min(1.0 * rankRate * 2, 300000);
+                } else if (typeLower === 'lab' || typeLower === 'trực lab') {
+                    itemSalary = Math.min(1.0 * rankRate * 2, 200000);
+                }
+            }
+
+            // console.log(`[DEBUG Salary] Date: ${date.toLocaleDateString('vi-VN')} | Group: ${groupKey} | Type: ${item.type} | SubType: ${item.officeHour?.type || 'N/A'} | Students: ${item.officeHour?.studentCount || 0} | Hours: ${hours} | itemSalary: ${itemSalary}`);
 
             groups[groupKey].count++;
             groups[groupKey].salary += itemSalary;
