@@ -24,6 +24,15 @@ export default function Timesheet() {
   const [selectedRankId, setSelectedRankId] = useState<string>(() => {
     return localStorage.getItem('selectedRankId') || 'T0';
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem('isSidebarOpen');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  const toggleSidebar = (isOpen: boolean) => {
+    setIsSidebarOpen(isOpen);
+    localStorage.setItem('isSidebarOpen', JSON.stringify(isOpen));
+  };
 
   const handleRankChange = (val: string) => {
     setSelectedRankId(val);
@@ -42,9 +51,8 @@ export default function Timesheet() {
       const authHeader = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 
       const now = new Date();
-      const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
       const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      const lastDay = isCurrentMonth ? now : new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
 
       const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/timesheet`, {
         method: 'POST',
@@ -101,6 +109,7 @@ export default function Timesheet() {
   };
 
   const monthYearLabel = currentDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+  const shortMonthYearLabel = `T${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
 
   // Group timesheet by date
   const selectedRank = RANKS.find(r => r.id === selectedRankId) || RANKS[0];
@@ -270,45 +279,66 @@ export default function Timesheet() {
           </div>
         </div>
 
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex overflow-hidden relative">
+          {/* Mobile Overlay */}
+          <div
+            className={`md:hidden absolute inset-0 bg-slate-900/20 z-30 transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+            onClick={() => toggleSidebar(false)}
+          />
+
           {/* Quick Nav Sidebar */}
-          <div className="hidden md:flex w-64 lg:w-72 bg-white border-r border-slate-200 flex-col shrink-0 overflow-y-auto z-10">
-            {Object.keys(groupedData).length > 0 && (
-              <>
-                <div className="p-5 border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur z-10">
-                  <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center">
-                    <CalendarIcon size={16} className="mr-2 text-slate-400" />
-                    Danh sách ngày
-                  </h3>
-                </div>
-                <div className="p-3 space-y-1">
-                  {Object.keys(groupedData).map(dateLabel => {
-                    const hasUnchecked = groupedData[dateLabel].some(item => item.displayStatus === 'UNCHECKED');
-                    return (
-                      <button
-                        key={dateLabel}
-                        onClick={() => {
-                          const el = document.getElementById(`date-${dateLabel.replace(/\s+/g, '-')}`);
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          }
-                        }}
-                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-between group ${hasUnchecked ? 'bg-orange-50 text-orange-700 hover:bg-orange-100' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
-                      >
-                        <span className="truncate mr-2 capitalize">{dateLabel}</span>
-                        {hasUnchecked && <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0  relative">
-                          <div className="absolute inset-0 rounded-full bg-orange-700/50 animate-ping"></div>
-                        </span>}
-                      </button>
-                    )
-                  })}
-                </div>
-              </>
-            )}
+          <div className={`absolute md:relative h-full flex flex-col shrink-0 overflow-y-auto z-40 md:z-10 bg-white border-r border-slate-200 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] md:w-64 lg:w-72 translate-x-0' : 'w-0 -translate-x-full opacity-0'}`}>
+            <div className="w-[80vw] md:w-64 lg:w-72 flex flex-col min-h-full">
+              {Object.keys(groupedData).length > 0 && (
+                <>
+                  <div className="p-5 border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur z-10 flex justify-between items-center">
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center">
+                      <CalendarIcon size={16} className="mr-2 text-slate-400" />
+                      Danh sách ngày
+                    </h3>
+                    <button onClick={() => toggleSidebar(false)} className="text-slate-400 hover:text-slate-600 transition-colors bg-slate-100 hover:bg-slate-200 p-1.5 rounded-md shrink-0">
+                      <ChevronLeft size={16} />
+                    </button>
+                  </div>
+                  <div className="p-3 space-y-1">
+                    {Object.keys(groupedData).map(dateLabel => {
+                      const hasUnchecked = groupedData[dateLabel].some(item => item.displayStatus === 'UNCHECKED');
+                      return (
+                        <button
+                          key={dateLabel}
+                          onClick={() => {
+                            const el = document.getElementById(`date-${dateLabel.replace(/\s+/g, '-')}`);
+                            if (el) {
+                              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            toggleSidebar(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-between group ${hasUnchecked ? 'bg-orange-50 text-orange-700 hover:bg-orange-100' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+                        >
+                          <span className="truncate mr-2 capitalize">{dateLabel}</span>
+                          {hasUnchecked && <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0  relative">
+                            <div className="absolute inset-0 rounded-full bg-orange-700/50 animate-ping"></div>
+                          </span>}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-8 scroll-smooth relative" onScroll={handleScroll}>
-            <div className="max-w-6xl mx-auto space-y-6">
+          <div className="flex-1 overflow-y-auto scroll-smooth relative" onScroll={handleScroll}>
+            {!isSidebarOpen && (
+              <button
+                onClick={() => toggleSidebar(true)}
+                className="hidden md:flex sticky left-0 top-1/2 -translate-y-1/2 z-20 bg-white border border-slate-200 border-l-0 rounded-r-xl p-2 shadow-sm text-slate-400 hover:text-orange-500 transition-colors"
+                title="Mở danh sách ngày"
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
+            <div className="max-w-6xl mx-auto space-y-6 p-4 md:p-6 lg:p-8 pb-20 md:pb-8 ">
 
               {/* Top Summary Cards */}
               <section className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 shrink-0">
@@ -334,9 +364,15 @@ export default function Timesheet() {
                 </div>
 
                 <div
-                  className={`bg-white p-6 rounded-2xl shadow-sm border flex flex-col justify-between cursor-pointer transition-colors ${filterUnchecked ? 'ring-2 ring-orange-500 border-orange-500' : 'border-slate-100 hover:border-orange-200'}`}
+                  className={`relative bg-white p-6 rounded-2xl shadow-sm border flex flex-col justify-between cursor-pointer transition-colors ${filterUnchecked ? 'ring-2 ring-orange-500 border-orange-500' : 'border-slate-100 hover:border-orange-200'}`}
                   onClick={() => setFilterUnchecked(!filterUnchecked)}
                 >
+                  {uncheckedCount > 0 && !filterUnchecked && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-4 w-4 bg-orange-500 border-2 border-white"></span>
+                    </span>
+                  )}
                   <div>
                     <p className="text-xs font-bold text-slate-400 uppercase">Công chưa chốt</p>
                     <h2 className="text-2xl font-bold text-orange-500 mt-1">{uncheckedCount} <span className="text-sm font-normal text-slate-400 leading-none">Buổi</span></h2>
@@ -359,14 +395,20 @@ export default function Timesheet() {
                 </div>
               </section>
 
-              <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-0 z-20">
+              <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-2 md:top-4 z-20">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-burgundy/10 text-burgundy rounded-xl flex items-center justify-center">
                     <CalendarIcon size={24} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-800 capitalize">{monthYearLabel}</h3>
-                    <p className="text-sm text-slate-500">Lịch trình giảng dạy trong tháng</p>
+                    <h3 className="text-lg font-bold text-slate-800 capitalize">
+                      <span className="md:hidden">{shortMonthYearLabel}</span>
+                      <span className="hidden md:inline">{monthYearLabel}</span>
+                    </h3>
+                    <p className="text-sm text-slate-500">
+                      <span className="md:hidden">Lịch giảng dạy</span>
+                      <span className="hidden md:inline">Lịch trình giảng dạy trong tháng</span>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -413,7 +455,7 @@ export default function Timesheet() {
               ) : (
                 <div className="space-y-6">
                   {Object.keys(typeCounts).length > 0 && (
-                    <div className="flex flex-wrap gap-2 sticky top-[76px] z-10 bg-[#F9FAFB] py-2">
+                    <div className="flex flex-wrap gap-2 sticky top-[110px] md:top-[100px] z-10 bg-[#F9FAFB] py-2">
                       <button
                         onClick={() => setSelectedTypeFilter(null)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${!selectedTypeFilter ? 'bg-burgundy text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
@@ -439,7 +481,8 @@ export default function Timesheet() {
                       <div key={dateLabel} className="space-y-4">
                         <h4
                           id={`date-${dateLabel.replace(/\s+/g, '-')}`}
-                          className={`text-md font-bold sticky top-[120px] py-2 bg-[#F9FAFB] z-10 border-b border-slate-200/50 capitalize flex items-center ${items.some(i => i.displayStatus === 'UNCHECKED') ? 'text-orange-600' : 'text-slate-800'}`}
+                          onClick={() => toggleSidebar(true)}
+                          className={`text-md font-bold sticky top-[150px] md:top-[140px] py-2 bg-[#F9FAFB] z-10 border-b border-slate-200/50 capitalize flex items-center cursor-pointer md:cursor-auto hover:text-burgundy transition-colors ${items.some(i => i.displayStatus === 'UNCHECKED') ? 'text-orange-600' : 'text-slate-800'}`}
                         >
                           {dateLabel}
                           {items.some(i => i.displayStatus === 'UNCHECKED') && (
