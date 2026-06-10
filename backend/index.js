@@ -134,15 +134,13 @@ router.post('/timesheet', async (req, res, next) => {
         if (!startDate) {
             // lấy ra ngày đầu tiên của tháng hiện tại
             const now = new Date()
-            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
-            startDate = firstDay.toISOString().split('T')[0]
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString()
         }
 
         if (!endDate) {
             // lấy ra ngày cuối cùng của tháng hiện tại
             const now = new Date()
-            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-            endDate = lastDay.toISOString().split('T')[0]
+            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime().toString()
         }
 
 
