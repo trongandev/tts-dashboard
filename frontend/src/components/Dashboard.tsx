@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import ClassCard from './ClassCard';
@@ -8,7 +8,7 @@ import Footer from './Footer';
 import { RANKS } from '../data';
 import { ClassInfo, Rank } from '../types';
 import { FindTimesheetByTeacher } from '../type-timesheet';
-import { ChevronDown, Wallet, BookOpen, Clock, LogOut } from 'lucide-react';
+import { ChevronDown, Wallet, BookOpen, Clock, LogOut, Loader2 } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 
 const getCookie = (name: string) => {
@@ -23,10 +23,11 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [selectedRankId, setSelectedRankId] = useState<string>('T5');
   const [selectedClass, setSelectedClass] = useState<ClassInfo | null>(null);
-  const { data: classes = [], isLoading: loading, error: queryError } = useQuery<ClassInfo[]>({
+  const { data: classesData, isLoading: loading, error: queryError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['classes', user?.id],
-    queryFn: async () => {
-      if (!user) return [];
+    initialPageParam: 0,
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!user) return { items: [], total: 0, nextPageIndex: 1 };
 
       let token = getCookie('accessToken');
       if (!token) token = getCookie('idToken');
@@ -40,7 +41,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': authHeader
         },
-        body: JSON.stringify({ teacherId: user.id, pageIndex: 0, itemsPerPage: 20, orderBy: "createdAt_desc" })
+        body: JSON.stringify({ teacherId: user.id, pageIndex: pageParam, itemsPerPage: 20, orderBy: "createdAt_desc" })
       });
 
       if (!response.ok) {
@@ -51,14 +52,17 @@ export default function Dashboard() {
       const data = await response.json();
 
       let rawClasses = [];
-      if (data?.data?.classes?.data) {
-        rawClasses = data.data.classes.data;
-      } else if (data?.classes?.data) {
-        rawClasses = data.classes.data;
+      let total = 0;
+      if (data?.data?.classes) {
+        rawClasses = data.data.classes.data || [];
+        total = data.data.classes.pagination?.total || 0;
+      } else if (data?.classes) {
+        rawClasses = data.classes.data || [];
+        total = data.classes.pagination?.total || 0;
       }
 
       if (rawClasses && Array.isArray(rawClasses)) {
-        return rawClasses.map((d: any) => {
+        const mapped = rawClasses.map((d: any) => {
           let completedHours = 0;
           let nextSessionStr = 'Chưa có lịch';
 
@@ -112,11 +116,20 @@ export default function Dashboard() {
             status: status
           };
         });
+        return { items: mapped, total, nextPageIndex: pageParam + 1 };
       }
-      return [];
+      return { items: [], total: 0, nextPageIndex: pageParam + 1 };
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.nextPageIndex * 20 < lastPage.total) return lastPage.nextPageIndex;
+      return undefined;
     },
     enabled: !!user,
   });
+
+  const classes = useMemo(() => {
+    return classesData?.pages.flatMap(page => page.items) || [];
+  }, [classesData]);
 
   const fetchError = queryError ? queryError.message : null;
 
@@ -337,7 +350,10 @@ export default function Dashboard() {
               {/* Active Classes */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold">Lớp đang giảng dạy {loading && <span className="text-sm font-normal text-slate-400 ml-2">(Đang tải...)</span>}</h3>
+                  <h3 className="text-lg font-bold flex items-center">
+                    Lớp đang giảng dạy
+                    {loading && <Loader2 size={16} className="animate-spin text-burgundy ml-2" />}
+                  </h3>
                   <button className="text-sm text-burgundy font-semibold hover:underline">
                     Xem tất cả
                   </button>
@@ -368,7 +384,10 @@ export default function Dashboard() {
               {/* Finished Classes */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold">Lớp đã hoàn thành</h3>
+                  <h3 className="text-lg font-bold flex items-center">
+                    Lớp đã hoàn thành
+                    {loading && <Loader2 size={16} className="animate-spin text-burgundy ml-2" />}
+                  </h3>
                 </div>
 
                 <div className="space-y-4 opacity-75  grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 gap-5">
@@ -387,6 +406,19 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
+
+              {hasNextPage && (
+                <div className="flex justify-center mt-2">
+                  <button
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="px-6 py-2.5 bg-white border border-slate-200 text-burgundy hover:bg-slate-50 font-semibold rounded-xl transition-colors shadow-sm flex items-center disabled:opacity-50"
+                  >
+                    {isFetchingNextPage ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
+                    {isFetchingNextPage ? 'Đang tải thêm...' : 'Xem thêm các lớp khác'}
+                  </button>
+                </div>
+              )}
             </div>
 
             <Footer />
