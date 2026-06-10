@@ -481,8 +481,8 @@ export default function Timesheet() {
                       <div key={dateLabel} className="space-y-4">
                         <h4
                           id={`date-${dateLabel.replace(/\s+/g, '-')}`}
-                          onClick={() => toggleSidebar(true)}
-                          className={`text-md font-bold sticky top-[150px] md:top-[140px] py-2 bg-[#F9FAFB] z-10 border-b border-slate-200/50 capitalize flex items-center cursor-pointer md:cursor-auto hover:text-burgundy transition-colors ${items.some(i => i.displayStatus === 'UNCHECKED') ? 'text-orange-600' : 'text-slate-800'}`}
+                          onClick={() => toggleSidebar(!isSidebarOpen)}
+                          className={`text-md font-bold sticky top-[150px] md:top-[140px] py-2 bg-[#F9FAFB] z-10 border-b border-slate-200/50 capitalize flex items-center cursor-pointer hover:text-burgundy transition-colors ${items.some(i => i.displayStatus === 'UNCHECKED') ? 'text-orange-600' : 'text-slate-800'}`}
                         >
                           {dateLabel}
                           {items.some(i => i.displayStatus === 'UNCHECKED') && (
