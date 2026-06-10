@@ -287,8 +287,8 @@ export default function Timesheet() {
           />
 
           {/* Quick Nav Sidebar */}
-          <div className={`absolute md:relative h-full flex flex-col shrink-0 overflow-y-auto z-40 md:z-10 bg-white border-r border-slate-200 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] md:w-64 lg:w-72 translate-x-0' : 'w-0 -translate-x-full opacity-0'}`}>
-            <div className="w-[80vw] md:w-64 lg:w-72 flex flex-col min-h-full">
+          <div className={`absolute md:relative h-full flex flex-col shrink-0 overflow-hidden z-40 md:z-10 bg-white border-r border-slate-200 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] md:w-64 lg:w-72 translate-x-0' : 'w-0 -translate-x-full opacity-0'}`}>
+            <div className="w-[80vw] md:w-64 lg:w-72 flex flex-col min-h-full ">
               {Object.keys(groupedData).length > 0 && (
                 <>
                   <div className="p-5 border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur z-10 flex justify-between items-center">
