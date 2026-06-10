@@ -251,9 +251,7 @@ router.post('/salary/calculate', async (req, res, next) => {
         const authorization = req.headers.authorization;
         if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
         let cacheKey = `${teacherId}_${period}`;
-        if (period === 'custom') {
-            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}`;
-        } else if (period === 'month' && fromMonth && fromYear) {
+        if (period === 'month' && fromMonth && fromYear) {
             cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}`;
         }
         console.log(cacheKey)
@@ -279,22 +277,12 @@ router.post('/salary/calculate', async (req, res, next) => {
         // 2. Fetch data from GraphQL
         const now = new Date();
         let startDate, endDate;
-        if (period === 'custom' && fromMonth && fromYear && toMonth && toYear) {
-            startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
-            endDate = new Date(toYear, toMonth, 0, 23, 59, 59, 999).getTime().toString();
-        } else if (period === 'month' && fromMonth && fromYear) {
+        if (period === 'month' && fromMonth && fromYear) {
             startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
             endDate = new Date(fromYear, fromMonth, 0, 23, 59, 59, 999).getTime().toString();
         } else if (period === 'month') {
             startDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString();
             endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime().toString();
-        } else if (period === 'quarter') {
-            const currentQuarter = Math.floor(now.getMonth() / 3);
-            startDate = new Date(now.getFullYear(), currentQuarter * 3, 1).getTime().toString();
-            endDate = new Date(now.getFullYear(), currentQuarter * 3 + 3, 0, 23, 59, 59, 999).getTime().toString();
-        } else if (period === 'year') {
-            startDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
-            endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).getTime().toString();
         } else {
             startDate = new Date(2020, 0, 1).getTime().toString(); // Past arbitrary date
             endDate = new Date(now.getFullYear() + 1, 11, 31, 23, 59, 59, 999).getTime().toString();

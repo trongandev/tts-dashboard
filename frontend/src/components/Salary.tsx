@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { DollarSign, Save, Loader2, TrendingUp, Calendar, CheckSquare, Undo2, RefreshCw, AlertTriangle } from 'lucide-react';
+import { DollarSign, Save, Loader2, TrendingUp, Calendar, CheckSquare, Undo2, RefreshCw, AlertTriangle, X, Info } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 import { RANKS } from '../data';
 
@@ -20,7 +20,23 @@ export default function Salary() {
   const { user } = useUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [period, setPeriod] = useState<'month' | 'quarter' | 'year' | 'all' | 'custom'>('month');
+  const [period, setPeriod] = useState<'month' | 'quarter' | 'year' | 'all' | 'custom'>(() => {
+    return (localStorage.getItem('salaryPeriod') as any) || 'all';
+  });
+
+  const [showHowTo, setShowHowTo] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('hasSeenSalaryHowTo');
+    if (!hasSeen) {
+      setShowHowTo(true);
+    }
+  }, []);
+
+  const handleCloseHowTo = () => {
+    localStorage.setItem('hasSeenSalaryHowTo', 'true');
+    setShowHowTo(false);
+  };
 
   // States for Rank Assignment and Filtering UI
   const [fromMonth, setFromMonth] = useState(new Date().getMonth() + 1);
@@ -31,60 +47,28 @@ export default function Salary() {
   const [clickStep, setClickStep] = useState(0); // 0 = set from, 1 = set to
   const [showRefreshConfirm, setShowRefreshConfirm] = useState(false);
   const [showFutureWarning, setShowFutureWarning] = useState(false);
+  const [showConfirmSaveRank, setShowConfirmSaveRank] = useState(false);
   const [neverShowFutureWarning, setNeverShowFutureWarning] = useState(() => localStorage.getItem('hideFutureSalaryWarning') === 'true');
 
-  // States for actual Query
-  const [queryFromMonth, setQueryFromMonth] = useState(fromMonth);
-  const [queryFromYear, setQueryFromYear] = useState(fromYear);
-  const [queryToMonth, setQueryToMonth] = useState(toMonth);
-  const [queryToYear, setQueryToYear] = useState(toYear);
-
-  const handlePeriodChange = (newPeriod: 'month' | 'quarter' | 'year' | 'all' | 'custom') => {
+  const handlePeriodChange = (newPeriod: 'month' | 'all') => {
     setPeriod(newPeriod);
-    const now = new Date();
-    let newFromMonth = fromMonth;
-    let newFromYear = fromYear;
-    let newToMonth = toMonth;
-    let newToYear = toYear;
-
-    if (newPeriod === 'quarter') {
-      const currentQuarter = Math.floor(now.getMonth() / 3);
-      newFromMonth = currentQuarter * 3 + 1;
-      newToMonth = currentQuarter * 3 + 3;
-      newFromYear = now.getFullYear();
-      newToYear = now.getFullYear();
-    } else if (newPeriod === 'year') {
-      newFromMonth = 1;
-      newToMonth = 12;
-      newFromYear = now.getFullYear();
-      newToYear = now.getFullYear();
-    } else if (newPeriod === 'all') {
-      // Will be auto-updated by useEffect based on actual data
-    } else if (newPeriod === 'month') {
-      newFromMonth = now.getMonth() + 1;
-      newFromYear = now.getFullYear();
-    }
-
-    if (newPeriod !== 'custom' && newPeriod !== 'all') {
-      setFromMonth(newFromMonth);
-      setFromYear(newFromYear);
-      setToMonth(newToMonth);
-      setToYear(newToYear);
-      setQueryFromMonth(newFromMonth);
-      setQueryFromYear(newFromYear);
-      setQueryToMonth(newToMonth);
-      setQueryToYear(newToYear);
-    }
+    localStorage.setItem('salaryPeriod', newPeriod);
   };
 
 
   const { data: salaryData, isLoading: loading, error: queryError } = useQuery({
-    queryKey: ['salary', period, queryFromMonth, queryFromYear, queryToMonth, queryToYear, user?.id],
+    queryKey: ['salary', period, user?.id],
     queryFn: async () => {
       if (!user) return null;
       let token = getCookie('accessToken') || getCookie('idToken');
       if (!token) throw new Error('Không tìm thấy token xác thực.');
       const authHeader = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+
+      const bodyData: any = { teacherId: user.id, period };
+      if (period === 'month') {
+        bodyData.fromMonth = new Date().getMonth() + 1;
+        bodyData.fromYear = new Date().getFullYear();
+      }
 
       const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/salary/calculate`, {
         method: 'POST',
@@ -92,14 +76,7 @@ export default function Salary() {
           'Content-Type': 'application/json',
           'Authorization': authHeader
         },
-        body: JSON.stringify({
-          teacherId: user.id,
-          period: period,
-          fromMonth: queryFromMonth,
-          fromYear: queryFromYear,
-          toMonth: queryToMonth,
-          toYear: queryToYear
-        })
+        body: JSON.stringify(bodyData)
       });
 
       if (!response.ok) {
@@ -116,34 +93,24 @@ export default function Salary() {
       const first = data[0];
       const last = data[data.length - 1];
 
-      let needsUpdate = false;
       if (fromMonth !== first.month || fromYear !== first.year) {
         setFromMonth(first.month);
         setFromYear(first.year);
-        needsUpdate = true;
       }
       if (toMonth !== last.month || toYear !== last.year) {
         setToMonth(last.month);
         setToYear(last.year);
-        needsUpdate = true;
-      }
-
-      if (needsUpdate) {
-        setQueryFromMonth(first.month);
-        setQueryFromYear(first.year);
-        setQueryToMonth(last.month);
-        setQueryToYear(last.year);
       }
     }
-  }, [salaryData, period, fromMonth, fromYear, toMonth, toYear]);
+  }, [salaryData, period]);
 
   useEffect(() => {
     const now = new Date();
-    let targetM = queryToMonth;
-    let targetY = queryToYear;
+    let targetM = toMonth;
+    let targetY = toYear;
     if (period === 'month') {
-      targetM = queryFromMonth;
-      targetY = queryFromYear;
+      targetM = fromMonth;
+      targetY = fromYear;
     }
 
     if (targetY > now.getFullYear() || (targetY === now.getFullYear() && targetM > now.getMonth() + 1)) {
@@ -151,11 +118,11 @@ export default function Salary() {
         setShowFutureWarning(true);
       }
     }
-  }, [queryFromMonth, queryFromYear, queryToMonth, queryToYear, period, neverShowFutureWarning]);
+  }, [fromMonth, fromYear, toMonth, toYear, period, neverShowFutureWarning]);
 
   const previousRanksRef = useRef<any[]>([]);
 
-  const handleSaveRank = () => {
+  const executeSaveRank = () => {
     // Record current state before saving to allow Undo
     const prev: any[] = [];
     if (salaryData?.chartData) {
@@ -179,6 +146,11 @@ export default function Salary() {
     }
     previousRanksRef.current = prev;
     saveRankMutation.mutate();
+    setShowConfirmSaveRank(false);
+  };
+
+  const handleSaveRank = () => {
+    setShowConfirmSaveRank(true);
   };
 
   const undoMutation = useMutation({
@@ -212,32 +184,21 @@ export default function Salary() {
     mutationFn: async () => {
       let token = getCookie('accessToken') || getCookie('idToken');
       const authHeader = token?.startsWith('Bearer ') ? token : `Bearer ${token}`;
+      const bodyData: any = { teacherId: user?.id, period, forceRefresh: true };
+
       const res = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/salary/calculate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': authHeader || ''
         },
-        body: JSON.stringify({
-          teacherId: user?.id,
-          period: period,
-          fromMonth: queryFromMonth,
-          fromYear: queryFromYear,
-          ...(period !== 'month' && {
-            toMonth: queryToMonth,
-            toYear: queryToYear
-          }),
-          forceRefresh: true
-        })
+        body: JSON.stringify(bodyData)
       });
       if (!res.ok) throw new Error('Failed to refresh cache');
       return res.json();
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(
-        ['salary', period, queryFromMonth, queryFromYear, period === 'month' ? null : queryToMonth, period === 'month' ? null : queryToYear, user?.id],
-        data
-      );
+      queryClient.invalidateQueries({ queryKey: ['salary'] });
       toast.success('Đã làm mới dữ liệu và xóa cache!');
     },
     onError: (err) => {
@@ -334,16 +295,6 @@ export default function Salary() {
   const years = Array.from({ length: 9 }, (_, i) => currentYear - 8 + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-  const handleApplyFilter = () => {
-    if (period === 'custom' && fromMonth === toMonth && fromYear === toYear) {
-      setPeriod('month');
-    }
-    setQueryFromMonth(fromMonth);
-    setQueryFromYear(fromYear);
-    setQueryToMonth(toMonth);
-    setQueryToYear(toYear);
-  };
-
   const handleChartClick = (e: any) => {
     let labelToParse = '';
 
@@ -364,20 +315,16 @@ export default function Salary() {
       const m = Number(match[1]);
       const y = Number(match[2]);
 
-      if (period !== 'custom') {
-        setPeriod('custom');
-      }
-
       if (clickStep === 0) {
         setFromMonth(m);
         setFromYear(y);
         setClickStep(1);
-        toast.success(`Đã chọn mốc TỪ tháng ${m}/${y}. Vui lòng chọn mốc ĐẾN.`, { id: 'click-step' });
+        toast.success(`Đã chọn BẮT ĐẦU từ tháng ${m}/${y}. Vui lòng click chọn thêm tháng KẾT THÚC.`, { id: 'click-step' });
       } else {
         setToMonth(m);
         setToYear(y);
         setClickStep(0);
-        toast.success(`Đã chọn khoảng từ ${fromMonth}/${fromYear} đến ${m}/${y}. Bấm Áp Dụng để xem.`, { id: 'click-step' });
+        toast.success(`Đã chọn khoảng từ ${fromMonth}/${fromYear} đến ${m}/${y}. Vui lòng chọn Rank và bấm Lưu!`, { id: 'click-step' });
       }
     } else {
       console.log('Cannot parse label:', labelToParse);
@@ -399,7 +346,10 @@ export default function Salary() {
                     <TrendingUp size={28} />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-slate-800">Thống kê Công Lương</h1>
+                    <h1 className="text-2xl font-bold text-slate-800 ">
+                      Thống kê Công Lương
+
+                    </h1>
                     <p className="text-sm text-slate-500">Biểu đồ chi tiết thu nhập & cài đặt hệ số lương</p>
                   </div>
                 </div>
@@ -407,10 +357,7 @@ export default function Salary() {
                 {/* Period Tabs */}
                 <div className="flex bg-slate-100 p-1.5 rounded-xl self-start md:self-auto overflow-x-auto max-w-full">
                   {[
-                    { id: 'custom', label: 'Tùy chỉnh' },
                     { id: 'month', label: 'Tháng' },
-                    { id: 'quarter', label: 'Quý' },
-                    { id: 'year', label: 'Năm' },
                     { id: 'all', label: 'Tất cả' }
                   ].map(tab => (
                     <button
@@ -438,10 +385,15 @@ export default function Salary() {
 
               {/* Rank Assignment Section */}
               <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                <h2 className="text-lg font-bold text-slate-800 mb-2 flex items-center">
                   <CheckSquare className="mr-2 text-burgundy" size={20} />
-                  Lọc & Cài đặt Rank lương theo thời gian
+                  Cài đặt Rank Lương
                 </h2>
+                <p className="text-sm text-slate-600 mb-4 bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                  <strong className="text-blue-700">Bước 1:</strong> Click trực tiếp vào biểu đồ để chọn nhanh từ tháng nào đến tháng nào. <br />
+                  <strong className="text-blue-700">Bước 2:</strong> Chọn Rank tương ứng và bấm <strong className="text-burgundy">Lưu Rank</strong>.
+                </p>
+
                 <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <div className="flex gap-4 p-3 bg-white border border-slate-200 rounded-xl shadow-sm w-full md:w-auto">
                     <div>
@@ -491,16 +443,9 @@ export default function Salary() {
                     </div>
                   )}
 
-                  <button
-                    onClick={handleApplyFilter}
-                    className="bg-slate-800 text-white px-5 py-2 rounded-lg font-semibold text-sm flex items-center shadow-md hover:bg-slate-700 transition-colors h-[38px] w-full md:w-auto justify-center"
-                  >
-                    Áp dụng
-                  </button>
-
                   <div className="ml-auto flex items-end gap-3 w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t border-slate-200 md:border-none">
                     <div className="flex-1 md:flex-none">
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Rank Lương</label>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Bước 2: Chọn Rank Lương</label>
                       <select
                         value={selectedRank}
                         onChange={e => {
@@ -528,7 +473,7 @@ export default function Salary() {
                   </div>
                 </div>
                 <p className="text-xs text-slate-500 mt-3">
-                  * Biểu đồ sẽ tự động cập nhật khi bạn thay đổi thời gian. Việc bấm "Lưu Rank" sẽ lưu lại hệ số lương cho toàn bộ các tháng trong khoảng đã chọn.
+                  *Việc bấm "Lưu Rank" sẽ lưu lại hệ số lương cho toàn bộ các tháng trong khoảng đã chọn.
                 </p>
               </div>
 
@@ -567,22 +512,19 @@ export default function Salary() {
                     <div className="flex justify-between items-start mb-6">
                       <div>
                         <h3 className="text-lg font-bold text-slate-800">Biểu đồ tăng trưởng lương</h3>
-                        {period !== 'month' && (
+                        {period === 'all' && (
                           <p className="text-xs text-slate-500 mt-1 italic">
                             💡 Mẹo: Nhấp vào 2 điểm bất kỳ trên biểu đồ để chọn nhanh khoảng thời gian cấu hình Rank!
                           </p>
                         )}
                       </div>
-                      {period === 'custom' && (
-                        <span className="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">
-                          Đang lọc: T{queryFromMonth}/{queryFromYear} - T{queryToMonth}/{queryToYear}
-                        </span>
-                      )}
-                      {period === 'month' && (
-                        <span className="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">
-                          Lọc: Tháng {queryFromMonth}/{queryFromYear}
-                        </span>
-                      )}
+                      <button
+                        onClick={() => setShowHowTo(true)}
+                        className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors border border-blue-100"
+                      >
+                        <Info size={16} />
+                        Hướng dẫn
+                      </button>
                     </div>
                     <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
@@ -724,11 +666,79 @@ export default function Salary() {
               </div>
             </div>
           )}
+
+          {showConfirmSaveRank && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+              <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl relative border border-slate-100">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-5xl">🎯</div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3 text-center mt-6">Xác nhận áp dụng Rank</h3>
+                <p className="text-sm text-slate-600 mb-4 leading-relaxed text-center">
+                  Bạn đang chuẩn bị áp dụng cấu hình Rank lương mới. Vui lòng kiểm tra lại thông tin bên dưới:
+                </p>
+                <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl mb-6 flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm font-semibold">Mức Rank:</span>
+                    <span className="text-burgundy font-bold text-base bg-red-50 px-2 py-1 rounded-lg border border-red-100">
+                      {selectedRank} - {formatCurrency(RANKS.find(r => r.id === selectedRank)?.rate || 0)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm font-semibold">Thời gian áp dụng:</span>
+                    <span className="text-slate-800 font-bold text-base bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-sm">
+                      {period === 'month' ? `Tháng ${fromMonth}/${fromYear}` : `T${fromMonth}/${fromYear} ➔ T${toMonth}/${toYear}`}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => setShowConfirmSaveRank(false)}
+                    className="flex-1 px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+                  >
+                    Hủy bỏ
+                  </button>
+                  <button
+                    onClick={executeSaveRank}
+                    disabled={saveRankMutation.isPending}
+                    className="flex-1 px-5 py-2.5 bg-burgundy text-white font-bold rounded-xl hover:bg-burgundy/90 transition-colors shadow-lg shadow-burgundy/30 flex items-center justify-center disabled:opacity-70"
+                  >
+                    {saveRankMutation.isPending ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
+                    Đồng ý lưu
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
-
-
       </div>
       <Footer />
+
+      {/* How To Modal */}
+      {showHowTo && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+                <AlertTriangle className="text-orange-500" size={20} />
+                Hướng dẫn sử dụng Thống kê Công Lương
+              </h3>
+              <button onClick={() => setShowHowTo(false)} className="text-slate-400 hover:text-slate-600 p-1 bg-white rounded-md shadow-sm border border-slate-200 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-2 overflow-y-auto max-h-[70vh] flex justify-center bg-slate-100">
+              <img src="/how-to.png" alt="Hướng dẫn" className="max-w-full h-auto object-contain rounded-xl shadow-sm" />
+            </div>
+            <div className="p-4 border-t border-slate-100 flex justify-end bg-slate-50">
+              <button
+                onClick={handleCloseHowTo}
+                className="px-6 py-2.5 bg-burgundy text-white font-bold rounded-xl hover:bg-burgundy/90 transition-colors shadow-sm"
+              >
+                Tôi đã hiểu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
