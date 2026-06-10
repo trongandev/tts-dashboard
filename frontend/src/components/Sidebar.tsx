@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, DollarSign, LogOut, Info } from 'lucide-react';
+import { LayoutDashboard, Calendar, DollarSign, LogOut, Info, Puzzle } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 
 export default function Sidebar() {
@@ -12,6 +12,7 @@ export default function Sidebar() {
     { icon: <LayoutDashboard size={20} />, label: 'Tổng quan', path: '/' },
     { icon: <Calendar size={20} />, label: 'Lịch dạy', path: '/timesheet' },
     { icon: <DollarSign size={20} />, label: 'Công lương', path: '/salary' },
+    { icon: <Puzzle size={20} />, label: 'Tiện ích', path: '/extension' },
     { icon: <Info size={20} />, label: 'Về chúng tôi', path: '/about' },
   ];
 

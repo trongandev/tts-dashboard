@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Timesheet from './components/Timesheet';
 import Salary from './components/Salary';
 import About from './components/About';
+import Extension from './components/Extension';
 import { UserProvider, useUser } from './contexts/UserContext';
 
 const ProtectedRoute = () => {
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/timesheet" element={<Timesheet />} />
             <Route path="/salary" element={<Salary />} />
             <Route path="/about" element={<About />} />
+            <Route path="/extension" element={<Extension />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
