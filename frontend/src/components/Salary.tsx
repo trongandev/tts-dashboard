@@ -48,6 +48,7 @@ export default function Salary() {
   const [showRefreshConfirm, setShowRefreshConfirm] = useState(false);
   const [showFutureWarning, setShowFutureWarning] = useState(false);
   const [showConfirmSaveRank, setShowConfirmSaveRank] = useState(false);
+  const [autoShowPopup, setAutoShowPopup] = useState(() => localStorage.getItem('autoShowSalaryPopup') !== 'false');
   const [neverShowFutureWarning, setNeverShowFutureWarning] = useState(() => localStorage.getItem('hideFutureSalaryWarning') === 'true');
 
   const handlePeriodChange = (newPeriod: 'month' | 'all') => {
@@ -57,7 +58,7 @@ export default function Salary() {
 
 
   const { data: salaryData, isLoading: loading, error: queryError } = useQuery({
-    queryKey: ['salary', period, user?.id],
+    queryKey: ['salary', period, period === 'month' ? fromMonth : null, period === 'month' ? fromYear : null, user?.id],
     queryFn: async () => {
       if (!user) return null;
       let token = getCookie('accessToken') || getCookie('idToken');
@@ -66,8 +67,8 @@ export default function Salary() {
 
       const bodyData: any = { teacherId: user.id, period };
       if (period === 'month') {
-        bodyData.fromMonth = new Date().getMonth() + 1;
-        bodyData.fromYear = new Date().getFullYear();
+        bodyData.fromMonth = fromMonth;
+        bodyData.fromYear = fromYear;
       }
 
       const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/salary/calculate`, {
@@ -185,6 +186,10 @@ export default function Salary() {
       let token = getCookie('accessToken') || getCookie('idToken');
       const authHeader = token?.startsWith('Bearer ') ? token : `Bearer ${token}`;
       const bodyData: any = { teacherId: user?.id, period, forceRefresh: true };
+      if (period === 'month') {
+        bodyData.fromMonth = fromMonth;
+        bodyData.fromYear = fromYear;
+      }
 
       const res = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/salary/calculate`, {
         method: 'POST',
@@ -324,7 +329,12 @@ export default function Salary() {
         setToMonth(m);
         setToYear(y);
         setClickStep(0);
-        toast.success(`Đã chọn khoảng từ ${fromMonth}/${fromYear} đến ${m}/${y}. Vui lòng chọn Rank và bấm Lưu!`, { id: 'click-step' });
+        if (autoShowPopup) {
+          // Delay lightly to ensure state is set before modal reads it
+          setTimeout(() => setShowConfirmSaveRank(true), 0);
+        } else {
+          toast.success(`Đã chọn khoảng từ ${fromMonth}/${fromYear} đến ${m}/${y}. Vui lòng chọn Rank và bấm Lưu!`, { id: 'click-step' });
+        }
       }
     } else {
       console.log('Cannot parse label:', labelToParse);
@@ -509,7 +519,7 @@ export default function Salary() {
 
                   {/* Main Chart */}
                   <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div className="flex justify-between items-start mb-6">
+                    <div className="flex justify-between items-center mb-6">
                       <div>
                         <h3 className="text-lg font-bold text-slate-800">Biểu đồ tăng trưởng lương</h3>
                         {period === 'all' && (
@@ -678,9 +688,21 @@ export default function Salary() {
                 <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl mb-6 flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-500 text-sm font-semibold">Mức Rank:</span>
-                    <span className="text-burgundy font-bold text-base bg-red-50 px-2 py-1 rounded-lg border border-red-100">
-                      {selectedRank} - {formatCurrency(RANKS.find(r => r.id === selectedRank)?.rate || 0)}
-                    </span>
+                    <select
+                      value={selectedRank}
+                      onChange={e => {
+                        const val = e.target.value;
+                        setSelectedRank(val);
+                        localStorage.setItem('selectedRankId', val);
+                      }}
+                      className="text-burgundy font-bold text-base bg-red-50 px-2 py-1 rounded-lg border border-red-100 outline-none focus:ring-2 focus:ring-burgundy/20 cursor-pointer"
+                    >
+                      {RANKS.map(rank => (
+                        <option key={rank.id} value={rank.id}>
+                          {rank.id} - {formatCurrency(rank.rate)}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-500 text-sm font-semibold">Thời gian áp dụng:</span>
@@ -689,6 +711,27 @@ export default function Salary() {
                     </span>
                   </div>
                 </div>
+
+                <div className="flex items-center justify-center mb-6">
+                  <label className="flex items-center cursor-pointer gap-2 select-none group">
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={autoShowPopup}
+                        onChange={(e) => {
+                          setAutoShowPopup(e.target.checked);
+                          localStorage.setItem('autoShowSalaryPopup', String(e.target.checked));
+                        }}
+                      />
+                      <div className="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-burgundy group-hover:bg-slate-300 peer-checked:group-hover:bg-burgundy/90"></div>
+                    </div>
+                    <span className="text-xs font-semibold text-slate-500">
+                      Tự động bật popup chọn nhanh trên biểu đồ
+                    </span>
+                  </label>
+                </div>
+
                 <div className="flex gap-3 mt-4">
                   <button
                     onClick={() => setShowConfirmSaveRank(false)}
