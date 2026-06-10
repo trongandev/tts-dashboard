@@ -252,11 +252,11 @@ router.post('/salary/calculate', async (req, res, next) => {
         const { teacherId, period, fromMonth, fromYear, toMonth, toYear, forceRefresh } = req.body;
         const authorization = req.headers.authorization;
         if (!authorization) return res.status(401).json({ error: 'Missing Auth' });
-        let cacheKey = `${teacherId}_${period}_${Date.now()}`;
+        let cacheKey = `${teacherId}_${period}`;
         if (period === 'custom') {
-            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}_${Date.now()}`;
+            cacheKey = `${teacherId}_custom_${fromMonth}_${fromYear}_${toMonth}_${toYear}`;
         } else if (period === 'month' && fromMonth && fromYear) {
-            cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}_${Date.now()}`;
+            cacheKey = `${teacherId}_month_${fromMonth}_${fromYear}`;
         }
         console.log(cacheKey)
         // 1. Try to get from Cache (Permanent until forceRefresh)
@@ -283,23 +283,23 @@ router.post('/salary/calculate', async (req, res, next) => {
         let startDate, endDate;
         if (period === 'custom' && fromMonth && fromYear && toMonth && toYear) {
             startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
-            endDate = new Date(toYear, toMonth, 0).getTime().toString();
+            endDate = new Date(toYear, toMonth, 0, 23, 59, 59, 999).getTime().toString();
         } else if (period === 'month' && fromMonth && fromYear) {
             startDate = new Date(fromYear, fromMonth - 1, 1).getTime().toString();
-            endDate = new Date(fromYear, fromMonth, 0).getTime().toString();
+            endDate = new Date(fromYear, fromMonth, 0, 23, 59, 59, 999).getTime().toString();
         } else if (period === 'month') {
             startDate = new Date(now.getFullYear(), now.getMonth(), 1).getTime().toString();
-            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).getTime().toString();
+            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime().toString();
         } else if (period === 'quarter') {
             const currentQuarter = Math.floor(now.getMonth() / 3);
             startDate = new Date(now.getFullYear(), currentQuarter * 3, 1).getTime().toString();
-            endDate = new Date(now.getFullYear(), currentQuarter * 3 + 3, 0).getTime().toString();
+            endDate = new Date(now.getFullYear(), currentQuarter * 3 + 3, 0, 23, 59, 59, 999).getTime().toString();
         } else if (period === 'year') {
             startDate = new Date(now.getFullYear(), 0, 1).getTime().toString();
-            endDate = new Date(now.getFullYear(), 11, 31).getTime().toString();
+            endDate = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).getTime().toString();
         } else {
             startDate = new Date(2020, 0, 1).getTime().toString(); // Past arbitrary date
-            endDate = new Date(now.getFullYear() + 1, 11, 31).getTime().toString();
+            endDate = new Date(now.getFullYear() + 1, 11, 31, 23, 59, 59, 999).getTime().toString();
         }
 
         const payload = { teacherId, startDate, endDate };
@@ -325,13 +325,18 @@ router.post('/salary/calculate', async (req, res, next) => {
         };
 
         const fetchedRanks = {};
-        let salaryDebug = 0;
+
+
         for (const item of timesheetItems) {
             // Validate date
             const timeMs = item.date || item.classSessionAttendance?.startTime;
             if (!timeMs) continue;
-            console.log(item)
-            //   status: 'ABSENT_WITH_NOTICE' using this
+
+            if (item.classSessionAttendance?.status === 'ABSENT_WITH_NOTICE' || item.status === 'ABSENT_WITH_NOTICE') {
+                continue;
+            }
+
+
             const date = new Date(Number(timeMs));
 
             let groupKey;
@@ -426,10 +431,6 @@ router.post('/salary/calculate', async (req, res, next) => {
                 }
             }
 
-            if (groupKey == "3_2026") {
-                console.log(`[DEBUG Salary] Date: ${date.toLocaleDateString('vi-VN')} | Group: ${groupKey} | Type: ${item.type} | SubType: ${item.officeHour?.type || 'N/A'} | Students: ${item.officeHour?.studentCount || 0} | Hours: ${hours} | itemSalary: ${itemSalary.toLocaleString()}`);
-                salaryDebug += itemSalary;
-            }
 
             groups[groupKey].count++;
             groups[groupKey].salary += itemSalary;
@@ -438,7 +439,7 @@ router.post('/salary/calculate', async (req, res, next) => {
 
             rankCounts[customRank] = (rankCounts[customRank] || 0) + 1;
         }
-        console.log(`[DEBUG Salary] 3_2026 Debug: ${salaryDebug.toLocaleString()}`);
+
         const chartData = Object.values(groups).map(g => {
             let description = '';
             if (g.label === 'Khác' && Object.keys(g.subTypes).length > 0) {
