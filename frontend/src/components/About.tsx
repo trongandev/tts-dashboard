@@ -70,7 +70,7 @@ export default function About() {
             </header>
 
             <div className="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-100 space-y-8">
-              
+
               <section className="space-y-4">
                 <h3 className="text-xl font-bold text-slate-800">Tác giả</h3>
                 <div className="flex items-center gap-4 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -103,7 +103,7 @@ export default function About() {
                     Sản phẩm này được tạo ra hoàn toàn với mục đích phi lợi nhuận, nhằm giúp đỡ các Mentor của MindX kiểm tra và theo dõi công lương của mình một cách minh bạch và rõ ràng hơn.
                   </p>
                   <p>
-                    <strong>Lưu ý:</strong> Ứng dụng có sử dụng API nội bộ từ hệ thống của MindX mà chưa thông qua quá trình xin phép chính thức. Chúng tôi không lưu trữ bất kỳ dữ liệu cá nhân hay thông tin nhạy cảm nào của bạn trên hệ thống của chúng tôi. Mọi dữ liệu đều được truyền trực tiếp đến API của MindX.
+                    <strong>Lưu ý:</strong> Ứng dụng có sử dụng API nội bộ từ hệ thống của MindX. Chúng tôi không lưu trữ bất kỳ dữ liệu cá nhân hay thông tin nhạy cảm nào của bạn trên hệ thống của chúng tôi. Mọi dữ liệu đều được truyền trực tiếp đến API của MindX.
                   </p>
                   <p className="font-medium text-orange-900 pt-2 border-t border-orange-200">
                     Nếu có bất kỳ khiếu nại nào về bản quyền, vi phạm chính sách hoặc yêu cầu gỡ bỏ, xin vui lòng gửi email trực tiếp cho tác giả qua địa chỉ: <a href="mailto:trongandev@gmail.com" className="font-bold hover:underline">trongandev@gmail.com</a>. Chúng tôi sẽ lập tức xử lý và gỡ bỏ.
