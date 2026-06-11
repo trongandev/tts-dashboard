@@ -1,4 +1,4 @@
-const { GraphQLClient } = require('graphql-request')
+import { GraphQLClient } from 'graphql-request'
 
 function createClient(authorization) {
     const headers = {}
@@ -8,4 +8,4 @@ function createClient(authorization) {
     return new GraphQLClient('https://lms-api.mindx.edu.vn/', { headers })
 }
 
-module.exports = { createClient }
+export { createClient }

@@ -1,4 +1,4 @@
-const { gql } = require('graphql-request')
+import { gql } from 'graphql-request'
 
 const GET_CLASSES_QUERY = gql`
     query GetClasses($pageIndex: Int!, $itemsPerPage: Int!, $orderBy: String, $teacherId: String, $search: String) {
@@ -136,8 +136,4 @@ const FIND_INFO_QUERY = gql`
     }
 `
 
-module.exports = {
-    GET_CLASSES_QUERY,
-    GET_TIMESHEET_QUERY,
-    FIND_INFO_QUERY,
-}
+export { GET_CLASSES_QUERY, GET_TIMESHEET_QUERY, FIND_INFO_QUERY }

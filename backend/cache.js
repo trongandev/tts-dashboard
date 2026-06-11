@@ -41,7 +41,7 @@ function clearExpired() {
 // optional: periodic cleanup
 setInterval(clearExpired, 60 * 60 * 1000) // every hour
 
-module.exports = {
+export default {
     generateKey,
     set,
     get,
