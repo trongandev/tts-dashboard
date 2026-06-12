@@ -2,7 +2,7 @@ import express from 'express'
 import fs from 'fs'
 import cron from 'node-cron'
 import { ThreadType, Zalo } from 'zca-js'
-import { FIND_INFO_QUERY, GET_CLASSES_QUERY, GET_TIMESHEET_QUERY } from '../queries.js'
+import { FIND_INFO_QUERY, GET_CLASSES_QUERY, GET_CLASSES_QUERY_FOR_TE, GET_TIMESHEET_QUERY } from '../queries.js'
 import { createClient } from '../graphqlClient.js'
 import MindXService from '../services/mindx.service.js'
 import state from '../state.js'
@@ -14,6 +14,11 @@ const SALARY_CACHE_TTL = 8 * 60 * 60 * 1000
 const LMS_CLASSES_PAGE_SIZE = 20
 const LMS_NOTIFICATION_TIMEZONE = 'Asia/Bangkok'
 const LMS_NOTIFICATION_COLLECTION = 'chatbot_lms_notifications'
+const LMSTA_CLASSES_PAGE_SIZE = 80
+const LMSTA_CENTRE_ID = '63f46f0489ef5647c31939d3'
+const LMSTA_CENTRE_NAME = 'Đồng Nai - 253 Phạm Văn Thuận'
+const LMSTA_AUTHORIZED_EMAILS = new Set(['vuta@mindx.com.vn', 'troandev@mindx.net.vn'])
+const LMSTA_NOTIFICATION_COLLECTION = 'chatbot_lmsta_notifications'
 const RANKS_RATE = {
     T0: 70000,
     T1: 90000,
@@ -39,6 +44,7 @@ const api = await zalo.login({
 
 const users = new Map()
 const lmsNotificationUsers = new Map()
+const lmstaNotificationUsers = new Map()
 
 function normalizeCommandText(text) {
     return text.trim().replace(/^\/\s+/, '/')
@@ -374,6 +380,14 @@ function getPreviousWeekRange(now = new Date()) {
     return { start, end }
 }
 
+function getLmstaWeekRange(now = new Date()) {
+    const today = new Date(now)
+    const daysFromMonday = (today.getDay() + 6) % 7
+    const prevMonday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysFromMonday - 7, 0, 0, 0, 0)
+    const end = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999)
+    return { start: prevMonday, end }
+}
+
 function getDayRange(date) {
     const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
     const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
@@ -386,10 +400,21 @@ function getYesterdayRange(now = new Date()) {
     return getDayRange(yesterday)
 }
 
+function getQueryRange(range) {
+    return {
+        from: range.start.toISOString(),
+        to: range.end.toISOString(),
+    }
+}
+
 function normalizeEmail(email) {
     return String(email || '')
         .trim()
         .toLowerCase()
+}
+
+function isLmstaAuthorized(user) {
+    return LMSTA_AUTHORIZED_EMAILS.has(normalizeEmail(user?.email))
 }
 
 function getTeacherKeys(teacher) {
@@ -707,6 +732,291 @@ function scheduleLmsNotificationCron() {
             timezone: LMS_NOTIFICATION_TIMEZONE,
         },
     )
+}
+
+async function ensureFreshTokenForLmstaNotification(registration) {
+    const user = registration.user
+    if (!user.refreshToken || !user.expiresAt || Date.now() < user.expiresAt - 60 * 1000) return user
+
+    const data = await MindXService.refreshToken('refresh_token', user.refreshToken)
+    const nextUser = {
+        ...user,
+        idToken: data.id_token || user.idToken,
+        refreshToken: data.refresh_token || user.refreshToken,
+        expiresAt: Date.now() + Number(data.expires_in || 3600) * 1000,
+    }
+
+    const nextRegistration = { ...registration, user: nextUser, updatedAt: Date.now() }
+    lmstaNotificationUsers.set(registration.sessionKey, nextRegistration)
+    users.set(registration.sessionKey, nextUser)
+
+    if (state.db) {
+        await state.db.collection(LMSTA_NOTIFICATION_COLLECTION).doc(getDocId(registration.sessionKey)).set(nextRegistration, { merge: true })
+        await state.db.collection('chatbot_users').doc(getDocId(registration.sessionKey)).set(nextUser, { merge: true })
+    }
+
+    return nextUser
+}
+
+async function getAllClassesForLmsta(freshUser, range) {
+    const data = await MindXService.login('vuta@mindx.com.vn', 'vut@123')
+    const client = createClient('Bearer ' + data.idToken)
+    const rawData = await client.request(GET_CLASSES_QUERY_FOR_TE, {
+        search: '',
+        centres: [LMSTA_CENTRE_ID],
+        courses: [],
+        courseLines: [],
+        statusIn: ['RUNNING'],
+        pageIndex: 0,
+        itemsPerPage: LMSTA_CLASSES_PAGE_SIZE,
+        orderBy: 'createdAt_desc',
+        teacherSlot: [],
+        passedSessionIndex: null,
+        unpassedSessionIndex: null,
+        haveSlotIn: getQueryRange(range),
+        comments: { criteria: [] },
+    })
+    return rawData?.classes?.data || []
+}
+
+function getLmstaUncheckedSlots(classes, range) {
+    const classesWithSlots = new Set()
+    const unchecked = []
+
+    for (const classItem of classes) {
+        for (const [slotIndex, slot] of (classItem.slots || []).entries()) {
+            const slotDate = slot.date ? new Date(slot.date) : null
+            if (!slotDate || Number.isNaN(slotDate.getTime()) || slotDate < range.start || slotDate > range.end) continue
+
+            classesWithSlots.add(classItem.name)
+
+            if (slot.summary == null || String(slot.summary).trim() === '') {
+                const lecTeacher = (slot.teachers || []).find((t) => t.role?.shortName === 'LEC')
+                unchecked.push({
+                    className: classItem.name,
+                    sessionNumber: slotIndex + 1,
+                    date: slotDate,
+                    lecTeacher: lecTeacher?.teacher || null,
+                })
+            }
+        }
+    }
+
+    return {
+        totalClassCount: classesWithSlots.size,
+        unchecked: unchecked.sort((a, b) => a.date - b.date || a.className.localeCompare(b.className)),
+    }
+}
+
+function formatLmstaResult(totalClassCount, unchecked, range) {
+    const lines = [`KIỂM TRA NHẬN XÉT LMS GIÁO VIÊN BIÊN HÒA TUẦN ${formatDate(range.start)} - ${formatDate(range.end)}`]
+    lines.push(`Cơ sở: ${LMSTA_CENTRE_NAME}`)
+    lines.push(`Tổng số lớp học: ${totalClassCount}`)
+
+    const uncheckedClassNames = new Set(unchecked.map((item) => item.className))
+    lines.push(`Số lớp chưa nhận xét: ${uncheckedClassNames.size}`)
+
+    if (!unchecked.length) {
+        lines.push('Tất cả các lớp đã được nhận xét.')
+        return lines.join('\n')
+    }
+
+    lines.push('', 'Chi tiết các buổi chưa nhận xét:')
+    for (const item of unchecked) {
+        const lecName = item.lecTeacher ? getTeacherDisplayName(item.lecTeacher) : 'Chưa rõ'
+        lines.push(`- ${item.className} | Buổi ${item.sessionNumber} | ${formatDate(item.date)} | LEC: ${lecName}`)
+    }
+
+    return lines.join('\n')
+}
+
+function formatLmstaNotificationResult(totalClassCount, unchecked, range) {
+    if (!unchecked.length) {
+        return `LMSTA: Tất cả ${totalClassCount} lớp tại ${LMSTA_CENTRE_NAME} tuần ${formatDate(range.start)} - ${formatDate(range.end)} đã được nhận xét.`
+    }
+
+    const lines = [`NHẮC NHẬN XÉT LMS GIÁO VIÊN BIÊN HÒA - ${LMSTA_CENTRE_NAME}`]
+    lines.push(`Tuần: ${formatDate(range.start)} - ${formatDate(range.end)}`)
+    lines.push(`Tổng số lớp: ${totalClassCount}`)
+
+    const uncheckedClassNames = new Set(unchecked.map((item) => item.className))
+    lines.push(`Số lớp chưa nhận xét: ${uncheckedClassNames.size}`)
+    lines.push('', 'Chi tiết các buổi chưa nhận xét:')
+
+    for (const item of unchecked) {
+        const lecName = item.lecTeacher ? getTeacherDisplayName(item.lecTeacher) : 'Chưa rõ'
+        lines.push(`- ${item.className} | Buổi ${item.sessionNumber} | ${formatDate(item.date)} | LEC: ${lecName}`)
+    }
+
+    return lines.join('\n')
+}
+
+async function saveLmstaNotificationRegistration(message, user) {
+    const sessionKey = getSessionKey(message)
+    const registration = {
+        sessionKey,
+        threadId: message.threadId,
+        threadType: message.type,
+        user,
+        enabled: true,
+        updatedAt: Date.now(),
+    }
+
+    lmstaNotificationUsers.set(sessionKey, registration)
+
+    if (state.db) {
+        await state.db
+            .collection(LMSTA_NOTIFICATION_COLLECTION)
+            .doc(getDocId(sessionKey))
+            .set(
+                {
+                    ...registration,
+                    updatedAt: state.FieldValue?.serverTimestamp?.() || Date.now(),
+                },
+                { merge: true },
+            )
+    }
+
+    return registration
+}
+
+async function destroyLmstaNotificationRegistration(message) {
+    const sessionKey = getSessionKey(message)
+    lmstaNotificationUsers.delete(sessionKey)
+
+    if (state.db) {
+        await state.db
+            .collection(LMSTA_NOTIFICATION_COLLECTION)
+            .doc(getDocId(sessionKey))
+            .set(
+                {
+                    sessionKey,
+                    threadId: message.threadId,
+                    threadType: message.type,
+                    enabled: false,
+                    updatedAt: state.FieldValue?.serverTimestamp?.() || Date.now(),
+                },
+                { merge: true },
+            )
+    }
+}
+
+async function getLmstaNotificationRegistrations() {
+    if (!state.db) return Array.from(lmstaNotificationUsers.values()).filter((registration) => registration.enabled)
+
+    const snapshot = await state.db.collection(LMSTA_NOTIFICATION_COLLECTION).where('enabled', '==', true).get()
+    return snapshot.docs.map((doc) => doc.data()).filter((registration) => registration.threadId && registration.user)
+}
+
+async function runLmstaNotificationForRegistration(registration, now = new Date()) {
+    try {
+        const user = await ensureFreshTokenForLmstaNotification(registration)
+        const range = getLmstaWeekRange(now)
+        const classes = await getAllClassesForLmsta(user, range)
+        const { totalClassCount, unchecked } = getLmstaUncheckedSlots(classes, range)
+        await sendMessageToThread(registration.threadId, registration.threadType, formatLmstaNotificationResult(totalClassCount, unchecked, range))
+    } catch (error) {
+        console.error('[ZCA-JS] LMSTA notification error:', error)
+        await sendMessageToThread(registration.threadId, registration.threadType, `Bot không kiểm tra được LMSTA hôm nay: ${error.message || 'Lỗi không xác định'}`)
+    }
+}
+
+async function runLmstaNotifications(now = new Date()) {
+    const registrations = await getLmstaNotificationRegistrations()
+    for (const registration of registrations) {
+        await runLmstaNotificationForRegistration(registration, now)
+    }
+}
+
+function scheduleLmstaNotificationCron() {
+    cron.schedule(
+        '0 9 * * *',
+        async () => {
+            try {
+                await runLmstaNotifications()
+            } catch (error) {
+                console.error('[ZCA-JS] LMSTA notification scheduler error:', error)
+            }
+        },
+        {
+            timezone: LMS_NOTIFICATION_TIMEZONE,
+        },
+    )
+}
+
+function scheduleLmstaNotificationTest(registration) {
+    const runAt = getCronDateParts(new Date(Date.now() + 60 * 1000))
+    const expression = `${runAt.minute} ${runAt.hour} ${runAt.day} ${runAt.month} *`
+    let task = null
+
+    task = cron.schedule(
+        expression,
+        async () => {
+            task.stop()
+            try {
+                await runLmstaNotificationForRegistration(registration)
+            } catch (error) {
+                console.error('[ZCA-JS] LMSTA notification test error:', error)
+            } finally {
+                task.destroy()
+            }
+        },
+        {
+            timezone: LMS_NOTIFICATION_TIMEZONE,
+        },
+    )
+}
+
+async function handleLmstaNotification(message, user, isTest = false) {
+    const registration = await saveLmstaNotificationRegistration(message, user)
+
+    if (isTest) {
+        scheduleLmstaNotificationTest(registration)
+        await reply(message, 'Đã đăng ký LMSTA notification và sẽ gửi thông báo test sau 1 phút.')
+        return
+    }
+
+    await reply(message, 'Đã đăng ký nhận thông báo LMSTA. Bot sẽ báo cáo lúc 9h sáng mỗi ngày.')
+}
+
+async function handleLmsta(message, command) {
+    const user = await getUserSession(message)
+    if (!user) {
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
+        return
+    }
+
+    if (!isLmstaAuthorized(user)) {
+        await reply(message, 'Bạn không có quyền sử dụng lệnh này.')
+        return
+    }
+
+    const args = (command.args || command.path || '').trim().toLowerCase()
+    if (args === 'noti destroy') {
+        await destroyLmstaNotificationRegistration(message)
+        await reply(message, 'Đã hủy đăng ký nhận thông báo LMSTA cho cuộc trò chuyện này.')
+        return
+    }
+    if (args === 'noti') {
+        await handleLmstaNotification(message, user)
+        return
+    }
+    if (args === 'noti test') {
+        await handleLmstaNotification(message, user, true)
+        return
+    }
+    if (args) {
+        await reply(message, 'Cú pháp LMSTA hợp lệ:\nlmsta\nlmsta noti\nlmsta noti test\nlmsta noti destroy')
+        return
+    }
+
+    await reply(message, 'Bot đang kiểm tra LMSTA, có thể mất khoảng 12-18 giây vì cần tải dữ liệu lớp. Bạn chờ mình xíu nhé.')
+
+    const range = getLmstaWeekRange()
+    const freshUser = await ensureFreshToken(message, user)
+    const classes = await getAllClassesForLmsta(freshUser, range)
+    const { totalClassCount, unchecked } = getLmstaUncheckedSlots(classes, range)
+    await reply(message, formatLmstaResult(totalClassCount, unchecked, range))
 }
 
 function getCronDateParts(date) {
@@ -1286,15 +1596,22 @@ async function handleMessage(message) {
 
                     `check - Check công tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()} theo ngày`,
                     'check 5 - Check công tháng 5 theo ngày',
+                    '',
                     'lms - Kiểm tra nhận xét các lớp đang dạy trong tuần trước',
                     'lms noti - Đăng ký nhận thông báo khi có lớp và học viên chưa nhận xét',
                     'lms noti test - Gửi thông báo LMS test sau 1 phút',
                     'lms noti destroy - Hủy đăng ký nhận thông báo LMS',
 
                     '',
+                    'lmsta - Kiểm tra nhận xét các lớp tại Đồng Nai - 253 Phạm Văn Thuận trong tuần trước (chỉ dành cho TE)',
+                    'lmsta noti - Đăng ký nhận báo cáo LMSTA mỗi ngày lúc 9h',
+                    'lmsta noti test - Gửi thông báo LMSTA test sau 1 phút',
+                    'lmsta noti destroy - Hủy đăng ký nhận thông báo LMSTA',
+
+                    '',
                     'Tất cả tin nhắn bạn nhắn tin cho bot đều được bảo mật tuyệt đối, tin nhắn sẽ xóa ngay sau khi trả lời cho bạn và không lưu lại trên server dưới bất kỳ hình thức nào. Bạn có thể yên tâm sử dụng các lệnh trên mà không lo bị lộ thông tin cá nhân hay tài khoản.',
                     '',
-                    'Theo dõi lương trực quan hơn qua trang web:\nhttps://tts.lrm.io.vn/',
+                    'Theo dõi lương trực quan hơn qua trang web:\nhttps://tts.lrm.io.vn',
                 ].join('\n'),
             )
             break
@@ -1315,6 +1632,9 @@ async function handleMessage(message) {
             break
         case 'lms':
             await handleLms(message, command)
+            break
+        case 'lmsta':
+            await handleLmsta(message, command)
             break
         case 'logout':
             users.delete(getSessionKey(message))
@@ -1341,5 +1661,6 @@ api.listener.on('message', (message) => {
 
 api.listener.start()
 scheduleLmsNotificationCron()
+scheduleLmstaNotificationCron()
 
 export default router
