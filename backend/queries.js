@@ -97,6 +97,7 @@ const GET_CLASSES_QUERY = gql`
                     startTime
                     endTime
                     sessionHour
+                    summary
                     teachers {
                         _id
                         teacher {
