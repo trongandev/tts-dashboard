@@ -1,8 +1,70 @@
 import { gql } from 'graphql-request'
 
 const GET_CLASSES_QUERY = gql`
-    query GetClasses($pageIndex: Int!, $itemsPerPage: Int!, $orderBy: String, $teacherId: String, $search: String) {
-        classes(payload: { pageIndex: $pageIndex, itemsPerPage: $itemsPerPage, orderBy: $orderBy, teacher_equals: $teacherId, filter_textSearch: $search }) {
+    query GetClasses(
+        $search: String
+        $centre: String
+        $operationMethodId: [String]
+        $openStatus: [String]
+        $centres: [String]
+        $courses: [String]
+        $courseLines: [String]
+        $startDateFrom: Date
+        $startDateTo: Date
+        $endDateFrom: Date
+        $endDateTo: Date
+        $haveSlotFrom: Date
+        $haveSlotTo: Date
+        $statusNotEquals: String
+        $attendanceCheckedExists: Boolean
+        $status: String
+        $statusIn: [String]
+        $attendanceStatus: [String]
+        $studentAttendanceStatus: [String]
+        $teacherAttendanceStatus: [String]
+        $pageIndex: Int!
+        $itemsPerPage: Int!
+        $orderBy: String
+        $teacherId: String
+        $teacherSlot: [String]
+        $passedSessionIndex: Int
+        $unpassedSessionIndex: Int
+        $haveSlotIn: HaveSlotIn
+        $comments: ClassCommentQuery
+    ) {
+        classes(
+            payload: {
+                filter_textSearch: $search
+                centre_equals: $centre
+                centre_in: $centres
+                operationMethodId_in: $operationMethodId
+                teacher_equals: $teacherId
+                teacherSlots: $teacherSlot
+                course_in: $courses
+                courseLine_in: $courseLines
+                startDate_gt: $startDateFrom
+                startDate_lt: $startDateTo
+                endDate_gt: $endDateFrom
+                endDate_lt: $endDateTo
+                haveSlot_from: $haveSlotFrom
+                haveSlot_to: $haveSlotTo
+                status_ne: $statusNotEquals
+                status_in: $statusIn
+                status_equals: $status
+                attendanceStatus_in: $attendanceStatus
+                studentAttendanceStatus_in: $studentAttendanceStatus
+                teacherAttendanceStatus_in: $teacherAttendanceStatus
+                attendanceChecked_exists: $attendanceCheckedExists
+                haveSlot_in: $haveSlotIn
+                passedSessionIndex: $passedSessionIndex
+                unpassedSessionIndex: $unpassedSessionIndex
+                pageIndex: $pageIndex
+                itemsPerPage: $itemsPerPage
+                orderBy: $orderBy
+                comments: $comments
+                openStatus: $openStatus
+            }
+        ) {
             data {
                 id
                 name
@@ -35,7 +97,6 @@ const GET_CLASSES_QUERY = gql`
                     startTime
                     endTime
                     sessionHour
-                    summary
                     teachers {
                         _id
                         teacher {

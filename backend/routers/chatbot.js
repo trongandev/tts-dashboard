@@ -1388,15 +1388,12 @@ async function handleLogin(message, args) {
 
         if (!customAttributes.id) throw new Error('Không tìm thấy thông tin giáo viên.')
 
-        const client = createClient(`Bearer ${data.idToken}`)
-        const result = await client.request(FIND_INFO_QUERY, { payload: { id: customAttributes.id } })
-        const infoData = result.users.findInfoInRoleById[0].info
         const oldUser = await getUserSession(message)
         const user = {
-            displayName: infoData.fullName,
-            email: infoData.email,
-            localId: infoData.user,
-            id: infoData._id,
+            displayName: data.displayName,
+            email: data.email,
+            localId: data.localId,
+            id: customAttributes.id,
             idToken: data.idToken,
             refreshToken: data.refreshToken,
             expiresAt: Date.now() + Number(data.expiresIn || 3600) * 1000,

@@ -47,28 +47,13 @@ export default function Login() {
                 const resData = await refreshRes.json()
                 const customAttributes = JSON.parse(resData.users[0].customAttributes)
                 if (customAttributes) {
-
-
-                    const authHeader = "Bearer " + data.idToken
-                    const reqInfo = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/find-info`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: authHeader,
-                        },
-                        body: JSON.stringify({ payload: { id: customAttributes.id } }),
+                    setUser({
+                        displayName: data.displayName,
+                        email: data.email,
+                        localId: data.localId,
+                        id: customAttributes.id,
+                        username: customAttributes.name,
                     })
-                    const res = await reqInfo.json()
-                    if (res) {
-                        const infoData = res.users.findInfoInRoleById[0].info
-                        setUser({
-                            displayName: infoData.fullName,
-                            email: infoData.email,
-                            localId: infoData.user,
-                            id: infoData._id,
-                            username: customAttributes.name,
-                        })
-                    }
                 }
             }
 
@@ -149,16 +134,18 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={() => setRole("teacher")}
-                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${role === "teacher" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
-                                    }`}
+                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                                    role === "teacher" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
+                                }`}
                             >
                                 Giáo viên
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setRole("manager")}
-                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${role === "manager" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
-                                    }`}
+                                className={`px-8 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                                    role === "manager" ? "bg-burgundy text-white border-transparent" : "bg-white text-burgundy border border-burgundy"
+                                }`}
                             >
                                 Quản lý
                             </button>
