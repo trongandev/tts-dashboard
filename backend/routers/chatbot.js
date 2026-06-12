@@ -1,7 +1,8 @@
 import express from 'express'
 import fs from 'fs'
+import cron from 'node-cron'
 import { ThreadType, Zalo } from 'zca-js'
-import { FIND_INFO_QUERY, GET_TIMESHEET_QUERY } from '../queries.js'
+import { FIND_INFO_QUERY, GET_CLASSES_QUERY, GET_TIMESHEET_QUERY } from '../queries.js'
 import { createClient } from '../graphqlClient.js'
 import MindXService from '../services/mindx.service.js'
 import state from '../state.js'
@@ -10,6 +11,9 @@ const router = express.Router()
 
 const DEFAULT_RANK = 'T3'
 const SALARY_CACHE_TTL = 8 * 60 * 60 * 1000
+const LMS_CLASSES_PAGE_SIZE = 20
+const LMS_NOTIFICATION_TIMEZONE = 'Asia/Bangkok'
+const LMS_NOTIFICATION_COLLECTION = 'chatbot_lms_notifications'
 const RANKS_RATE = {
     T0: 70000,
     T1: 90000,
@@ -34,13 +38,14 @@ const api = await zalo.login({
 })
 
 const users = new Map()
+const lmsNotificationUsers = new Map()
 
 function normalizeCommandText(text) {
     return text.trim().replace(/^\/\s+/, '/')
 }
 
 function parseCommand(text) {
-    const match = normalizeCommandText(text).match(/^\/([a-zA-Z][\w-]*)(?:\/([^\s]+))?(?:\s+([\s\S]*))?$/)
+    const match = normalizeCommandText(text).match(/^\/?([a-zA-Z][\w-]*)(?:\/([^\s]+))?(?:\s+([\s\S]*))?$/)
     if (!match) return null
 
     return {
@@ -176,6 +181,30 @@ async function ensureFreshToken(message, user) {
     }
 
     await saveUserSession(message, nextUser)
+    return nextUser
+}
+
+async function ensureFreshTokenForNotification(registration) {
+    const user = registration.user
+    if (!user.refreshToken || !user.expiresAt || Date.now() < user.expiresAt - 60 * 1000) return user
+
+    const data = await MindXService.refreshToken('refresh_token', user.refreshToken)
+    const nextUser = {
+        ...user,
+        idToken: data.id_token || user.idToken,
+        refreshToken: data.refresh_token || user.refreshToken,
+        expiresAt: Date.now() + Number(data.expires_in || 3600) * 1000,
+    }
+
+    const nextRegistration = { ...registration, user: nextUser, updatedAt: Date.now() }
+    lmsNotificationUsers.set(registration.sessionKey, nextRegistration)
+    users.set(registration.sessionKey, nextUser)
+
+    if (state.db) {
+        await state.db.collection(LMS_NOTIFICATION_COLLECTION).doc(getDocId(registration.sessionKey)).set(nextRegistration, { merge: true })
+        await state.db.collection('chatbot_users').doc(getDocId(registration.sessionKey)).set(nextUser, { merge: true })
+    }
+
     return nextUser
 }
 
@@ -330,6 +359,393 @@ function formatDate(date) {
     return date.toLocaleDateString('vi-VN')
 }
 
+function getPreviousWeekRange(now = new Date()) {
+    const targetDate = new Date(now)
+    targetDate.setDate(targetDate.getDate() - 7)
+
+    const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 0, 0, 0, 0)
+    const daysFromMonday = (start.getDay() + 6) % 7
+    start.setDate(start.getDate() - daysFromMonday)
+
+    const end = new Date(start)
+    end.setDate(start.getDate() + 6)
+    end.setHours(23, 59, 59, 999)
+
+    return { start, end }
+}
+
+function getDayRange(date) {
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+    const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
+    return { start, end }
+}
+
+function getYesterdayRange(now = new Date()) {
+    const yesterday = new Date(now)
+    yesterday.setDate(yesterday.getDate() - 1)
+    return getDayRange(yesterday)
+}
+
+function normalizeEmail(email) {
+    return String(email || '')
+        .trim()
+        .toLowerCase()
+}
+
+function getTeacherKeys(teacher) {
+    return [teacher?.id, teacher?.email, teacher?.username].filter(Boolean).map((value) => String(value).trim().toLowerCase())
+}
+
+function createTeacherRoleMap(classItem, slot) {
+    const roleMap = new Map()
+
+    for (const entry of [...(classItem.teachers || []), ...(slot.teachers || [])]) {
+        const teacher = entry.teacher || {}
+        for (const key of getTeacherKeys(teacher)) {
+            roleMap.set(key, entry)
+        }
+    }
+
+    return roleMap
+}
+
+function getRoleEntry(roleMap, teacher) {
+    for (const key of getTeacherKeys(teacher)) {
+        const entry = roleMap.get(key)
+        if (entry) return entry
+    }
+
+    return null
+}
+
+function getTeacherDisplayName(teacher) {
+    return teacher?.fullName || teacher?.email || teacher?.username || 'Chưa rõ tên'
+}
+
+function getSlotTeachers(classItem, slot) {
+    const roleMap = createTeacherRoleMap(classItem, slot)
+    const teachers = []
+    const seen = new Set()
+    const source = slot.teacherAttendance?.length ? slot.teacherAttendance : [...(slot.teachers || []), ...(classItem.teachers || [])]
+
+    for (const item of source) {
+        const teacher = item.teacher || {}
+        const roleEntry = getRoleEntry(roleMap, teacher) || item
+        const roleShortName = roleEntry.role?.shortName || 'N/A'
+        const key = getTeacherKeys(teacher)[0] || `${getTeacherDisplayName(teacher)}_${roleShortName}`
+
+        if (seen.has(key)) continue
+        seen.add(key)
+        teachers.push({
+            fullName: getTeacherDisplayName({ ...roleEntry.teacher, ...teacher }),
+            roleShortName,
+        })
+    }
+
+    return teachers
+}
+
+function isCurrentUserLecturer(classItem, slot, user) {
+    const userEmail = normalizeEmail(user.email)
+    if (!userEmail) return false
+
+    const roleMap = createTeacherRoleMap(classItem, slot)
+    const source = slot.teacherAttendance?.length ? slot.teacherAttendance : [...(slot.teachers || []), ...(classItem.teachers || [])]
+
+    return source.some((item) => {
+        const teacher = item.teacher || {}
+        const roleEntry = getRoleEntry(roleMap, teacher) || item
+        return roleEntry.role?.shortName === 'LEC' && normalizeEmail(teacher.email || roleEntry.teacher?.email) === userEmail
+    })
+}
+
+function getStudentAttendanceStatusLabel(status) {
+    switch (status) {
+        case 'ATTENDED':
+            return 'đi đúng giờ'
+        case 'LATE_ARRIVED':
+            return 'đi trễ'
+        case 'ABSENT_WITH_NOTICE':
+            return 'nghỉ có phép'
+        default:
+            return 'nghỉ không phép'
+    }
+}
+
+function compactClassesForLmsCache(classes) {
+    return classes.map((classItem) => ({
+        ...classItem,
+        slots: (classItem.slots || []).map((slot) => ({
+            ...slot,
+            studentAttendance: (slot.studentAttendance || []).map((attendance) => ({
+                ...attendance,
+                comment: attendance.comment != null ? true : null,
+            })),
+        })),
+    }))
+}
+
+async function getAllClasses(message, user) {
+    const freshUser = await ensureFreshToken(message, user)
+    return getAllClassesForUser(freshUser)
+}
+
+async function getAllClassesForUser(freshUser) {
+    const client = createClient(getAuthHeader(freshUser))
+    const rawData = await client.request(GET_CLASSES_QUERY, {
+        pageIndex: 0,
+        itemsPerPage: LMS_CLASSES_PAGE_SIZE,
+        teacherId: freshUser.id,
+        orderBy: 'createdAt_desc',
+    })
+    return compactClassesForLmsCache(rawData?.classes?.data || [])
+}
+
+function getLmsReviewItems(classes, user, range) {
+    const items = []
+
+    for (const classItem of classes) {
+        if (classItem.status !== 'RUNNING') continue
+
+        for (const [slotIndex, slot] of (classItem.slots || []).entries()) {
+            const slotDate = slot.date ? new Date(slot.date) : null
+            if (!slotDate || Number.isNaN(slotDate.getTime()) || slotDate < range.start || slotDate > range.end) continue
+            if (!isCurrentUserLecturer(classItem, slot, user)) continue
+
+            items.push({
+                className: classItem.name,
+                sessionNumber: slotIndex + 1,
+                date: slotDate,
+                hasSummary: slot.summary != null && String(slot.summary).trim() !== '',
+                teachers: getSlotTeachers(classItem, slot),
+                students: slot.studentAttendance || [],
+            })
+        }
+    }
+
+    return items.sort((a, b) => a.date - b.date || a.className.localeCompare(b.className))
+}
+
+function hasMissingLmsReview(item) {
+    if (!item.hasSummary) return true
+
+    return item.students.some((attendance) => {
+        const needsComment = attendance.status === 'ATTENDED' || attendance.status === 'LATE_ARRIVED'
+        return needsComment && attendance.comment == null
+    })
+}
+
+function formatLmsReviewResult(items, range) {
+    const lines = [`KIỂM TRA NHẬN XÉT LMS TUẦN ${formatDate(range.start)} - ${formatDate(range.end)}`]
+
+    if (!items.length) {
+        lines.push('Không có lớp nào bạn dạy chính trong tuần trước.')
+        return lines.join('\n')
+    }
+
+    const uncheckedClassCount = items.filter(hasMissingLmsReview).length
+    lines.push(`Số lớp dạy: ${items.length}`)
+    lines.push(`Số lớp chưa nhận xét: ${uncheckedClassCount}`)
+    lines.push('Đã nhận xét: ✅, chưa nhận xét: ❌')
+
+    for (const item of items) {
+        const reviewIcon = hasMissingLmsReview(item) ? '❌' : '✅'
+        lines.push('', `${reviewIcon} ${item.className} - Buổi ${item.sessionNumber} (${formatDate(item.date)})`)
+        lines.push(`Nội dung buổi học: ${item.hasSummary ? '✅' : '❌'}`)
+        lines.push(`Giáo viên: ${item.teachers.length ? item.teachers.map((teacher) => `${teacher.fullName} (${teacher.roleShortName})`).join(', ') : 'Chưa có dữ liệu'}`)
+        lines.push('Học viên:')
+
+        if (!item.students.length) {
+            lines.push('- Chưa có dữ liệu điểm danh học viên')
+            continue
+        }
+
+        for (const attendance of item.students) {
+            const studentName = attendance.student?.fullName || 'Chưa rõ tên'
+            const statusLabel = getStudentAttendanceStatusLabel(attendance.status)
+            const commentLabel = attendance.status === 'ATTENDED' || attendance.status === 'LATE_ARRIVED' ? (attendance.comment == null ? '❌' : '✅') : ''
+            lines.push(`- ${studentName}: ${statusLabel} ${commentLabel}`)
+        }
+    }
+
+    return lines.join('\n')
+}
+
+function formatLmsNotificationResult(items, range) {
+    const missingItems = items.filter(hasMissingLmsReview)
+    if (!missingItems.length) {
+        return `Chúc mừng, bạn thật chăm chỉ, bạn đã nhận xét hết lớp ngày ${formatDate(range.start)}.`
+    }
+
+    const lines = [`NHẮC NHẬN XÉT LMS NGÀY ${formatDate(range.start)}`]
+    lines.push(`Số lớp chưa nhận xét: ${missingItems.length}`)
+    lines.push('Đã nhận xét: ✅, chưa nhận xét: ❌')
+
+    for (const item of missingItems) {
+        lines.push('', ` ❌ ${item.className} - Buổi ${item.sessionNumber} (${formatDate(item.date)})`)
+        lines.push(`Nội dung buổi học: ${item.hasSummary ? '✅' : '❌'}`)
+        lines.push('Học viên cần kiểm tra:')
+
+        const missingStudents = item.students.filter((attendance) => {
+            const needsComment = attendance.status === 'ATTENDED' || attendance.status === 'LATE_ARRIVED'
+            return needsComment && attendance.comment == null
+        })
+
+        if (!missingStudents.length) {
+            lines.push('- Không có học viên thiếu nhận xét')
+            continue
+        }
+
+        for (const attendance of missingStudents) {
+            const studentName = attendance.student?.fullName || 'Chưa rõ tên'
+            const statusLabel = getStudentAttendanceStatusLabel(attendance.status)
+            lines.push(`- ${studentName}: ${statusLabel} ❌`)
+        }
+    }
+
+    return lines.join('\n')
+}
+
+async function sendMessageToThread(threadId, threadType, text) {
+    return api.sendMessage(
+        {
+            msg: text,
+        },
+        threadId,
+        threadType,
+    )
+}
+
+async function saveLmsNotificationRegistration(message, user) {
+    const sessionKey = getSessionKey(message)
+    const registration = {
+        sessionKey,
+        threadId: message.threadId,
+        threadType: message.type,
+        user,
+        enabled: true,
+        updatedAt: Date.now(),
+    }
+
+    lmsNotificationUsers.set(sessionKey, registration)
+
+    if (state.db) {
+        await state.db
+            .collection(LMS_NOTIFICATION_COLLECTION)
+            .doc(getDocId(sessionKey))
+            .set(
+                {
+                    ...registration,
+                    updatedAt: state.FieldValue?.serverTimestamp?.() || Date.now(),
+                },
+                { merge: true },
+            )
+    }
+
+    return registration
+}
+
+async function destroyLmsNotificationRegistration(message) {
+    const sessionKey = getSessionKey(message)
+    lmsNotificationUsers.delete(sessionKey)
+
+    if (state.db) {
+        await state.db
+            .collection(LMS_NOTIFICATION_COLLECTION)
+            .doc(getDocId(sessionKey))
+            .set(
+                {
+                    sessionKey,
+                    threadId: message.threadId,
+                    threadType: message.type,
+                    enabled: false,
+                    updatedAt: state.FieldValue?.serverTimestamp?.() || Date.now(),
+                },
+                { merge: true },
+            )
+    }
+}
+
+async function getLmsNotificationRegistrations() {
+    if (!state.db) return Array.from(lmsNotificationUsers.values()).filter((registration) => registration.enabled)
+
+    const snapshot = await state.db.collection(LMS_NOTIFICATION_COLLECTION).where('enabled', '==', true).get()
+    return snapshot.docs.map((doc) => doc.data()).filter((registration) => registration.threadId && registration.user)
+}
+
+async function runLmsNotificationForRegistration(registration, now = new Date()) {
+    try {
+        const user = await ensureFreshTokenForNotification(registration)
+        const range = getYesterdayRange(now)
+        const classes = await getAllClassesForUser(user)
+        const items = getLmsReviewItems(classes, user, range)
+        await sendMessageToThread(registration.threadId, registration.threadType, formatLmsNotificationResult(items, range))
+    } catch (error) {
+        console.error('[ZCA-JS] LMS notification error:', error)
+        await sendMessageToThread(registration.threadId, registration.threadType, `Bot không kiểm tra được LMS hôm nay: ${error.message || 'Lỗi không xác định'}`)
+    }
+}
+
+async function runLmsNotifications(now = new Date()) {
+    const registrations = await getLmsNotificationRegistrations()
+    for (const registration of registrations) {
+        await runLmsNotificationForRegistration(registration, now)
+    }
+}
+
+function scheduleLmsNotificationCron() {
+    cron.schedule(
+        '0 9 * * *',
+        async () => {
+            try {
+                await runLmsNotifications()
+            } catch (error) {
+                console.error('[ZCA-JS] LMS notification scheduler error:', error)
+            }
+        },
+        {
+            timezone: LMS_NOTIFICATION_TIMEZONE,
+        },
+    )
+}
+
+function getCronDateParts(date) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: LMS_NOTIFICATION_TIMEZONE,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hourCycle: 'h23',
+    }).formatToParts(date)
+
+    return Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, Number(part.value)]))
+}
+
+function scheduleLmsNotificationTest(registration) {
+    const runAt = getCronDateParts(new Date(Date.now() + 60 * 1000))
+    const expression = `${runAt.minute} ${runAt.hour} ${runAt.day} ${runAt.month} *`
+    let task = null
+
+    task = cron.schedule(
+        expression,
+        async () => {
+            task.stop()
+            try {
+                await runLmsNotificationForRegistration(registration)
+            } catch (error) {
+                console.error('[ZCA-JS] LMS notification test error:', error)
+            } finally {
+                task.destroy()
+            }
+        },
+        {
+            timezone: LMS_NOTIFICATION_TIMEZONE,
+        },
+    )
+}
+
 function calculateItemSalary(item, rankRate) {
     if (item.type === 'ATTENDANCE_CLASS') return rankRate * 2
 
@@ -448,13 +864,16 @@ function parseSalaryRequest(command) {
     const now = new Date()
     const currentMonth = now.getMonth() + 1
     const currentYear = now.getFullYear()
-    const value = command.path || command.args || ''
+    const value = (command.path || command.args || '').toLowerCase()
 
     if (!value) return { type: 'month', month: currentMonth, year: currentYear }
     if (value === 'all') return { type: 'all', fromMonth: 1, fromYear: 2020, toMonth: currentMonth, toYear: currentYear }
 
     const rangeMatch = value.match(/^(\d{1,2})-(\d{1,2})$/)
     if (rangeMatch) return { type: 'range', fromMonth: Number(rangeMatch[1]), fromYear: currentYear, toMonth: Number(rangeMatch[2]), toYear: currentYear }
+
+    const monthYearMatch = value.match(/^(\d{1,2})\/(\d{4})$/)
+    if (monthYearMatch) return { type: 'month', month: Number(monthYearMatch[1]), year: Number(monthYearMatch[2]) }
 
     const monthMatch = value.match(/^(\d{1,2})$/)
     if (monthMatch) return { type: 'month', month: Number(monthMatch[1]), year: currentYear }
@@ -488,8 +907,20 @@ function filterFutureTimesheetItems(items, request) {
 }
 
 function isValidMonthRange(request) {
-    const months = [request.month, request.fromMonth, request.toMonth].filter(Boolean)
-    return months.every((month) => month >= 1 && month <= 12) && (!request.fromMonth || request.fromMonth <= request.toMonth)
+    const isValidMonth = (month) => Number.isInteger(month) && month >= 1 && month <= 12
+    const isValidYear = (year) => Number.isInteger(year) && year >= 2020
+
+    if (request.type === 'month') {
+        return isValidMonth(request.month) && isValidYear(request.year)
+    }
+
+    return (
+        isValidMonth(request.fromMonth) &&
+        isValidMonth(request.toMonth) &&
+        isValidYear(request.fromYear) &&
+        isValidYear(request.toYear) &&
+        (request.fromYear < request.toYear || (request.fromYear === request.toYear && request.fromMonth <= request.toMonth))
+    )
 }
 
 function formatMonthSalary(user, salary, month, year) {
@@ -518,7 +949,6 @@ function formatMonthSalary(user, salary, month, year) {
 }
 
 function formatCheckResult(salary, month, year) {
-    console.log(salary)
     if (!salary.details.length) return `Không có dữ liệu chấm công tháng ${month}/${year}.`
 
     const lines = [`CHECK CÔNG THÁNG ${month}/${year}`]
@@ -616,7 +1046,7 @@ function formatRangeSalary(salary, title) {
     if (!salary.months.length) return `${title}\nKhông có dữ liệu lương.`
 
     const lines = [title]
-    lines.push(`\nBạn có thể set rank mặc định cho từng tháng bằng lệnh VD: /setrank 03/2025 08/2025 3: set rank T3 cho khoảng thời gian đó.\n`)
+    lines.push(`\nBạn có thể set rank mặc định cho từng tháng bằng lệnh VD: setrank 03/2025 08/2025 3: set rank T3 cho khoảng thời gian đó.\n`)
     for (const item of salary.months) {
         lines.push(`- Tháng ${item.month}/${item.year}: ${formatMoney(item.salary)} (${item.sessions} buổi, rank ${item.rank})`)
     }
@@ -632,7 +1062,7 @@ async function handleLogin(message, args) {
 
     const credentials = parseLoginArgs(args)
     if (!credentials || !isValidEmail(credentials.email)) {
-        await reply(message, 'Cú pháp đúng: /login email mật_khẩu\nVD: /login abc@mindx.net.vn password123@')
+        await reply(message, 'Cú pháp đúng: login email mật_khẩu\nVD: login abc@mindx.net.vn password123@')
         return
     }
 
@@ -664,7 +1094,7 @@ async function handleLogin(message, args) {
         }
 
         await saveUserSession(message, user)
-        await reply(message, `Đăng nhập thành công: ${user.displayName || user.email}\nEmail: ${user.email}\nRank hiện tại: ${user.rankId}\nGõ /help để xem các lệnh hỗ trợ.`)
+        await reply(message, `Đăng nhập thành công: ${user.displayName || user.email}\nEmail: ${user.email}\nRank hiện tại: ${user.rankId}\nGõ help để xem các lệnh hỗ trợ.`)
     } catch (error) {
         console.error(error)
         await reply(message, error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
@@ -674,13 +1104,13 @@ async function handleLogin(message, args) {
 async function handleRank(message, command) {
     const user = await getUserSession(message)
     if (!user) {
-        await reply(message, 'Bạn chưa đăng nhập. Gõ /login email mật_khẩu để bắt đầu.')
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
     const rankId = parseRank(command.path || command.args)
     if (!rankId) {
-        await reply(message, 'Cú pháp đúng: /rank số_rank\nVD: /rank 3 hoặc /rank/5')
+        await reply(message, 'Cú pháp đúng: rank số_rank\nVD: rank 3 hoặc rank/5')
         return
     }
 
@@ -693,7 +1123,7 @@ async function handleRank(message, command) {
 async function handleSetRank(message, command) {
     const user = await getUserSession(message)
     if (!user) {
-        await reply(message, 'Bạn chưa đăng nhập. Gõ /login email mật_khẩu để bắt đầu.')
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
@@ -712,7 +1142,7 @@ async function handleSetRank(message, command) {
     const rankId = parseRank(rankValue)
 
     if (!from || !to || !rankId || to.year < from.year || (to.year === from.year && to.month < from.month)) {
-        await reply(message, 'Cú pháp đúng: /setrank thời_gian_bắt_đầu thời_gian_kết_thúc rank\nVD: /setrank 03/2025 08/2025 3')
+        await reply(message, 'Cú pháp đúng: setrank thời_gian_bắt_đầu thời_gian_kết_thúc rank\nVD: setrank 03/2025 08/2025 3')
         return
     }
 
@@ -723,13 +1153,13 @@ async function handleSetRank(message, command) {
 async function handleSalary(message, command) {
     const user = await getUserSession(message)
     if (!user) {
-        await reply(message, 'Bạn chưa đăng nhập. Gõ /login email mật_khẩu để bắt đầu.')
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
     const request = parseSalaryRequest(command)
     if (!request || !isValidMonthRange(request)) {
-        await reply(message, 'Cú pháp lương hợp lệ:\n/salary\n/salary/3\n/salary/3-5\n/salary/all')
+        await reply(message, 'Cú pháp lương hợp lệ:\nsalary\nsalary 3\nsalary 3-5\nsalary 3/2025\nsalary all')
         return
     }
 
@@ -750,13 +1180,13 @@ async function handleSalary(message, command) {
 async function handleCheck(message, command) {
     const user = await getUserSession(message)
     if (!user) {
-        await reply(message, 'Bạn chưa đăng nhập. Gõ /login email mật_khẩu để bắt đầu.')
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
     const request = parseCheckRequest(command)
     if (!request) {
-        await reply(message, 'Cú pháp check hợp lệ:\n/check\n/check 5')
+        await reply(message, 'Cú pháp check hợp lệ:\ncheck\ncheck 5')
         return
     }
 
@@ -765,10 +1195,57 @@ async function handleCheck(message, command) {
     await reply(message, await formatTimesheetCheckResult(user, visibleItems, request.month, request.year))
 }
 
+async function handleLmsNotification(message, user, isTest = false) {
+    const registration = await saveLmsNotificationRegistration(message, user)
+
+    if (isTest) {
+        scheduleLmsNotificationTest(registration)
+        await reply(message, 'Đã đăng ký LMS notification và sẽ gửi thông báo test sau 1 phút.')
+        return
+    }
+
+    await reply(message, 'Đã đăng ký nhận thông báo LMS. Bot sẽ nhắc lúc 9h sáng nếu lớp hôm trước còn thiếu nhận xét.')
+}
+
+async function handleLms(message, command) {
+    const user = await getUserSession(message)
+    if (!user) {
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
+        return
+    }
+
+    const args = (command.args || command.path || '').trim().toLowerCase()
+    if (args === 'noti destroy') {
+        await destroyLmsNotificationRegistration(message)
+        await reply(message, 'Đã hủy đăng ký nhận thông báo LMS cho cuộc trò chuyện này.')
+        return
+    }
+    if (args === 'noti') {
+        await handleLmsNotification(message, user)
+        return
+    }
+    if (args === 'noti test') {
+        await handleLmsNotification(message, user, true)
+        return
+    }
+    if (args) {
+        await reply(message, 'Cú pháp LMS hợp lệ:\nlms\nlms noti\nlms noti test\nlms noti destroy')
+        return
+    }
+
+    await reply(message, 'Bot đang kiểm tra LMS, có thể mất khoảng 12-18 giây vì cần tải dữ liệu lớp. Bạn chờ mình xíu nhé.')
+
+    const range = getPreviousWeekRange()
+    const classes = await getAllClasses(message, user)
+
+    const items = getLmsReviewItems(classes, user, range)
+    await reply(message, formatLmsReviewResult(items, range))
+}
+
 async function handleMe(message) {
     const user = await getUserSession(message)
     if (!user) {
-        await reply(message, 'Bạn chưa đăng nhập. Gõ /login email mật_khẩu để bắt đầu.')
+        await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
@@ -782,7 +1259,7 @@ async function handleMessage(message) {
 
     const command = parseCommand(message.data.content)
     if (!command) {
-        await reply(message, 'Gõ /help để xem các lệnh hỗ trợ.')
+        await reply(message, 'Gõ help để xem các lệnh hỗ trợ.')
         return
     }
 
@@ -792,22 +1269,27 @@ async function handleMessage(message) {
                 message,
                 [
                     'Các lệnh hỗ trợ:',
-                    '/login email mật_khẩu - Đăng nhập MindX',
-                    '/me - Xem tên, email và rank',
-                    '/logout - Đăng xuất',
+                    'login email mật_khẩu - Đăng nhập MindX',
+                    'me - Xem tên, email và rank',
+                    'logout - Đăng xuất',
                     '',
-                    '/rank 3 - Set rank mặc định T3',
-                    `/setrank 3 - Set rank T3 cho tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
-                    '/setrank 03/2025 08/2025 3 - Set rank theo khoảng thời gian',
+                    'rank 3 - Set rank mặc định T3',
+                    `setrank 3 - Set rank T3 cho tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+                    'setrank 03/2025 08/2025 3 - Set rank theo khoảng thời gian',
                     '',
-                    `/salary - Xem lương và chi tiết tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
-                    '/salary/3 - Xem lương và chi tiết tháng 3',
-                    '/salary/3-5 - Xem tổng lương tháng 3 đến 5',
-                    '/salary/all - Xem tất cả lương',
+                    `salary - Xem lương và chi tiết tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+                    `salary 3 - Xem lương và chi tiết tháng 3/${new Date().getFullYear()}`,
+                    `salary 3-5 - Xem tổng lương tháng 3/${new Date().getFullYear()} đến 5/${new Date().getFullYear()}`,
+                    'salary 3/2025 - Xem lương tháng 3/2025',
+                    'salary all - Xem tất cả lương',
                     '',
 
-                    `/check - Check công tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()} theo ngày`,
-                    '/check 5 - Check công tháng 5 theo ngày',
+                    `check - Check công tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()} theo ngày`,
+                    'check 5 - Check công tháng 5 theo ngày',
+                    'lms - Kiểm tra nhận xét các lớp đang dạy trong tuần trước',
+                    'lms noti - Đăng ký nhận thông báo khi có lớp và học viên chưa nhận xét',
+                    'lms noti test - Gửi thông báo LMS test sau 1 phút',
+                    'lms noti destroy - Hủy đăng ký nhận thông báo LMS',
 
                     '',
                     'Tất cả tin nhắn bạn nhắn tin cho bot đều được bảo mật tuyệt đối, tin nhắn sẽ xóa ngay sau khi trả lời cho bạn và không lưu lại trên server dưới bất kỳ hình thức nào. Bạn có thể yên tâm sử dụng các lệnh trên mà không lo bị lộ thông tin cá nhân hay tài khoản.',
@@ -831,6 +1313,9 @@ async function handleMessage(message) {
         case 'check':
             await handleCheck(message, command)
             break
+        case 'lms':
+            await handleLms(message, command)
+            break
         case 'logout':
             users.delete(getSessionKey(message))
             if (state.db)
@@ -844,7 +1329,7 @@ async function handleMessage(message) {
             await handleMe(message)
             break
         default:
-            await reply(message, 'Lệnh không hợp lệ. Gõ /help để xem các lệnh hỗ trợ.')
+            await reply(message, 'Lệnh không hợp lệ. Gõ help để xem các lệnh hỗ trợ.')
     }
 }
 
@@ -855,5 +1340,6 @@ api.listener.on('message', (message) => {
 })
 
 api.listener.start()
+scheduleLmsNotificationCron()
 
 export default router

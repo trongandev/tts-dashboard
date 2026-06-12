@@ -124,10 +124,14 @@ interface Teacher {
     email: string
     phoneNumber: string
     user: string
+    role: Role
     imageUrl: null | null | null | string | string | string | string
     __typename: string
 }
 
+interface Role {
+    shortName: string
+}
 interface ClassSite {
     _id: string
     name: string

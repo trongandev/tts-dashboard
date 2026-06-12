@@ -7,6 +7,25 @@ import catchAsync from '../middlewares/catchAsync.js'
 import MindXService from '../services/mindx.service.js'
 const router = express.Router()
 
+function compactClassesResponse(data) {
+    return {
+        ...data,
+        classes: {
+            ...data?.classes,
+            data: (data?.classes?.data || []).map((classItem) => ({
+                ...classItem,
+                slots: (classItem.slots || []).map((slot) => ({
+                    ...slot,
+                    studentAttendance: (slot.studentAttendance || []).map((attendance) => ({
+                        ...attendance,
+                        comment: attendance.comment != null ? true : null,
+                    })),
+                })),
+            })),
+        },
+    }
+}
+
 router.post(
     '/login',
     catchAsync(async (req, res, next) => {
@@ -32,7 +51,7 @@ router.post('/classes', async (req, res, next) => {
         const authorization = req.headers.authorization
 
         // Cache key should include endpoint, params and authorization to avoid leaking data
-        const cacheKey = cache.generateKey('/classes', { pageIndex, itemsPerPage, teacherId, search, orderBy }, { authorization })
+        const cacheKey = cache.generateKey('/classes:v2', { pageIndex, itemsPerPage, teacherId, search, orderBy }, { authorization })
         const cached = cache.get(cacheKey)
         if (cached) return res.json(cached)
 
@@ -40,13 +59,14 @@ router.post('/classes', async (req, res, next) => {
         const client = createClient(authorization)
 
         // Gọi GraphQL API
-        const data = await client.request(GET_CLASSES_QUERY, {
+        const rawData = await client.request(GET_CLASSES_QUERY, {
             pageIndex,
             itemsPerPage,
             teacherId,
             search,
             orderBy,
         })
+        const data = compactClassesResponse(rawData)
 
         // Lưu cache 8 giờ (seconds)
         cache.set(cacheKey, data, 8 * 60 * 60)

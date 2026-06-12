@@ -35,11 +35,29 @@ const GET_CLASSES_QUERY = gql`
                     startTime
                     endTime
                     sessionHour
+                    summary
+                    teachers {
+                        _id
+                        teacher {
+                            id
+                            username
+                            fullName
+                            email
+                        }
+                        role {
+                            id
+                            name
+                            shortName
+                        }
+                        isActive
+                    }
                     teacherAttendance {
                         _id
                         teacher {
                             id
                             username
+                            fullName
+                            email
                         }
                         status
                         note
@@ -54,6 +72,7 @@ const GET_CLASSES_QUERY = gql`
                             fullName
                         }
                         status
+                        comment
                     }
                 }
                 students {
@@ -71,6 +90,8 @@ const GET_CLASSES_QUERY = gql`
                     teacher {
                         id
                         username
+                        fullName
+                        email
                     }
                     role {
                         id
