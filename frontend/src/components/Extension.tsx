@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import { LogOut, Puzzle, Download, X } from 'lucide-react';
+import { LogOut, Puzzle, Download, X, MessageCircle, User, Wallet, Bell } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -61,7 +61,9 @@ export default function Extension() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 pb-20 md:pb-8" onScroll={handleScroll}>
+
           <div className="max-w-5xl mx-auto space-y-6">
+
             <header className="mb-6 md:mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-slate-800 flex items-center gap-3">
                 <Puzzle className="text-burgundy" size={32} />
@@ -69,7 +71,59 @@ export default function Extension() {
               </h2>
               <p className="text-sm text-slate-500 font-medium mt-2">Các công cụ hỗ trợ giảng dạy hiệu quả trên LMS</p>
             </header>
+            {/* Chatbot AI Zalo Section */}
+            <div className="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-8 items-start mb-8">
 
+              <img class="w-24 h-24 md:w-32 md:h-32 rounded-3xl shadow-sm border border-slate-100 object-cover shrink-0 p-4" src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/U8Ik5r6w7S61DoU4AnqzNJzPR6uOn8NF_1714098050____362fc74944ce4875ddad8192d17ebdba.jpg" />
+
+              <div className="space-y-4 flex-1">
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-800">Chatbot AI Zalo</h3>
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+                  Trợ lý ảo trên Zalo giúp bạn tra cứu nhanh chóng và tiện lợi các thông tin, tài khoản, công lương, nhận xét và thông báo.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-slate-700 my-4">
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-[#0068FF]/30 transition-colors">
+                    <h4 className="font-bold mb-3 flex items-center gap-2 text-slate-800"><User size={18} className="text-[#0068FF]" /> Tài khoản</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> login</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> setting</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> logout</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-[#0068FF]/30 transition-colors">
+                    <h4 className="font-bold mb-3 flex items-center gap-2 text-slate-800"><Wallet size={18} className="text-[#0068FF]" /> Công lương</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> sal (xem chi tiết)</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> rank - set rank</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> check</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-[#0068FF]/30 transition-colors">
+                    <h4 className="font-bold mb-3 flex items-center gap-2 text-slate-800"><Bell size={18} className="text-[#0068FF]" /> Nhận xét & TB</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> nx</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> lms</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#0068FF]/60"></div> lmsta</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                  <a
+                    href="https://zalo.me/0855667148"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-[#0068FF] hover:bg-[#0054cc] text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-sm"
+                  >
+                    <MessageCircle size={20} />
+                    Trải nghiệm ngay trên Zalo
+                  </a>
+                </div>
+              </div>
+            </div>
             <div className="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-8 items-start">
               <img src="/ext-icon.png" alt="Auto Comment MindX Logo" className="w-24 h-24 md:w-32 md:h-32 rounded-3xl shadow-sm border border-slate-100 object-cover shrink-0" />
 
@@ -121,6 +175,8 @@ export default function Extension() {
                 </div>
               </div>
             </div>
+
+
 
             <Footer />
           </div>

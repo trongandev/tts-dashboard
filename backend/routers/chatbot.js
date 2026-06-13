@@ -178,6 +178,7 @@ function formatSalaryHelp() {
         '- sal <tháng-tháng> → xem tổng lương khoảng tháng',
         '- sal <tháng/năm>   → xem lương tháng cụ thể',
         '- sal all           → xem tất cả lương',
+        '- sal reload        → làm mới lại lương (xoá cache)',
         '',
         'Ví dụ:',
         `- sal now    → lương tháng ${m}/${y}`,
@@ -185,6 +186,7 @@ function formatSalaryHelp() {
         `- sal 3-5    → tổng lương tháng 3/${y} đến 5/${y}`,
         `- sal 3/2025 → lương tháng 3/2025`,
         '- sal all    → toàn bộ lịch sử lương',
+        '- sal reload → tải lại dữ liệu mới nhất',
         '',
         'Gõ salary để xem hướng dẫn này.',
     ].join('\n')
@@ -286,7 +288,7 @@ function formatNxContent(lesson, nxArgs, isBt, isSb) {
 
     const parts = [`KÍNH CHÀO PHỤ HUYNH, EM XIN PHÉP GỬI NỘI DUNG\n\n${section}: ${title}${details ? `\n${details}` : ''}`]
 
-    if (isBt) {
+    if (isBt && lessonNumber < 10) {
         parts.push('Bài tập có sẵn trên Denise, quý phụ huynh hỗ trợ thầy nhắc nhở bạn thực hiện trước buổi học tiếp theo.\nTrang làm bài tập: https://denise.mindx.edu.vn')
     }
 
@@ -298,9 +300,11 @@ function formatNxContent(lesson, nxArgs, isBt, isSb) {
         c: 'https://drive.google.com/drive/folders/1unV-GdgQnnj9ozqLCVKAvaDE45hOPSDe?usp=drive_link',
     }
 
-    if (isSb) {
+    if (isSb && lessonNumber < 10) {
         const coursePrefix = className[0]?.toLowerCase()
         parts.push(`Student Book (Sách xem lại các kiến thức thầy hướng dẫn trong buổi học):\n${studentBookLinks[coursePrefix] || studentBookLinks.s}`)
+    } else {
+        parts.push('Giai đoạn từ buổi 10 đến buổi 13 là thời gian các con tập trung hoàn thiện SẢN PHẨM CUỐI KHÓA.\n\nKính mong Quý phụ huynh đồng hành và nhắc nhở các con dành thêm thời gian tự luyện tập, hoàn thiện sản phẩm tại nhà để đạt kết quả cao nhất.')
     }
 
     parts.push('Nếu có bất kỳ thắc mắc nào về bài học, quý phụ huynh và bạn có thể liên hệ với thầy/cô để được hỗ trợ nhé!\n\nCảm ơn quý phụ huynh và các bạn đã đọc!')
@@ -453,6 +457,9 @@ async function formatSettings(message, user) {
         '',
         'Bật/tắt: setting số_mục on/off',
         'VD: setting 3 on',
+        '',
+        'Tiện ích khác:',
+        '- sal reload: làm mới lại lương',
     ].join('\n')
 }
 
