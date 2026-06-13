@@ -305,7 +305,9 @@ function formatNxContent(lesson, nxArgs, isBt, isSb) {
     if (isSb && lessonNumber < 10) {
         const coursePrefix = className[0]?.toLowerCase()
         parts.push(`Student Book (Sách xem lại các kiến thức thầy hướng dẫn trong buổi học):\n${studentBookLinks[coursePrefix] || studentBookLinks.s}`)
-    } else {
+    }
+
+    if (lessonNumber > 9 && lessonNumber < 14) {
         parts.push('Giai đoạn từ buổi 10 đến buổi 13 là thời gian các con tập trung hoàn thiện SẢN PHẨM CUỐI KHÓA.\n\nKính mong Quý phụ huynh đồng hành và nhắc nhở các con dành thêm thời gian tự luyện tập, hoàn thiện sản phẩm tại nhà để đạt kết quả cao nhất.')
     }
 
