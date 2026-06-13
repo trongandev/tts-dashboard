@@ -1392,7 +1392,7 @@ async function calculateSalary(message, user, request) {
     const fromYear = request.fromYear || request.year
     const toMonth = request.toMonth || request.month
     const toYear = request.toYear || request.year
-    
+
     const freshUser = await ensureFreshToken(message, user)
     const cacheKey = `chatbot_${freshUser.id}_${fromMonth}_${fromYear}_${toMonth}_${toYear}`
 
@@ -1400,7 +1400,7 @@ async function calculateSalary(message, user, request) {
         const cached = await getSalaryFromCache(cacheKey)
         if (cached) return cached
     }
-    
+
     if (type === 'all' || type === 'range_years') {
         await reply(message, 'Quá trình tính toán dữ liệu lớn có thể mất từ 15 ~ 30s. Bạn chờ mình tổng hợp chút nhé!')
     }
@@ -1813,7 +1813,7 @@ async function handleSalary(message, command) {
     const title =
         request.type === 'all'
             ? `TẤT CẢ LƯƠNG TỪ ${request.fromMonth}/${request.fromYear} ĐẾN ${request.toMonth}/${request.toYear}`
-            : (request.type === 'range_years' 
+            : (request.type === 'range_years'
                 ? `TỔNG LƯƠNG TỪ ${request.fromMonth}/${request.fromYear} ĐẾN ${request.toMonth}/${request.toYear}`
                 : `TỔNG LƯƠNG THÁNG ${request.fromMonth}-${request.toMonth}/${request.fromYear}`)
     await reply(message, formatRangeSalary(salary, title))
@@ -2019,9 +2019,9 @@ async function handleMessage(message) {
             }
             break
         default:
-            // await reply(message, 'Lệnh không hợp lệ. Gõ help để xem các lệnh hỗ trợ.')
-            // nhại lại người dùng
-            await reply(message, `Bạn vừa gõ: ${message.data.content}`)
+            await reply(message, 'Lệnh không hợp lệ. Gõ help để xem các lệnh hỗ trợ.')
+        // nhại lại người dùng
+        // await reply(message, `Bạn vừa gõ: ${message.data.content}`)
     }
 }
 
