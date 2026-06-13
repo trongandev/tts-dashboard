@@ -53,7 +53,10 @@ router.post('/classes', async (req, res, next) => {
         // Cache key should include endpoint, params and authorization to avoid leaking data
         const cacheKey = cache.generateKey('/classes:v2', { pageIndex, itemsPerPage, teacherId, search, orderBy }, { authorization })
         const cached = cache.get(cacheKey)
-        if (cached) return res.json(cached)
+        if (cached) {
+            console.log('[CLASSES] CACHE')
+            return res.json(cached)
+        }
 
         // Khởi tạo GraphQL client
         const client = createClient(authorization)
@@ -103,7 +106,10 @@ router.post('/timesheet', async (req, res, next) => {
 
         const cacheKey = cache.generateKey('/timesheet', payload, { authorization })
         const cached = cache.get(cacheKey)
-        if (cached) return res.json(cached)
+        if (cached) {
+            console.log('[TIMESHEET] CACHE', cached)
+            return res.json(cached)
+        }
 
         const client = createClient(authorization)
         const data = await client.request(GET_TIMESHEET_QUERY, payload)

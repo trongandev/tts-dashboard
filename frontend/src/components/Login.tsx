@@ -34,7 +34,6 @@ export default function Login() {
             }
 
             const data = await response.json()
-            console.log({ data })
             if (data.idToken) {
                 const expires = new Date()
                 expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000)
@@ -46,17 +45,31 @@ export default function Login() {
                 })
                 const resData = await refreshRes.json()
                 const customAttributes = JSON.parse(resData.users[0].customAttributes)
-                console.log(customAttributes)
                 if (customAttributes) {
-                    const newUser = {
-                        displayName: data.displayName,
-                        email: data.email,
-                        localId: data.localId,
-                        id: customAttributes.id,
-                        username: customAttributes.username,
+                    let token = getCookie("accessToken")
+                    if (!token) token = getCookie("idToken")
+                    if (!token) throw new Error("Không tìm thấy token xác thực, vui lòng đăng nhập lại.")
+
+                    const authHeader = token.startsWith("Bearer ") ? token : `Bearer ${token}`
+                    const reqInfo = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/find-info`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: authHeader,
+                        },
+                        body: JSON.stringify({ payload: { id: customAttributes.id } }),
+                    })
+                    const res = await reqInfo.json()
+                    if (res) {
+                        const infoData = res.users.findInfoInRoleById[0].info
+                        setUser({
+                            displayName: infoData.fullName,
+                            email: infoData.email,
+                            localId: infoData.user,
+                            id: infoData._id,
+                            username: customAttributes.name,
+                        })
                     }
-                    console.log(newUser)
-                    setUser(newUser)
                 }
                 if (data.refreshToken) {
                     localStorage.setItem("refreshToken", data.refreshToken)
@@ -79,7 +92,7 @@ export default function Login() {
             return data
         },
         onSuccess: () => {
-            // navigate("/")
+            navigate("/")
         },
         onError: (err: any) => {
             setError(err.message || "Có lỗi xảy ra")

@@ -1,0 +1,1484 @@
+[
+    {
+        "name": "ptb",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "NGÔN NGỮ MÁY LÀ GÌ\nNgôn ngữ lập trình bậc cao là gì\nGiới thiệu và cài đặt môi trường lập trình Python\nMột số câu lệnh Python đầu tiên"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "TÌM HIỂU BIẾN\nCác từ khóa Python cơ bản\nQuy tắc đặt tên biến trong Python\nCác kiểu dữ liệu trong Python\nÉp kiểu dữ liệu"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Giới thiệu về toán tử\nToán tử số học\nToán tử quan hệ\nToán tử logic\nBiểu thức logic"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Biểu thức điều kiện\nCâu điều kiện if - elif - else\nGiới thiệu về thuật toán\nVẽ sơ đồ khối"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Ôn tập kiểm tra kiến thức về nhập xuất dữ liệu, xử lý kiểu dữ liệu\nKết hợp toán tử để tạo biểu thức điểu kiện\nThực hành xây dựng thuật toán để giải quyết vấn đề\nThực hành xây dựng chương trình dựa trên sơ đồ khối"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Ôn tập kiểm tra kiến thức về nhập xuất dữ liệu, xử lý kiểu dữ liệu\nKết hợp toán tử để tạo biểu thức điểu kiện\nThực hành xây dựng thuật toán để giải quyết vấn đề\nThực hành xây dựng chương trình dựa trên sơ đồ khối"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Vòng lặp vô hạn\nÁp dụng được câu lệnh while trong Python\nPhân biệt ba cấu trúc lập trình cơ bản: tuần tự, rẽ nhánh, lặp"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Vận dụng các kiến thức đã học để giải quyết vấn đề"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KIỂM TRA: VÒNG LẶP & DANH SÁCH LÀ GÌ?\nKiểm tra\nĐịnh nghĩa danh sách\nKhởi tạo danh sách"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "DANH SÁCH VÀ HƠN THẾ NỮA\nDuyệt phần tử trong danh sách\nCác hàm để thao tác với danh sách\nThực hành thêm xóa sửa các phần tử trong danh sách"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "XÂU KÝ TỰ\nXâu ký tự\nDuyệt xâu\nXâu con và cắt chuỗi xâu\nMột số lệnh làm việc với xâu ký tự"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "HÀM: CHIA NHỎ CÔNG VIỆC\nĐịnh nghĩa hàm\nThiết lập hàm không có giá trị trả về\nTruyền tham số vào hàm và phạm vi của tham số"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "HÀM VỚI GIÁ TRỊ MANG LẠI\nThiết lập hàm có giá trị trả về\nMột số hàm thiết kế sẵn trong Python"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "HACKATHON: KIỂM TRA CUỐI KHÓA\nÔn tập tổng hợp kiến thức\nKiểm tra cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "pti",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Giới thiệu sản phẩm đầu ra của level Intensive\nCác khái niệm về AI\nẢnh hưởng của AI trong đời sống và xã hội\nAI được huấn huyện như thế nào: Làm quen với mạng Neuron"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Ôn tập kiến thức Lớp - Đối tượng\nÔn tập thư viện PyQt"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Ôn tập về danh sách\nDanh sách đối tượng trong Python\nDuyệt và xử lý phần tử trong danh sách\nÁp dụng xây dựng danh sách đối tượng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Ôn tập kiến thức hàm\nXây dựng chương trình quản lý danh sách đối tượng\nÁp dụng quản lý danh sách đối tượng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Kiểm tra kiến thức về quản lý danh sách đối tượng, xây dựng sơ đồ đối tượng, khởi tạo, duyệt mảng, thêm và xóa trên danh sách đối tượng\nKhái niệm dữ liệu và vai trò trong ứng dụng\nTìm hiểu về kiểu dữ liệu JSON"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Tìm hiểu đọc ghi file dữ liệu\nSử dụng JSON trong chương trình quản lý\nÁp dụng quản lý dữ liệu cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Ôn tập lại widget trong công cụ xây dựng giao diện\nTìm hiểu widget dành cho danh sách\nCác hao tác với widget cho danh sách\nÁp dụng xây dựng giao diện quản lý cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Ôn tập về sự kiện\nTìm hiểu về cách sự kiện ảnh hưởng đến dữ liệu lưu trữ trong JSON\nÁp dụng xử lý sự kiện và tương tác với giao diện cho dự án cá nhân\nKiểm tra tiến độ dự án cá nhân"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Kiểm tra kiến thức về đọc ghi file JSON\nKiểm tra kiến thức về xây dựng giao diện trong chương trình quản lý\nKiểm tra kiến thức về xử lý sự kiện trong chương trình quản lý"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Text-to-Speed\nSử dụng thư viện để thêm các tính năng AI vào cho phần mềm\nHướng dẫn triển khai phần mềm trong môi trường thực tế"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "làm Sản phẩm cuối khóa"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "làm Sản phẩm cuối khóa"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "làm Sản phẩm cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "arma",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "CÁNH TAY ROBOT\nHọc viên tìm hiểu sự xuất hiện của cánh tay robot trong các nhà máy công nghiệp\nLắp ráp và tìm hiểu nguyên tắc hoạt động của mô hình cánh tay Robot"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Lắp mô hình trang bị 2 động cơ, nam châm điện và cảm biến mắt\nLập trình mô hình cánh tay di chuyển đồ vật từ vị trí ban đầu sang vị trí khác với thẻ lệnh, toán tử logic"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Lắp ráp mô hình cách tay trang bị 2 đọng cơ, nam châm điện và cảm biến mắt\nLập trình mô hình cách tay di chuyển dồ vật từ vị trí ban đầu sang vị trí khác với thẻ lệnh biến số, toán tử logic, repeat.. until"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nDưới sự gợi ý của giáo viên, học viên thảo luận theo nhóm lựa chọn mô hình thiết bị cần thiết cho nhiệm vụ bất khả thi\nLắp ráp mô hình sử dụng não, pin, 2 đọng cơ, LED Bumper và cảm biến mắt\nLập trình mô hình hoạt động và tham gia thi đấu cùng với nhóm khác với các thẻ lệnh đã được học..."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "ĐẠI DƯƠNG LÂM NGUY\nHọc viên tìm hiểu sự nóng lên toàn cầu ảnh huởng như thế nào đến đại dương\nLắp ráp mô hình có sử dụng 3 động cơ và trang bị thêm cảm biến mắt\nLập trình mô hình hoạt động sử dụng thẻ lệnh toán tử logic và vòng lặp"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "TRẬN CHIẾN HỎA HOẠN\nHọc viên tìm hiểu về công việc của lính cứu hỏa\nLắp ráp mô hình có sử dụng 3 động cơ và trang bị thêm cảm biến mắt, LED Bumper\nLập trình mô hình hoạt động sử dụng thẻ lệnh toán tử logic và vòng lặp"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "THẢM HỌA CHÁY RỪNG\nHọc viên tìm hiểu về công việc của lính cứu hỏa\nLắp ráp mô hình có sử dụng 3 động cơ và trang bị thêm cảm biến mắt, LED Bumper\nLập trình mô hình hoạt động sử dụng thẻ lệnh toán tử logic và vòng lặp"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nHọc viên tìm hiểu về công việc của lính cứu hỏa\nLắp ráp mô hình có sử dụng 3 động cơ và trang bị thêm cảm biến mắt, LED Bumper\nLập trình mô hình hoạt động sử dụng thẻ lệnh toán tử logic và vòng lặp"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "NHỮNG BỨC TRANH ĐẮT GIÁ\nHọc viên tìm hiểu về những hình có thể có tính đối xứng trong đời sống\nLắp ráp mô hình cỗ máy biết vẽ và hoạt động kết hợp với LED Bumper, cảm biến mắt\nLập trình mô hình hoạt động sử dụng thẻ lệnh toán tử logic và vòng lặp"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "TRỞ NGẠI VỰC THẲM\nHọc viên tham gia cuộc thi tranh tài lập trình Robot di chuyển trên mặt bàn và không rơi xuống đất\nLập trình sử dụng thẻ lệnh điều kiện lồng nhau"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "GIẢI THOÁT MÊ CUNG\nHọc viên được giới thiệu thuật toán bám tường\nLắp ráp mô hình\nLập trình mô hình thoát khỏi mê cung\nThẻ lệnh điều kiện lồng nhau"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập toàn bộ kiến thức lập trình đã học\nTham gia giải đề cuối khóa xoay quanh chủ đề Nhiệm vụ bất khả thi\nLên ý tưởng lắp ráp mô hình gồm 3 động cơ, nam châm điện, cảm biến mắt, LED Bumper\nLập trình mô hình vận hành nhiệm vụ được giao"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "DEMO ROBOT\nDưới sự hướng dẫn của giáo viên, học viên lên ý tưởng lắp ráp mô hình và lập trình mô hình vận hành\nThuyêt trình demo, tùy chỉnh câu lệnh, cải tiến mô hình"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH ROBOT\nThuyết trình cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "jsb",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "WEBSITE HOẠT ĐỘNG NHƯ THẾ NÀO?\nTìm hiểu về các tiêu chuẩn , khái niệm website: W3C, URL và HTTPS\nGiới thiệu về HTLM5 và cú pháp, các dạng thẻ\nLàm quen với IDE VSCode\nTạo trang web hiển thị nội dung đơn giản"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "HTML BẬC TRUNG & WEB NHIỀU TRANG\nTìm hiểu về thẻ danh sách, thẻ đường dẫn và hình ảnh\nCăn chỉnh Thụt lề & Khái niệm thẻ lòng nhau\nKhái niệm website, webpage và mối quan hệ\nThực hành xây dựng Project Portfolio Website"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "TRANG TRÍ CHO WEBSITE NHƯ THẾ NÀO?\nGiới thiệu về CSS và các thuộc tỉnh cơ bản\nTìm hiểu về CSS Selectors để chọn phần tử HTML cụ thể\nSử dụng Inspecting CSS tùy chỉnh giao diện tại trình duyệt\nTìm hiểu về CSS Box Model\nThực hành xây dựng dự án MindX Page"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "CSS BẬC TRUNG\nĐộ ưu tiên và tính kế thừa trong CSS\nGiới thiệu về CSS Positioning giúp định vị các phần tử trên trang web\nThực hành dự án The Flag"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CSS display\nCSS NÂNG CAO & CHECKPOINT 1\nGiới thiệu Responsive website\nCú pháp Media Queries\nFlexbox và các thuộc tỉnh đi kèm\nThực hành dự án Pricing Table\nKiểm tra checkpoint 1"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "BOOTSTRAP & WEB DESIGN (P1)\nTìm hiểu khái niệm framework\nGiới thiệu về framework CSS Bootstrap và cách sử dụng\nGiới thiệu về khái niệm Web Design & Color Theory\nGiới thiệu dự án Dog Social"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Giới thiệu về Typography và cách chọn Font chữ\nBOOTSTRAP & WEB DESIGN (P2)\nQuy tắc phân cấp trong bố cục: Kích thước, vị trí & màu sắc\nQuản lý \"ATTENTION\" với thiết kế giao diện người dùng (UI) hiệu quả\nThực hành xây dựng website: Dog Social (p2)"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "THU THẬP DỮ LIỆU NGƯỜI DÙNG\nGiới thiệu về thẻ Form và các thuộc tỉnh, phương thức đi kèm\nCác dạng điều khiển nhập liệu với thẻ input\nTạo một mẫu đăng nhập đơn giản\nTạo biểu mẫu thanh toán trên Marketplace\nThực hành xây dựng website: Dog Social (p2)"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KHÁM PHÁ Ý TƯỞNG LẬP TRÌNH, CHECKPOINT 2\nSơ lược về Al và ứng dụng trong lập trình\nGiới thiệu các Al phổ thông hỗ trợ web developer\nLên ý tưởng dự án website cuối khóa\nThực hành làm bài checkpoint 2"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "THỰC HÀNH XÂY DỰNG SẢN PHẨM CUỐI KHÓA (P1)\nKIểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa theo timeline đặt ra"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THỰC HÀNH XÂY DỰNG SẢN PHẨM CUỐI KHÓA (P2)\nKIểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa theo timeline đặt ra"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "THỰC HÀNH XÂY DỰNG SẢN PHẨM CUỐI KHÓA (P3)\nKIểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa theo timeline đặt ra"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nNghiệm thu sản phẩm web và deploy cơ bản\nHoàn thiện và kiểm duyệt slide\nThuyết trình thử"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHÓA\nThuyết trình quá trình làm việc và trình bày kết quả\nTrả lời câu hỏi và tương tác với khán giả & giám khảo"
+            }
+        ]
+    },
+    {
+        "name": "jsa",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "HỆ THỐNG LƯỚI TRONG THIẾT KẾ GIAO DIỆN\nÔn tập kiến thức\nGiới thiệu về display GRID\nTìm hiểu về Grid Sizing và Grid Placement\nThực hành xây dựng dự án Mondrian-Style Painting"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "SỨC MẠNH CỦA NGÔN NGỮ LẬP TRÌNH JAVASCRIPT\nTìm hiểu về Javascript: Nguồn gốc, công dụng\nJavascript Variables và quy tắc đặt đên\nJavascript Data Types\nThử thách thay đổi cách viết hoa trong văn bản"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "TOÁN TỬ, CÂU ĐIỀU KIỆN & VÒNG LẶP\nTìm hiểu về toán tử trong Javascript\nGiới thiệu về câu điều kiện\nTim hiểu về vòng lặp\nThực hành với bài toán Thực tế"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "HÀM & DOM\nTìm hiểu về danh sách và đối tượng trong Javascript\nCRUD với danh sách và đối tượng\nTìm hiểu về hàm và ứng dụng\nTim hiểu về DOM trong lập trình web"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "WORKSHOP LƯU TRỮ PHIÊN BẢN CODE & CHECKPOINT 1\nÁp dụng thu thập dữ liệu người dùng qua HTML\nForm.\nGiới thiệu git github và các thao tác cơ bản\nTim hiểu về github page & deploy dự án\nGiới thiệu kho lưu trữ dữ liệu cục bộ LocalStorage\nThực hành làm bài kiểm tra checkpoint 1"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "MINDX CINEMA (PHẦN 1)\nTìm hiểu về API và các cú pháp đi kèm\nGiới thiệu dự án MindX Cinema và tỉnh Real World của dự án\nThực hành lập trình giao diện: Register/Login, Home page"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "MINDX CINEMA (PHẦN 2)\nHoàn thiện tính năng: Xác thực người dùng\nThực hành lập trình: Page chi tiết phim, Search Page & News Page, Movie controller"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "MINDX CINEMA (PHẦN 3)\nSoát lỗi người dùng nhập dữ liệu\nResponsive website\nComment/rating phim\nDeploy dự án lên Internet"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KHÁM PHÁ Ý TƯỞNG LẬP TRÌNH WEB & CHECKPOINT 2\nLên ý tưởng dự án website cuối khóa với AI hỗ trợ\nThực hành làm bài checkpoint 2"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "THỰC HÀNH XÂY DỰNG WEBSITE (PHẦN 1)\nKiểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THỰC HÀNH XÂY DỰNG WEBSITE (PHẦN 2)\nKiểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "THỰC HÀNH XÂY DỰNG WEBSITE (PHẦN 3)\nKiểm tra tiến độ dự án cá nhân\nXây dựng dự án cuối khóa"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nNghiệm thu sản phẩm website\nHoàn thiện và kiểm duyệt slide\nThuyết trình thử"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHÓA\nThuyết trình quá trình làm việc và trình bày kết quả\nTrả lời câu hỏi và tương tác với khán giả & giám khảo"
+            }
+        ]
+    },
+    {
+        "name": "csb",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "CHƯƠNG TRÌNH PYTHON CƠ BẢN\nCú pháp python cơ bản: Biến, Toán tử, Kiểu dữ liệu cơ bản\nCấu trúc xử lý luồng như: biểu thức logic và câu điều kiện, vòng lặp for/while, break/continue"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "LIST - HÀM - ĐỌC GHI FILE\nKiểu dữ liệu: List\nHàm\nXử lý File\nThực hành: Tìm số trung bình (mean), trung vị (median), yếu vị (mode)"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "LẬP TRÌNH HƯỚNG ĐỐI TƯỢNG (PHẦN 1)\nGiới thiệu lập trình hướng đối tượng (OOP)\n4 tính chất của OOP\nTính đóng gói (Encapsulation)\nTính kế thừa\t"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "LẬP TRÌNH HƯỚNG ĐỐI TƯỢNG (PHẦN 2)\nTính đa hình (Polymorphism)\nTính trừu tượng (Abstraction)\n"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "KIỂM TRA CHECKPOINT 1 & THUẬT TOÁN\nKiểm tra các kiến thức về cú pháp và lập trình OOP bằng Python\nCác khái niệm thuật toán\nTính chất đặc trưng của thuật toán\nPhân tích tích hiệu quả của thuật toán\nĐánh giá thuật toán bằng độ phức tạp\t"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "THUẬT TOÁN TÌM KIẾM\nBài toán tìm kiếm\nTìm kiếm tuần tự (linear search)\nTìm kiếm nhị phân (binary search)"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "THUẬT TUÁN SẮP XẾP\nBài toán sắp xếp\nSắp xếp chèn (Insertion sort)\nSắp xếp bong bóng (Bubble sort)"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "THỰC HÀNH LẬP TRÌNH GIẢI QUYẾT VẤN ĐỀ (PHẦN 1)\nThực hành giải quyết một số bài toán sử dụng thuật toán tìm kiếm - sắp xếp phù hợp"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KIỂM TRA CHECKPOINT 2\nKiểm tra kiến thức đánh giá thuật toán, các thuật toán tìm kiếm và sắp xếp"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "TẬP HỢP VÀ ÁNH XẠ\nCách hoạt động của cấu trúc dữ liệu Set (tập hợp)\nCách hoạt động của cấu trúc dữ liệu Map (ánh xạ)\nMap trong Python Dictionary\nỨng dụng của Set và Map\nGame Bingo"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "NGĂN XẾP\nCách hoạt động của cấu trúc dữ liệu Stack (Ngăn xếp)\nThao tác cơ bản trên Stack\nỨng dụng của Stack trong lập trình và trong thực tế\nỨng dụng giả lập trình duyệt: Quản lý các thao tác truy cập trang web bằng Stack"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "HÀNG ĐỢI\nCách hoạt động của cấu trúc dữ liệu Queue (hàng đợi)\nCác thao tác với bản trên Queue\nỨng dụng của Queue trong lập trình và trong thực tế\nỨng dụng âm nhạc: thêm bài hát, chạy bài hát trong hàng đợi, bỏ qua bài hát"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "THỰC HÀNH GIẢI QUYẾT VẤN ĐỀ (PHẦN 2)\nThực hành giải quyết một số bài toán sử dụng thuật toán và cấu trúc dữ liệu phù hợp"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "HACKATHON CUỐI KHÓA\nKiểm tra kiến thức OOP, thuật toán, cấu trúc dữ liệu"
+            }
+        ]
+    },
+    {
+        "name": "pta",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "ÔN TẬP CÚ PHÁP TRONG PYTHON\nÔn tập kiến thức Python"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "LÀM QUEN VỚI LỚP VÀ ĐỐI TƯỢNG\nTìm hiểu lập trình hướng đối tượng là gì\nGiới thiệu về đối tượng - biến có giá trị phức hợp\nGiới thiệu về lớp - khuông tạo ra đối tượng\nHướng dẫn khởi tạo lớp và đối tượng"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "PHƯƠNG THỨC VÀ KẾ THỪA\nTìm hiểu về phương thức trong lớp\nXây dựng phương thức và từ khóa self\nGiới thiệu hàm __init__()\nKế thừa và các tính chất của kế thừa"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "LÀM QUEN VỚI PyQT\nÔn tập kiến thức lớp và đối tượng\nGiới thiệu và cài đặt thư viện PyQt\nGiới thiệu và cài đặt công cụ Qt Designer"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "XÂY DỰNG THÀNH PHẦN TRONG GIAO DIỆN (CHECKPOINT 1)\nKiểm tra các kiến thức lớp và đối tượng\nGiới thiệu thành phần widgets cơ bản\nTìm hiểu phương thức và thuộc tính của widgets"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "TÙY CHỈNH PHONG CÁCH THÀNH PHẦN GIAO DIỆN\nKết nối file giao diện với chương trình Python\nTìm hiểu tùy chỉnh kiểu dáng và giao diện trong Qt Designer\nThực hành xây dựng giao diện sản phẩm số với trang đăng nhập và đăng ký"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "GIAO DIỆN VÀ SỰ KIỆN\nLập tình thao tác sự kiện cho các thành phần của PyQt\nXử lý sự kiện trên trang đăng nhập\nPhân tích xử lý những sự kiện có thể xảy trên các thành phần của trang giao diện\nTìm hiểu cửa sổ thông báo"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "PHÂN CHIA BỐ CỤC CHO GIAO DIỆN\nTìm hiểu khái niệm về bố cục trình bày trang giao diện thông qua trải nghiệm sản phẩn thực tế\nKhám phá các kiểu bố cục tragn thông dụng được hỗ trợ bởi PyQt6\nPhân tích và áp dụng các kiểu bố cục đã học vào thiết kế sản phẩm trang giao diện bằng Qt Designer và lập trình PyQt"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KIỂM TRA KIẾN THỨC PyQt (CHECKPOINT 2)\nKiểm tra các bước thao tác trên công cụ thiết kế giao diện và các loại bố cục thông dụng\nKiểm tra khởi tạo thuộc tính và phương thức của các thành phần Widget\nKiểm tra xử lý thao tác các sự kiện tương tác giữa thành phần Widget và cửa sổ hộp thoại\nGiới thiệu công cụ AI tạo giao diện từ mô tả Uizard"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "LÊN Ý TƯỞNG PHẦN MỀM CUỐI KHÓA\nTổng quan về buổi demo sản phẩm\nHướng dẫn học sinh lên ý tưởng cho SẢN PHẨM CUỐI KHÓA\nSử dụng công cụ AI tạo giao diện từ mô tả Uizard\nPhân tích, đánh giá từng ý tưởng sản phẩm"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THỰC HÀNH XÂY DỰNG GIAO DIỆN PHẦN MỀM\nKiểm tra tiến độ dự án cá nhân\nThực hành xây dựng phần mềm"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "THỰC HÀNH XÂY DỰNG GIAO DIỆN PHẦN MỀM\nKiểm tra tiến độ dự án cá nhân\nThực hành xây dựng phần mềm"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "THỰC HÀNH XÂY DỰNG GIAO DIỆN PHẦN MỀM\nThực hành xây dựng phần mềm\nTạo bản trình chiếu"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH SẢN PHẨM CUỐI KHÓA\nTrình bày sản phẩm cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "jsi",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "ÔN TẬP KIẾN THỨC\nÔn tập kiến thức về HTML, CSS, Javascript\nÔn tập kiến thức về API và xử lý request cơ bản\nThực hành xây dựng dự án Pokemon Wiki với xử\nlý API\nGiới thiệu chương trình NextGen và tiêu chí đánh\ngiá sản phẩm cuối khóa\n"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "JAVASCRIPT CHUYÊN SÂU VÀ HƠN THẾ NỮA\nGiới thiệu ES6 và ứng dụng\nTìm hiểu về Array method: map, filter, find\nThực hành với bài toán xử lý dữ liệu điểm trường\nhọc"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "FIREBASE THIẾT LẬP MÁY CHỦ\nÔn tập về client/server\nTìm hiểu về firebase và kết nối với dự án website\nGiới thiệu dự án Coffe Management"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "FIREBASE VÀ XÁC THỰC NGƯỜI DÙNG\nXây dựng giao diện Login/Register Coffe management\nGiới thiệu các phương thức authentication trên\nfirebase\nThực hành lập trình tính năng soát lỗi và xác thực\nngười dùng\nThiết kế nút đăng xuất và lập trình tính năng\nSignOut"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "FIREBASE CƠ SỞ DỮ LIỆU TRỰC TUYẾN - CHECKPOINT 1\nGiới thiệu về hệ cơ sở dữ liệu và tầm quan trọng trong lập trình\nTìm hiểu về Firebase Firestore và kết nối với dự án web\nThực hành lập trình CRUD order với Coffe management\nDeploy dự án Firebase\nThực hành làm bài kiểm tra checkpoint 1"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "LÊN Ý TƯỞNG DỰ ÁN VÀ MÔ HÌNH QUẢN LÝ DỰ ÁN\nSử dụng AI microsoft copilot để tìm kiếm các ý tưởng và mô tả dự án theo chủ đề\nGiới thiệu mô hình quản lý dự án Waterfall kèm ứng dụng\nXây dựng bảng quản lý tiến độ dự án dựa trên mô hình Waterfall"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "THIẾT KẾ GIAO DIỆN WEBSITE (PHẦN 1)\nSử dụng AI Copilot để tìm kiếm các template bố cục phù hợp với mô tả dự án\nSử dụng AI Color Hunt, Colour Combination cho phép tạo và kiểm tra sự kết hợp màu sắc\nThực hành lập trình các giao diện được liệt kê trong bảng quản lý tiến độ\nXây dựng tối thiểu 30% UI website\n"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "THIẾT KẾ GIAO DIỆN WEBSITE (PHẦN 2)\nThực hành lập trình các giao diện được liệt kê trong bảng quản lý tiến độ\nTìm hiểu về AI Canva image generate giúp tạo hình ảnh với từ khóa đầu vào\nXây dựng tối thiểu 60% UI website"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "THIẾT KẾ GIAO DIỆN WEBSITE (PHẦN 3)\nĐánh giá tiến độ dự án\nHoàn thành tối thiểu 80% giao diện website theo mô tả trong bảng quản lý tiến độ\nHoàn thành xử lý Router chuyển trang"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "XÂY DỰNG TÍNH NĂNG WEBSITE (PHẦN 1)\nĐóng gói giao diện website và tiến hành responsive\nKết nối dự án với firebase cá nhân\nThiết lập kết nối xác thực người dùng và database\nThiết lập google analytics phân tích trải nghiệm khách hàng trong dự án\nThực hành lập trình tính năng xác thực người dùng"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "XÂY DỰNG TÍNH NĂNG WEBSITE (PHẦN 2)\nHướng dẫn sử dụng AI microsoft copilot xây dựng các hàm xử lý tính năng trong dự án\nHướng dẫn tích hợp AI Chatbot và xử lý lỗi phát sinh (Phần 1)\nThực hành lập trình các tính năng phủ hợp theo mô tả trong bảng quản lý tiến độ"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "XÂY DỰNG TÍNH NĂNG WEBSITE (PHẦN 3)\nThực hành lập trình các tính năng phù hợp theo mô tả trong bảng quản lý tiến độ\nHoàn thành tối thiểu 90% tính năng dự án\nHướng dẫn tích hợp AI Chatbot và xử lý lỗi phát sinh (Phần 2)\nHướng dẫn deploy dự án Firebase lên Internet\nGiới thiệu AI slide generator hỗ trợ xây dựng slide cuối khóa"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nNghiệm thu sản phẩm web và sửa lỗi\nĐóng gói dự án cuối khóa và deploy version 2\nHoàn thiện và kiểm duyệt slide\nThuyết trình thử"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHÓA\nThuyết trình quá trình làm việc và trình bày kết quả\nTrả lời câu hỏi và tương tác với khán giả & giám khảo"
+            }
+        ]
+    },
+    {
+        "name": "csa",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "LÀM QUEN VỚI DỮ LIỆU\nKhái niệm dữ liệu\nỨng dụng của dữ liệu\nVòng đời Phân tích dữ liệu (Data analysis Life cycle)\nPhát biểu vấn đề (problem statement) và Câu hỏi thống kê (statistical questions)\nThực hành Mini Project 1: Phát biểu vấn đề và Đặt câu hỏi thống kê"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "THU THẬP DỮ LIỆU\nDữ liệu Định lượng và Dữ liệu Định tính\nTìm hiểu một số nguồn dữ liệu mở\nThư viện khoa học dữ liệu cho Python: Thư viện pandas\nGiới thiệu extension Jupyter Notebook\nCài đặt thư viện bằng Jupyter Notebook\nCài đặt thư viện bằng Jupyter Notebook\nTạo/đọc file dữ liệu (.csv, .txt,...) bằng pandas\nThực hành Mini Project 1: Thu thập dữ liệu"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "ĐỌC VÀ LỌC DỮ LIỆU\nPandas Series\nMean, Median, Mode trong pandas\nPandas DataFrame\nLọc dữ liệu: slicing, boolean selection, loc và iloc\nThực hành Mini Project 1: Đọc và lọc dữ liệu"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "NHÓM VÀ SẮP XẾP DỮ LIỆU\nXử lý các vấn đề với dữ liệu: thiếu dữ liệu, sai kiểu dữ liệu, trùng lặp dữ liệu,...\nBiến đổi dữ liệu\nNhóm và sắp xếp dữ liệu\nThực hành Mini Project 1: Nhóm và sắp xếp dữ liệu"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "KIỂM TRA CHECKPOINT 1\nKiểm tra Checkpoint 1\nThuyết trình quá trình thực hành Mini Project 1\nTrình bày kết quả tìm được"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "TRỰC QUAN HÓA - KỂ CÂU CHUYỆN DỮ LIỆU\nXử lý các vấn đề với dữ liệu: Dữ liệu bị thiếu, Sai kiểu dữ liệu, Trùng lặp dữ liệu,...\nGiới thiệu thư viện: matplotlib, seaborn\nCác kiểu trực quan hoá dữ liệu: Histogram, Scatterplot, Line Chart, Bar Chart\nThực hành Mini Project 1: Trực quan hoá dữ liệu\nCâu chuyện dữ liệu (Data Story) và ý nghĩa\nCác bước tạo Câu chuyện dữ liệu\nThiết kế câu chuyện dữ liệu bằng Dashboard"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "PHÂN TÍCH DỰ ĐOÁN\nMô hình Tuyến tính (Linear regression)\nCác bước huấn luyện mô hình tuyến tính\nThư viện sklearn\nThực hành lập trình và huấn luyện Mô hình tuyến tính"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "PHÂN TÍCH DỰ ĐOÁN ĐA BIẾN\nHuấn luyện và Đánh giá (Training vs Testing)\nMô hình Tuyến tính Đa biến (Multivariable Linear Regression)\nBiểu diễn mối quan hệ của các biến bằng thư viện matplotlib\nThực hành lập trình và huấn luyện mô hình dự đoán trên tập dữ liệu Năng lực học sinh với thư viện scikit-learn"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KIỂM TRA CHECKPOINT 2\nKiểm tra kiến thức Mô hình dự đoán Đơn biến và Đa biến\nKiểm tra kiến thức câu chuyện dữ liệu"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nLên ý tưởng và lập kế hoạch cho dự án cuối khoá\nThư viện streamlit xây dựng ứng dụng\nXây dựng dự án cuối khoá: Đặt vấn đề và câu hỏi thống kê"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Thu thập và phân tích dữ liệu"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Xây dựng mô hình và trực quan hoá dữ liệu"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Câu chuyện cho dự án cuối khoá\nXây dựng bài thuyết trình"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH DỰ ÁN CUỐI KHÓA\nThuyết trình quá trình làm việc và trình bày kết quả\nTrả lời câu hỏi và tương tác với khán giả"
+            }
+        ]
+    },
+    {
+        "name": "csi",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "LÀM QUEN VỚI AI\nGiới thiệu sản phẩm đầu ra của level Intensive chương trình Next-Gen\nCác khái niệm về Ai\nThuật toán trong Al\nẢnh hưởng của Al trong đời sống và xã hội\nCác lĩnh vực trong Al:\n+ Học Máy: Học giám sát và Học không giám sát\n+ Xử lý ngôn ngữ tự nhiên\n+ Thị giác máy tính\n+ Xử lý âm thanh, vv...\nAi được huấn luyện như thế nào: Làm quen với Mạng Neuron"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "AI CÓ ĐẠO ĐỨC HAY KHÔNG\nVấn đề đạo đức trong Al\nMột số câu hỏi đạo đức cần phải trả lời\nThiên kiến trong thuật toán AI\nThực hành với tập dữ liệu bị thiên kiến\nNguy cơ của một số thuật toán Al (Deep Fakes, etc...)\nTrách nhiệm đạo đức khi làm việc và sử dụng Al\nThực hành nghiên cứu và biện luận về 01 chủ đề liên quan đến đạo đức trong AI"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "NHÌN THẾ GIỚI QUA AI\nQuá trình phát triển của công nghệ thị giác máy tính\nMột số ứng dụng Al trong thị giác máy tính: Phân loại, Nhận diện vật thể, Sinh ảnh....\nMạng Neuron Tích Chập (Convolutional Neural Network)\nGiới thiệu framework Tensorflow\nThực hành phân loại chữ số viết tay với tập dữ liệu MNIST"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "MINI PROJECT: OBJECT DETECTOR\nLuồng Nhận diện vật thể (Object Detection)\nSơ lược một số mô hình nổi tiếng: YOLO, SSD, R-CNN\nThực hành: Nhận diện vật thể sử dụng mô hình pretrained và thư viện opencv\nĐánh giá mô hình: độ chính xác (precision), độ phủ (recall) và F1-score\nĐánh giá và phân tích kết quả nhận diện"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "KIỂM TRA CHECKPOINT 1\nKiểm tra kiến thức về Al, đạo đức Al và thị giác máy tính.\nThực hành cải thiện Mini Project Object Detector"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "NÓI CHUYỆN CÙNG AI\nChatbot là gì? Ứng dụng của Chatbot\nPhép thử Turing (Turing Test)\nThực hành đánh giá một số Chatbot bằng Turing Test\nCác bước phát triển Chatbot và vai trò của Xử lý ngôn ngữ tự nhiên\nCase study: nghiên cứu ứng dụng của Chatbot trong Game: Al Dungeon"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "MINI PROJECT: CHATBOT (PHẦN 1)\nThực hành xây dựng ứng dụng Chatbot (chatbot booking, chatbot support,...) theo 02 hình thức:\n+ Rule-based (sử dụng if/else hoặc switch/case)\n+ Pattern-matching (sử dụng NLP)\nPhân tích hiệu quả và so sánh giữa rule-based và pattern-matching chatbot"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "MINI PROJECT: CHATBOT (PHẦN 2)\nGiới thiệu mô hình ngôn ngữ lớn (LLM)\nThực hành sử dụng OpenAI GPT API\nThực hành điều chỉnh Chatbot sử dụng Prompt Engineering"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "KIỂM TRA CHECKPOINT 2\nKiểm tra kiến thức về xây dựng chatbot sử dụng Al\nThực hành hoàn thiện Chatbot\n"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nYêu cầu dự án cuối khoá: Chatbot, Al Game,...\nXây dựng dự án cuối khoá: Lên ý tưởng & Lập kế hoạch\nThư viện streamlit"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Thu thập dữ liệu & Huấn luyện mô hình\n"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Huấn luyện mô hình & Xây dựng tính năng phần mềm\n"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "THỰC HÀNH XÂY DỰNG DỰ ÁN CUỐI KHÓA\nXây dựng dự án cuối khoá: Hoàn thiện tính năng & Triển khai phần mềm\nXây dựng dự án cuối khoá: Câu chuyện\nXây dựng bài thuyết trình"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH DỰ ÁN CUỐI KHÓA\nThuyết trình quá trình làm việc và trình bày kết quả\nTrả lời câu hỏi và tương tác với khán giả"
+            }
+        ]
+    },
+    {
+        "name": "gb",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Sức mạnh công cụ Gamemaker Studio 2.0\nXây dựng logic game với Alarm\nĐiều kiện va chạm, cả lớn ăn cả bé\nĐiều kiện tiến hóa, trở thành vua cá\nWorkshop: Dùng AI tạo hình ảnh cho game"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Xây dựng logic game với Alarm\nÔn tập các bước thêm tài nguyên\nXác định chức năng lập trình nhân vật\nKhái niệm animation, frame per second\nKhái niệm tọa độ ngang dọc xy và Alarm\nSố ngẫu nhiên, chức năng Random() và áp dụng vào máy tạo cả\nLập trình máy tạo cá bơi"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Điều kiện va chạm, cả lớn ăn cả bé\nĐặt thêm các loài cá bơi qua bơi lại với object spawner\nKhái niệm biến số\nLập trình điều kiện va chạm giữa cá nhân vật chính và các cá khác\nÁp dụng path để tạo đường bơi cho nhân vật phụ"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Điều kiện tiến hóa, trở thành vua cá\nKhái niệm điều kiện If Else\nKhái niệm sự kiện step\nKhái niệm âm thanh và lập trình âm thanh\nTạo room và thứ tự các room trong game\nLập trình màn chơi thắng thua và nút trên menu"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Workshop: Dùng AI tạo hình ảnh cho game\nSử dụng công cụ copilot để tạo hình ảnh phông nền, chướng ngại vật cho game"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Làm chủ bầu trời với Animation\nÔn tập khái niệm Frame và Animation\nChuẩn bị tài nguyên lập trình trò chơi Ace Pilot\nLập trình màn chơi 1: Tập bắn\nÔn tập các thẻ lệnh di chuyển\nSử dụng timeline vào đặt cách di chuyển cho kẻ thù\nLập trình phần tạo máy bay địch và đặt đường di chuyển cho máy bay địch"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Phân chia màn chơi, sải cánh cùng đồng đội\nKhái niệm path, áp dụng vào điều chỉnh hướng đi cho nhân vật phụ\nTìm hiểu về hướng, cách điều chỉnh hưởng với hệ tọa độ cực\nLập trình cách di chuyển của kẻ địch"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Vượt qua thử thách với thuật toán\nÔn tập timeline trong gamemaker\nÁp dụng timeline tạo thuật toàn di chuyển cho kẻ địch\nHoàn thiện các màn chơi\nTổng kết và lưu trò chơi\nHoàn thiện trò chơi"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Lên ý tưởng và định hướng sản phẩm\nOverview về buổi demo cuối khóa\nHướng dẫn học sinh lên ý tưởng cuối khóa\nThực hành checkpoint hoàn thiện sản phẩm trò chơi Ace Pilot\nPhân tích, đánh giá từng sản phẩm:\nƯu, nhược điểm\nĐộ khả thi"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Thực hành hoàn thiện sản phẩm cuối khóa (Phần 1)\nThực hành lập trình cho dự án cuối khoá"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Thực hành hoàn thiện sản phẩm cuối khóa ( Phần 2)\nThực hành lập trình cho dự án cuối khoá"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Thực hành hoàn thiện sản phẩm cuối khóa ( Phần 3)\nThực hành lập trình cho dự án cuối khoá"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Nghiệm thu sản phẩm\nThiết kế slide thuyết trình sản phẩm\nThuyết trình thử sản phẩm\nGóp ý sửa đổi"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình cuối khóa\nThực hành thuyết trình, vấn đáp và bảo vệ sản phẩm cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "ga",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Ngôn ngữ lập trình GML\nMindx run\nGiới Thiệu GML\nKhái niệm biển số, biến môi trường, biến tự tạo.\nÔn tập về sự kiện step\nChuyển action thành gml với các biến cơ bản kiểm soát hoạt động di chuyển\nCấu Trúc điều kiện (If) trong gml\nHiệu ứng parallax trong trò chơi\nSửa lỗi với sự kiện draw trong gamemaker"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Project: Mario run\nMario run part 1\nThêm các sprite\nChuyển action thành gml với các biến chuyên xử lý hình ảnh\nThao tác và tập tự sửa lỗi trong gamemaker\nChinh vùng va chạm của sprite\nThêm phông nền cho nhân project\nLập trình di chuyển, trọng lực cho nhân vật"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Làm quen với GML\nGiới thiệu GML trong gamemaker\nProject: Mario Run part 2\nLập trình xử lý va chạm người chơi, kẻ địch\nTạo điểm cho nhân vật, cơ chế tăng điểm khi chạm quái vật"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Sound và button cho khởi hành, chạy và kết thúc\nProject: Mario Run part 3\nTạo biến điểm khi bắt đầu trò chơi và xử lý điểm\nTạo room bắt đầu, chơi game, kết thúc game\nThêm sound và nhạc nền cho trò chơi\nThêm button: chơi thoát trò chơi ở room bắt đầu\nThêm button: chơi lại, thoát trò chơi ở room kết thúc\nHover các nút: ôn tập image_xscale, image_yscale\nHoàn thiện project"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Workshop kỹ năng Sử dụng AI tạo cốt truyện game\nSử dụng công cụ chatgpt, gemini, copilot để tạo cốt truyện game"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Lập trình di chuyển với GML\nProject Dangerouse Maze Part 1\nÔn tập thêm hình ảnh nhân vật, lập trình animation với biến môi trường gml\nÔn tập lập trình di chuyển chuyên sâu với câu lệnh\nĐiều khiển nhân vật, cho nhân vật di chuyển, khi chạm tưởng sẽ ngưng với tileset\nVẽ bản đồ bằng tileset vẽ từng ô thay vì cả phông nền"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Camera và View Port\nProject Dangerouse Maze Part 2\nĐiều chỉnh camera để di chuyển theo nhân vật\nDùng draw_srpite() để vẽ các vật thể, debug các lỗi\nThêm chướng ngại vật, các vật phẩm tinh điểm\nThêm cơ chế tăng điểm, giảm máu khi va chạm"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Hoàn thành game Dangerouse Maze\nProject Dangerouse Maze Part 3\nTìm hiểu về cách vận dụng font chữ\nTìm hiểu về mảng, thứ tự của măng trong lập trình\nTạo các room chơi, màn menu, kết thúc\nTạo màn hướng dẫn chơi, ôn tập các hàm vẽ đã được học\nThêm âm thanh các màn, tổng kết bài học"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Lên ý tưởng và định hướng sản phẩm\nOverview về buổi demo cuối khóa\nHướng dẫn học sinh lên ý tưởng cuối khóa"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Thực hành hoàn thiện sản phẩm (Phần 1)\nThực hành lập trình cho dự án cuối khóa\nThực hành lập trình cho dự án "
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Thực hành hoàn thiện sản phẩm (Phần 2)\nThực hành lập trình cho dự án cuối khóa\nThực hành lập trình cho dự án "
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Thực hành hoàn thiện sản phẩm (Phần 3)\nThực hành lập trình cho dự án cuối khóa\nThực hành lập trình cho dự án "
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Nghiệm thu sản phẩm\nThiết kế slide thuyết trình sản phẩm\nThuyết trình thử sản phẩm\nGóp ý sửa đổi"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình cuối khóa\nThực hành thuyết trình, vấn đáp và bảo vệ sản phẩm cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "gi",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Master Gamemaker\nGiới thiệu khóa học Game Intensive\nTrải nghiệm các sản phẩm mẫu của khóa Intensive\nPhân tích vấn đề và cách giải quyết vấn đề bằng công nghệ của dự án mẫu.\nLên ý tưởng sản phẩm demo\nLên kế hoạch triển khai sản phẩm\nGiới thiệu vòng lặp While trong gamemaker\nGiới thiệu hàm và chức năng của hàm"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Xử lý va chạm\nÔn tập hàm và vòng lặp while game maker\nÔn tập cách vẽ background sử dụng tileset\nXử lý va chạm tinh gọn hơn với hàm và vòng lặp\nGiới thiệu thế các thể loại game\nTìm kiếm hình ảnh nhân vật chính trong sản phẩm cuối khóa\nThực hiện các chức năng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Cấu trúc điều kiện switch case\nTìm hiểu về cấu trúc điều kiện switch case break\nÔn tập sử dụng hàm vào lập trinh switch case break\nÁp dụng cấu trúc điều kiện vào việc điều khiển trạng thái nhân vật\nThực hiện các chức năng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Finite State Machine\nÔn tập cấu trúc điều kiện switch case\nTìm hiểu cơ chế FSM (finite state machine) thông qua switch case\nKết hợp lập trình hướng đối tượng với FSM\nThực hiện các chức năng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Deploy dự án\nTìm hiểu nền tảng GX.GAME\nTạo tài khoản opera, gx game để post game lên nền tảng gx.game\nKiểm tra kiến thức xử lý di chuyển, va chạm\nKiểm tra kiến thức FSM\nBáo cáo tiến độ dự án\nTrải nghiệm thử thể loại game của các bạn trong lớp"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "AI và Thuật toán\nÔn tập cơ chế FSM\nLập trình tạo thuật toán AI cho nhân vật phụ với cơ chế FSM\nÁp dụng kết hợp lập trình kế thừa và FSM\nThực hiện các chức năng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Camera thông minh\nÔn tập các câu lệnh điều khiển camera\nÁp dụng các biển mới, tạo độ mượt khi di chuyển camera\nLập trình các chức năng phụ tạo lối chơi riêng cho game\nThực hiện các chức năng cho dự án cá nhân"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Sức mạnh của hàm\nTìm hiểu cách mở rộng chức năng thông qua việc gọi hàm\nThực hiện các chức năng cho dự án cá nhân\nĐánh giá tiến độ sản phẩm cuối khóa"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Kiềm thử và sửa lỗi trò chơi\nĐưa sản phẩm lên gx.game\nTrao đổi sản phẩm trong lớp, chơi thử và đánh giá chéo\nThẩm định tiến độ của dự án"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Cải tiến sản phẩm\nLắng nghe ý kiến của các bạn, từ đó hoàn thiện hơn Tạo nhiều phòng chơi, tăng tính đa dạng cho game\nTiếp tục hoàn thiện sản phẩm"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Nâng cấp sản phẩm\nThẩm định lại các chức năng trong game\nXem lại các sản phẩm demo, sáng tạo chức năng mới\nTiếp tục hoàn thiện sản phẩm"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Kiểm thử và sửa lỗi trò chơi\nNâng cấp phát triển và mở rộng sản phẩm\nTạo xong tài khoản opera và nền tảng gxgame"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Nghiệm thu sản phẩm\nThiết kế slide thuyết trình sản phẩm\nĐóng gói sản phẩm lên nền tảng gx.game\nThuyết trình thử sản phẩm\nGóp ý sửa đổi"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình cuối khóa\nThực hành thuyết trình, vấn đáp và bảo vệ sản phẩm cuối khoá"
+            }
+        ]
+    },
+    {
+        "name": "semib",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "IQ Ngôn ngữ Robot\nGiới thiệu về VEX IQ Kit và các chi tiết nhựa, học viên được hướng dẫn cách sử dụng và lắp ráp các chi tiết nhựa để thiết kế mô hình đơn giản\nTrải ngiệm lắp ráp mô hình trực thăng\nLàm quen với ứng dụng VEXcode IQ, học viên được hướng dẫn thao tác cơ bản với ứng dụng như đặt tên cho dự án, lưu và mở dự án..."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "CHUYỂN ĐỘNG ROBOT\nHọc viên tìm hiểu lĩnh vực Robotics và các ứng dụng thực tế và vai trò của robot trong cuộc sống hiện đại\nLắp ráp mô hình robot và lập trình robot hoạt động cơ bản bao gồm di chuyển tới - lùi, rẽ trái - phải\nLập trình mô hình chuyển động cơ bản (di chuyển liên tục) kết hợp lệnh wait\nThực hành kết nối mô hình với máy tính và chạy chương trình"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "TỐC ĐỘ VÀ SỨC MẠNH\nHọc viên được giới thiệu về cơ cấu truyền động bằng bánh răng, tìm hiểu về các thành phần bánh răng, trục, bộ phận truyền động và cách chúng hoạt động\nTìm hiểu về MAD Box và cách áp dụng chúng trong việc lập trình chuyển động robot\nKhái niệm về tốc độ, cách tính toán tốc độ dựa theo thông số cơ cấu truyền động\nTrải nghiệm ứng dụng VEXCODE VR chuẩn bị cho việc học tại nhà"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Công xưởng sáng tạo\nÔn tập kiến thức từ các bài học trước, bao gồm cơ cấu truyền động, vận tốc, M A.D. Box.\nHọc viên áp dụng cơ cấu truyền động thiết kế một mô hình robot.\nÁp dụng kiến thức đã học lập trình mô hình robot đã thiết kế để thực hiện các chức năng và hành động mong muốn."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Chạm và Di Chuyển\nHọc viên được giới thiệu với các cảm biến chạm có thể lắp đặt trên robot để phát hiện tiếp xúc với vật thể hoặc môi trường xung quanh.\nHọc viên sẽ tìm hiểu về bumper switch một loại cảm biến chạm phổ biến trong robotics, tìm hiểu cấu tạo và nguyên lý hoạt động của bumper switch.\nLập trình với thẻ lệnh điều kiện \"if..else\" để kiểm tra trạng thái của cảm biến chạm và thực hiện các hành động tương ứng."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Khoảng Cách Bao Xa\nHọc viên được giới thiệu về cảm biến khoảng cách và cách nó hoạt động trong việc đo khoảng cách từ robot đến vật.\nTìm hiểu về nguyên lý hoạt động của cảm biến khoảng cách và cách sử dụng để nhận biết kích thước của vật.\nLập trình để robot có thể nhận biết kích thước của vật thông qua cảm biến khoảng cách và hiển thị kết quả lên màn hình não.\nLập trình để robot có thể chuyển động hoặc dừng lại khi phát hiện vật cản thông qua cảm biến khoảng cách"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Robot Nhận Tín Hiệu Như Thế Nào?\nHọc viên được giới thiệu cảm biến quang học và nguyên tắc hoạt động trong việc nhận biết đồ vật và màu sắc.\nTìm hiểu nguyên lý hoạt động của cảm biến quang học và cách sử dụng trong lĩnh vực robotics.\nLập trình mô hình phát hiện vật thể và màu sắc của vật thể trong phạm vi cảm biến hiện thị kết quả lên màn hình não hoặc touch LED."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Công xưởng sáng tạo\nHọc viên ôn tập kiến thức về cảm biến đã học trong các bài học trước, bao gồm cảm biến chạm, cảm biến màu sắc, cảm biến khoảng cách, cảm biến chuyển động, và các thẻ lệnh điều kiện, vòng lặp, thẻ lệnh hiển thị liên quan đến cảm biển.\nLắp ráp mô hình robot trang bị các loại cảm biến.\nLập trình mô hình động và tương tác với cảm biến."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Hành trình Tự động\nÔn tập kiến thức từ các bài học trước, vòng lặp, cảm biến quang học và lập trình với thẻ lệnh \"if...else\".\nHọc viên áp dụng toán tử vào lập trình mô hình robot.\nÁp dụng kiến thức đã học lập trình mô hình robot đã thiết kế để thực hiện các chức năng và hành động mong muốn"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Tín hiệu Thông minh\nÔn tập kiến thức từ các bài học trước, vòng lặp, cảm biến quang học và lập trình với thẻ lệnh \"if else\".\nHọc viên áp dụng thẻ lệnh LOCK vào lập trình mô hình robot.\nÁp dụng kiến thức đã học lập trình mô hình robot đã thiết kế để thực hiện các chức năng và hành động mong muốn"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Sáng tạo Mô hình\nÔn tập công dụng của các linh kiện, thiết bị trong bộ Kit VEX IQ\nLên ý tưởng và xây dựng mô hình cho sản phẩm cuối khóa."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Công xưởng sáng tạo\nÔn tập công dụng các thẻ lệnh lập trình đã học.\nLên ý tưởng cho lập trình cho sản phẩm cuối khóa"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Demo\nHọc viên cải tiến mô hình và vập trình mô hình hoạt động hiệu quả hơn"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình\nHọc viên thuyết trình được ý tưởng lắp ráp mô hình\nHọc viên trình bày được ý tưởng nội dung lập trình"
+            }
+        ]
+    },
+    {
+        "name": "semia",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Vận Hành Robot\nÔn tập kiến thức đã học trong học phần trước.\nGiới thiệu về khái niệm tự động hóa một phần và ứng dụng trong lĩnh vực robot.\nLập trình mô hình hoạt động theo trình tự từng động cơ thông qua các phim bấm trên não."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Thống Trị Robot\nKhám phá kiến thức về robot trong công nghiệp, ứng dụng của robot trong quá trình sản xuất và lợi ích mà chúng mang lại.\nTìm hiểu cách ghép nối bộ điều khiển VEX IQ với não và điều chỉnh các thông số liên quan đến bộ điều khiển.\nTrải nghiệm sử dụng bộ điều khiển VEX IQ để điều khiển động cơ và thực hiện các thao tác đơn giản, chẳng hạn như di chuyển lên, xuống. quay trái và quay phải, di chuyển đồ vật."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "IQ Bộ Não Siêu Việt\nÔn tập cách kết nối điều khiển với Brain, lập trình in lên màn hình Brain.\nLập trình với vòng lặp và thẻ lệnh điều kiện if .. else .. if (controller sensing) để sử dụng các nút bấm trên bộ điều khiển.\nSử dụng Controller để đánh các bài nhạc cơ bản.\nTìm hiểu các công dụng khác của điều khiển."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Công Xưởng Sáng Tạo\nLắp ráp mô hình robot đơn giản và áp dụng kiến thức đã học để lập trình chúng thực hiện các tác vụ cơ bản.\nThực hành lập trình với thẻ lệnh sự kiện, điều kiện và tương tác với bộ điều khiển VEXIQ\nGiải quyết các bài tập và vấn đề thực tế liên quan đến lập trình và điều khiển robot.\nMini Competition.\nÔn tập thẻ lệnh vòng lặp, thẻ lệnh điều kiện If... else. if (controller sensing)."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Cánh tay Robot\nTìm hiểu thông số thiết bị như tốc độ di chuyển, mức độ phản hồi của của cảm biển.\nLập trình robot để phản ứng với sự kiện nhấn nút bấm trên não, ví dụ: di chuyển, dừng lại hoặc thực hiện một hành động cụ thể."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Phối Hợp Linh Hoạt\nTìm hiểu về các phim có trên bộ điều khiển VEX IQ\nLập trình robot hoạt động với thể lệnh sự kiện phản ứng tín hiệu từ các phim E Up, E Down, F Up, F Down, L Up, L Down, R Up, R Down, L3, R3 trên bộ điều khiển.\nThiết kế và lập trình các hành động cơ bản cho robot khi nhận được tín hiệu từ các phím trên bộ điều khiển, chẳng hạn như di chuyển, nâng hạ, quay trái phải\nvà thực hiện các tác vụ khác."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Robot và Toán Học\nTìm hiểu về biển, toán tử và ý nghĩa của chúng trong lập trình robot.\nKhai báo biển, kiểu dữ liệu và cách sử dụng biến trong lập trình robot.\nPhép toán tử bao gồm so sánh phép toán đại số."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Công Xưởng Sáng Tạo\nLắp ráp mô hình robot đơn giản và áp dụng kiến thức đã học để lập trình chúng thực hiện các tác vụ cơ bản.\nThực hành lập trình với thẻ lệnh sự kiện, điều kiện và tương tác với bộ điều khiển VEX IQ\nGiải quyết các bài tập và vấn đề thực tế liên quan đến lập trình và điều khiển robot.\nMini Competition."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Tối Ưu Thiết Bị Điều Khiển\nGiới thiệu cần điều khiển trên bộ điều khiển và các thông số liên quan\nTìm hiểu nguyên tắc di chuyển cơ bản của mô hình robot thông qua lập trình mô hình hoạt động với cần điều khiển.\nLập trình mô hình hoạt động với thẻ lệnh biển số, toán tử, vòng lặp và câu lệnh điều kiện"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Tối Ưu Thiết Bị Điều Khiển\nLập trình mô hình hoạt động nhiệm vụ phức tạp với cả "
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Nhiệm Vụ Phối Hợp\nTìm hiểu cách kết hợp Bumper Switch (cảm biến chạm) và bộ điều khiển để tạo ra một hệ thống phức tạp cho robot.\nLập trình Robot hoạt động khi Bumper Switch phát hiện va chạm, robot sẽ thực hiện một hành động nhất định và vô hiệu hóa bộ điều khiển."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Công Xưởng Sáng Tạo\nÔn tập kiến thức đã học.\nÁp dụng kiến thức đã học thực hành và giải quyết các bài tập thực tế\nLập trình các tác vụ và hành động cơ bản của robot, như di chuyển, quay đầu, nâng hạ đồ vật và tương tác với môi trường xung quanh.\nMini Competition."
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Demo\nHọc viên cải tiến mô hình và lập trình mô hình hoạt động hiệu quả hơn."
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình\nHọc viên thuyết trình được ý tưởng lắp ráp mô hình.\nHọc viên trình bày được ý nghĩa nội dung lập trình."
+            }
+        ]
+    },
+    {
+        "name": "semii",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Cảm Biến Tiên Tiến\nÔn tập kiến thức lập trình của học phần trước.\nTìm hiểu cảm biến con quay hồi chuyển gryo sensor và lập trình mô hình hoạt động.\nSo sánh kết quả hoạt động của mô hình khi khai báo và không khai báo cảm biến con quay hồi chuyển\n"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Thông Điệp Robot\nKhám phá nguyên lý hoạt động của hệ thống treo.\nTìm hiểu các loại hệ thống treo phổ biến và ứng dụng của chúng.\nÁp dụng hệ thống treo lắp ráp mô hình.\nLập trình mô hình hoạt động với thẻ lệnh sự kiện sử dụng bộ điều khiển."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Vượt Chướng Ngại Vật\nTìm hiểu về khái niệm và cấu trúc của robot nâng hạ.\nHiểu về cách hoạt động của các bộ phận cơ bản trong robot nâng hạ\nTìm hiểu cách lắp ráp và kết nối các thành phần của robot nâng hạ.\nKhám phá khả năng sử dụng thẻ lệnh \"When I receive\" trong lập trình robot.\nLập trình điều khiển robot nâng hạ để thực hiện các nhiệm vụ như nâng, hạ và\ndi chuyển tải trọng với thẻ lệnh sự kiện."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Chinh Phục Robot\nKhám phá các tình huống nguy hiểm mà robot có thể tham gia để giảm thiểu nguy cơ cho con người.\nTìm hiểu về vai trò của robot trong việc thực hiện các tác vụ nguy hiểm mà con người khó tiếp cận hoặc gặp rủi ro lớn.\nThực hành viết chương trình để điều khiển và tương tác với robot thông qua bộ điều khiển.\nTạo ra các tác vụ và tình huống thực tế để thử nghiệm khả năng hoạt động và phản ứng của robot với bộ điều khiển."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Giao Hàng Thông Minh\nTìm hiểu khái niệm robot dịch vụ và tầm quan trọng của nó trong cung cấp các\ndịch vụ hỗ trợ và tương tác với con người.\nTìm hiểu ứng dụng của robot dịch vụ như y tế, khách sạn, giao thông, giáo dục, và\ndịch vụ công cộng.\nLập trình mô hình hoạt động với nhiều tác vụ khác nhau, thể hiện cảm xúc thông\nqua màn hình hiển thị."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Robot Công Nghiệp\nKhám phá cấu trúc và nguyên lý hoạt động của mô hình cánh tay robot với nhiều động cơ.\nTìm hiểu vai trò và ứng dụng của cánh tay robot trong các tác vụ như vận chuyển, nâng hạ, và tương tác với môi trường.\nLập trình mô hình hoạt động khi nhận tín hiệu từ touch led và bumper switch, bộ điều khiển."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Robot Đa Năng\nHọc viên tạo ra các tình huống, nhiệm vụ thực tế để thử nghiệm và kiểm tra khả năng hoạt động của mô hình cánh tay robot.\nLập trình mô hình hoạt động khi nhận tín hiệu từ bộ điều khiển thực hiện chuỗi tác vụ trong một nhiệm vụ."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Công xưởng sáng tạo - thực thi\nÔn tập kiến thức đã học.\nLựa chọn sản phẩm cuối khóa.\nĐưa ra ý tưởng và lập trình cho sản phẩm cuối khóa."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Dự Án Cuối Khóa\nLựa chọn dự án Robotics và ứng dụng của nó trong thực tế.\nLắp ráp các thành phần cần thiết và kết nối chúng để tạo thành mô hình Robot.\n"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Dự Án Cuối Khóa\nXác định các chức năng và nhiệm vụ mà mô hình Robot cần thực hiện.\nSử dụng kiến thức lập trình đã học, lập trình mô hình hoạt động dựa trên ý tưởng dự án."
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Dự Án Cuối Khóa\nThực hiện các thử nghiệm và kiểm tra hoạt động của mô hình Robot, hiểu chỉnh về thiết kế và nội dung lập trình.\nĐánh giá hiệu suất và tính năng của mô hình Robot, điều chỉnh và cải thiện nếu\ncân."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Công xưởng sáng tạo\nÔn tập kiến thức đã học.\nhoàn thiên dự án cuối khóa.\nPhân chia nhiệm vụ, chuẩn bị cho buổi thuyết trình Robot"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Demo\nHọc viên cải tiến mô hình và lập trình mô hình hoạt động hiệu quả hơn."
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình\nHọc viên thuyết trình được ý tưởng lắp ráp mô hình.\nHọc viên trình bày được ý nghĩa nội dung lập trình"
+            }
+        ]
+    },
+    {
+        "name": "armi",
+        "date": "2025",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "Cổng vào Thành phố\nHọc viên tìm hiểu như thế nào được gọi là thành phố hiện đại trong tương lai.\nLắp ráp mô hình Cổng thành phố trang bị 02 động cơ, LED Bumper và cảm biến mắt.\nLập trình mô hình tự hoạt động có sử dụng thẻ lệnh hiển thị LED Bumper, thẻ lệnh điều kiện và vòng lặp."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "Đồng hồ khổng lồ\nHọc viên tìm hiểu cách bố trí bánh răng của đồng hồ.\nLắp ráp mô hình đồng hồ có sử dụng 02 động cơ.\nLập trình mô hình đồng hồ hoạt động với thẻ lệnh wait và vòng lặp."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "Trạm dự báo ô nhiễm\nHọc viên tìm hiểu vấn nạn ô nhiễm không khí và tiếng ồn ở các thành phố lớn.\nLắp ráp mô hình có sử dụng cảm biến mắt và LED Bumper\nLập trình mô hình hoạt động với thẻ lệnh điều kiện if .. else và vòng lặp."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "Công xưởng sáng tạo\nDưới sự gợi ý của giáo viên, học viên thảo luận theo nhóm lựa chọn mô hình thiết bị cần thiết cho Thành phố hiện đại.\nLắp ráp mô hình sử dụng não, pin, 02 động cơ, LED Bumper, cảm biến mắt.\nLập trình mô hình hoạt động và tham gia thi đấu cùng với nhóm khác.\n"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "Xe buýt tự vận hành\nHọc viên tìm hiểu các loại xe tự vận hành trên thế giới.\nLắp ráp mô hình xe buýt có thể tự di chuyển và tự động đóng-mở cửa với 03 động cơ, LED Bumper và cảm biến mắt.\nLập trình mô hình hoạt động với thẻ lệnh điều kiện if .. else và vòng lặp."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "Xe gom rác tự động\nHọc viên tìm hiểu về vấn nạn ô nhiễm môi trường trên toàn thế giới.\nLắp ráp mô hình xe gom rác trang bị 03 động cơ, cảm biến mắt.\nLập trình mô hình hoạt động với thẻ lệnh điều kiện if .. else (liên quan đến cảm biến mắt) và vòng lặp."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "Xe giải cứu thú cưng\nHọc viên tìm hiểu cơ chế nâng đồ vật của xe nâng hàng.\nLắp ráp mô hình xe nâng hàng sử dụng 03 động cơ, cảm biến mắt và nam châm điện.\nLập trình mô hình hoạt động sử dụng thẻ lệnh nam châm điện, thẻ lệnh điều kiện if then, if .. else và vòng lặp.\nThẻ lệnh điều kiện lồng nhau."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "Công xuởng sáng tạo\nÔn tập toàn bộ kiến thức lập trình đã học.\nHọc viên tham gia giải đề cuối khóa xoay quanh chủ đề Thành phố hiện đại.\nLên ý tưởng lắp ráp mô hình gồm 03 động cơ, năm châm điện, cảm biến mắt, LED Bumper.\nLập trình mô hình vận hành nhiệm vụ được giao."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "Trợ thủ trường học\nHọc viên được giới thiệu về những Robot thông minh trên thế giới.\nLắp ráp mô hình Robot trang bị 03 động cơ, cảm biến mắt và LED Bumper.\nLập trình Robot di chuyển linh hoạt và né tránh vật cản.\nThẻ lệnh điều kiện lồng nhau."
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "Vận chuyển thức ăn\nLắp ráp mô hình xe vận chuyển thức ăn có sử dụng ròng rọc (mô phỏng tời nâng).\nLập trình mô hình di chuyển đồ vật tự động.\nThẻ lệnh điều kiện lồng nhau, vòng lặp."
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "Trường học thông minh\nLắp ráp mô hình thùng rác tự động di chuyển trang bị 3 động cơ, cảm biến mắt.\nLập trình mô hình di chuyển theo đường vạch màu (đỏ, xanh dương, xanh lá cây).\nThủ lệnh điều kiện lồng nhau, vòng lặp."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "Công xuống sáng tạo.\nÔn tập toàn bộ kiến thức lập trình đã học.\nHọc viên tham gia giải để cuối khóa xoay quanh chủ đề Nhiệm vụ bất khả thi.\nLên ý tưởng lắp ráp mô hình gồm 03 động cơ, năm chăm điện, cảm biến mắt, LED Bumper.\nLập trình mô hình vận hành nhiệm vụ được giao."
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "Demo Robot\nDưới sự hướng dẫn của giáo viên, học viên lên ý tưởng lắp ráp mô hình và lập trình mô hình vận hành.\nThuyết trình demo, tùy chỉnh câu lệnh, cải tiến mô hình."
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "Thuyết trình Robot\nThuyết trình cuối khóa."
+            }
+        ]
+    },
+    {
+        "name": "ai4l2",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "VIBE CODE & GOOGLE AI STUDIO\nGiới thiệu mục tiêu Level 2 và sản phẩm cuối khóa.\nLàm quen Google Al Studio như công cụ học tập và xây nền tảng ôn tập.\nChọn 1 môn học/chủ đề thật để phát triển xuyên suốt khóa.\nXác định các đầu ra chính của nền tảng: tóm tắt, sơ đồ kiến thức, quiz, flashcard, Q&A.\nKhởi tạo phiên bản đầu tiên của nền tảng trên Google Al Studio Build App.\nHình thành nguyên tắc dùng AI đúng cách, có kiểm chứng và có trách nhiệm.\nTrong phạm vi khóa học, học viên chọn 1 môn/chủ đề làm trọng tâm để phát triển sản phẩm; sau\nkhi kết thúc khóa, nền tảng có thể tiếp tục mở rộng thêm nhiều môn/chủ đề khác để ôn luyện."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "INPUT SOURCES & AI ANALYIS\nThu thập học liệu từ text, ảnh chụp vở/tài liệu, URL theo đúng chủ đề đã chọn.\nLàm rõ luồng text-first: text là nguồn ổn định nhất cho grounded Al ở giai đoạn này.\nXây dựng khu vực nhập học liệu của nền tảng ôn tập.\nTổ chức nguồn học liệu theo chủ đề và lưu bằng LocalStorage.\nTạo màn hình preview để Al thể hiện: ý chính, từ khóa, phạm vi kiến thức.\nKiểm tra xem Ai hiểu đúng hay chưa; bổ sung hoặc chỉnh nguồn nếu cần.\nLàm rõ nguyên tắc nhập học liệu an toàn, phù hợp, không đưa dữ liệu riêng tư hoặc tài liệu không rõ\nnguồn."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "AI CONTENT GENERATION\nDùng Al tạo summary và key points theo đúng phạm vi chủ đề.\nTạo bộ câu hỏi luyện tập ở mức cơ bản theo nhiều dạng: đúng/sai, lựa chọn, điền từ ngắn, hỏi – đáp ngắn.\nTạo flashcard hoặc bộ ghi nhớ nhanh theo từ khóa/khái niệm/công thức.\nTạo Q&A seed để chuẩn bị cho chatbot hỗ trợ ôn bài sau này.\nLưu toàn bộ output vào LocalStorage.\nRèn thói quen chọn lọc, kiểm chứng, chỉnh sửa output Al trước khi dùng học thật.\nTăng chuẩn chất lượng: study pack phải bám kiến thức cốt lõi, tránh quá nông hoặc quá meta."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "QUIZ MODE & FLASHCARD UI\nTổ chức dữ liệu câu hỏi và flashcard thành trải nghiệm ôn tập rõ ràng, dễ dùng.\nHoàn thiện Quiz Mode với phản hồi đáp án cơ bản và score đúng.\nHoàn thiện Flashcard Mode để lật thẻ và ôn nhanh theo chủ đề.\nBổ sung thao tác thêm/sửa/xóa câu hỏi và flashcard.\nTinh chỉnh trình bày theo thế mạnh người học: trực quan cho khối art, logic – tương tác cho khối công nghệ.\nTiếp tục nhấn mạnh: Al hỗ trợ tạo nội dung, nhưng con người quyết định chọn và chỉnh nội dung để học thật.\nThêm bước kiểm thử scoring để tránh lỗi logic “UI đúng nhưng điểm sai\"."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CHATBOT, SAVE/LOAD & RE-GENERATE\nTạo trợ lý hỏi-đáp hỗ trợ ôn bài trong phạm vi chủ đề đã chọn.\nHoàn thiện phiên bản lưu trữ bảo quản sản phẩm để lần sau học lại được.\nDùng Re-Generate để tạo phiên bản ôn tập mới từ cùng nguồn gốc.\nSo sánh phiên bản cũ và mới để thấy giá trị của việc ôn luyện nhiều vòng.\nThảo luận khi nào Al hỗ trợ học là đúng, khi nào là làm hộ không phù hợp."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "POLISH, TESTING & SHOWCASE\nRà soát toàn bộ hệ thống ôn tập đã tạo trong 5 buổi trước.\nHoàn thiện sản phẩm theo định dạng phù hợp: interactive, visual hoặc portfolio học tập.\nKiểm thử bằng một phiên ôn tập thật trên chính chủ đề đã chọn.\nChuẩn bị phần trình bày: Al đã giúp tổng hợp, hệ thống hóa và làm chủ kiến thức ra sao.\nTổng kết nguyên tắc dùng Al an toàn, trung thực, có trách nhiệm trong học tập.\n"
+            }
+        ]
+    },
+    {
+        "name": "ai4l1",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "SÁNG TẠO HÌNH ẢNH VỚI AI\nGiới thiệu tổng quan khóa học Al for Learn và đưa ra nội quy của lớp học.\nTìm hiểu khái niệm cơ bản về Trí tuệ nhân tạo (AI), các phân loại Al.\nTìm hiểu về ứng dụng Al trong học tập.\nTìm hiểu về trách nhiệm khi sử dụng Al.\nThực hành tạo lập tài khoản Gmail.\nThực hành sử dụng công cụ ChatGPT/Gemini để sáng tạo hình ảnh."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "THỰC HÀNH: TẠO HÌNH ẢNH BẰNG NANO BANANA\nTìm hiểu storybook và các bước xây dựng storybook.\nTìm hiểu về các thành phần nhân vật và cốt truyện trong storybook.\nTìm hiểu về công cụ Gemini Storybook.\nPhân tích Prompt xây dựng Storybook.\nThực hành sử dụng công cụ để sáng tạo một Storybook hoàn chỉnh với cốt truyện có ý nghĩa."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "LÀM CHỦ SLIDE THUYẾT TRÌNH VỚI AI\nTìm hiểu infographic và lợi ích của infographic trong học tập.\nPhân tích Prompt xây dựng Storybook bằng Nano Banana 2.\nTìm hiểu về công cụ NotebookLM.\nThực hành tải file để xây dựng sổ ghi chú trên NotebookLM.\nThực hành sử dụng công cụ để sáng tạo một infographic hoàn chỉnh."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "THỰC HÀNH: TẠO SLIDE BẰNG NOTEBOOKLM\nTìm hiểu về slide thuyết trình và lợi ích của slide thuyết trình trong ghi nhớ kiến thức.\nPhân tích Prompt xây dựng slide thuyết trình bằng NotebookLM.\nÔn tập công cụ NotebookLM.\nThực hành sử dụng công cụ để sáng tạo một slide thuyết trình hoàn chỉnh."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CHINH PHỤC VIDEO VỚI AL\nÝ nghĩa của video ngắn trong việc truyền tải thông tin.\nTìm hiểu các yếu tố cần thiết để xây dựng kịch bản cho một video ngắn.\nGiới thiệu một số công cụ Al tạo và chỉnh sửa video.\nTìm hiểu cách viết prompt tạo video.\nThực hành tạo video đơn giản bằng Veo 3."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "THỰC HÀNH: TẠO VIDEO BẰNG FLOW\nThực hành xây dựng kịch bản cho một video ngắn từ chủ đề đã chọn.\nThực hành tạo video từ kịch bản trên bằng Flow."
+            }
+        ]
+    },
+    {
+        "name": "SB",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "AI TRONG HỌC TẬP\nTìm hiểu tổng quan khóa học Scratch Basic, các mốc thời gian quan trọng và nội quy lớp học.\nTìm hiểu về cấu trúc tuần tự trong tư duy máy tính thông qua trò chơi Rapid Router.\nTìm hiểu về vai trò của ngôn ngữ lập trình và các sản phẩm lập trình trong cuộc sống.\nLàm quen với môi trường lập trình Scratch (Raise).\nTìm hiểu và thực hành khởi tạo nhân vật và phông nền.\nThực hành thiết kế căn phòng của em.\nTìm hiểu cách quản lý dự án thông qua quản lý file."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "THIỆP MỪNG SINH NHẬT\nTìm hiểu về kỷ nguyên số hoá các công việc thông dụng trong cuộc sống.\nTìm hiểu về các trang phục của nhân vật, các thẻ lệnh tương tác với trang phục và chức năng của các trang phục.\nTìm hiểu về âm thanh, cách thêm âm thanh và các thẻ lệnh tương tác với âm thanh trong Scratch.\nTìm hiểu vòng lặp với số lần biết trước và vòng lặp liên tục trong nhóm lệnh Control.\nThực hành tạo hành động của nhân vật và thêm âm thanh vào dự án.\nThực hành thiết kế thiệp chúc mừng sinh nhật và nhân vật gửi lời chúc đến người nhận."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "GÀ MẸ TÌM CON\nTìm hiểu về tập tính của loài gà và công việc chăm con của gà mái.\nTìm hiểu về hướng của nhân vật, các hướng cơ bản và các thẻ lệnh để điều chỉnh hướng của nhân vật trong Scratch.\nTìm hiểu về câu lệnh rẽ nhánh, ứng dụng của câu lệnh rẽ nhánh trong thực tế.\nTìm hiểu về điều kiện và giá trị trả về từ điều kiện trong Scratch.\nThực hành sử dụng thẻ lệnh kiểm tra va chạm giữa hai nhân vật.\nThực hành lập trình dự án \"Gà mẹ tìm con\"."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "GIAO THÔNG AN TOÀN\nTìm hiểu về các hậu quả của tai nạn giao thông và các biện pháp tham gia giao thông an toàn.\nTìm hiểu về biến, ứng dụng của biến và các thẻ lệnh tương tác với biến trong Scratch.\nThực hành sử dụng biến để đếm số lần nhấn chuột.\nTìm hiểu về sự kiện nhấn phím trong Scratch.\nThực hành lập trình điều khiển nhân vật thông qua các phím điều hướng.\nÔn tập câu điều kiện, tìm hiểu về điều kiện lồng và các thẻ lệnh kết hợp điều kiện trong Scratch Thực hành lập trình dự án \"Giao thông an toàn\"."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "WORKSHOP KỸ NĂNG\nThực hiện bài kiểm tra định kỳ làn 1 - checkpoint 1\nTìm hiểu về tầm quan trọng của hình ảnh trong dự án.\nTìm hiểu về công cụ Al tạo hình ảnh.\nThực hành viết prompt để tạo hình ảnh."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "BẢO VỆ KHỦNG LONG\nTìm hiểu về các loài khủng long và nguyên nhân tuyệt chủng của khủng long.\nTìm hiểu về tạo bản sao, cơ chế của tạo bản sao và các thẻ lệnh để tạo, tương tác với bản sao trong Scratch.\nThực hành dùng cơ chế bản sao để lập trình tạo hiệu ứng bóng bay.\nThực hành sử dụng cơ chế tạo bản sao để tạo nhiều thiên thạch.\nThực hành tạo trò chơi \"Bảo vệ Khủng long\"."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "ĐẠI CHIẾN TRÊN KHÔNG TRUNG PHẦN 1\nTìm hiểu về chiến thắng Điện Biên Phủ trên không (1972) và anh hùng Phạm Tuân.\nTìm hiểu về các hiệu ứng trong Scratch.\nThực hành tạo hiệu ứng ẩn/hiện nhân vật bằng các hiệu ứng trong Scratch.\nThực hành lập trình dự án \"Đại chiến không trung\"."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "ĐẠI CHIẾN TRÊN KHÔNG TRUNG PHẦN 2\nTìm hiểu về vai trò của màn hình chờ, màn hình bắt đầu và màn hình kết thúc trò chơi.\nTìm hiểu về phát tin - nhận tin và ứng dụng của phát tin - nhận tin trong Scratch.\nThực hành tạo giao diện bắt đầu và giao diện kết thúc cho trò chơi.\nThực hành lập trình tăng độ khó cho trò chơi.\nThực hành lập trình hoàn thiện dự án \"Đại chiến không trung\"."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "CÔNG XƯỞNG PHÁT MINH\nThực hiện bài kiểm tra định lần 2 - checkpoint 2.\nTìm hiểu tiêu chí đánh giá sản phẩm cuối khoá.\nThực hành tìm kiếm ý tưởng xây dựng dự án cá nhân."
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "DỰ ÁN CỦA EM (Phần 1)\nThực hiện lập trình cho dự án"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "DỰ ÁN CỦA EM (Phần 2)\nThực hiện lập trình cho dự án"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "DỰ ÁN CỦA EM (Phần 3)\nThực hiện lập trình cho dự án"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nHoàn thiện và đóng gói sản phẩm\nThiết kế bài trình chiếu hỗ trợ thuyết trình"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHÓA\nThực hiện thuyết trình cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "SA",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "AI TRONG CUỘC SỐNG\nGiới thiệu tổng quan khoá học Scratch Advanced, các mốc thời gian quan trọng và nhắc lại nội quy của lớp học.\nÔn tập các khái niệm cơ bản về Scratch Basic.\nTìm hiểu về ứng dụng của Al trong các mặt của cuộc sống.\nTìm hiểu về nhà thông minh và xy hướng của tương lai.\nLập trình xây dựng các chức năng cho dự án \"Nhà thông minh\"\n"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "HÀNH TRÌNH BÍ NGÔ (PHẦN 1)\nTìm hiểu về sự công việc của người nông dân khi trồng và thu hoạch Bí ngô.\nThực hành phân tích dự án \"Hành trình bí ngô\".\nThực hành lập trình tạo giao diện cho trò chơi.\nThực hành lập trình điều khiến nhân vật bằng các phím WASD và xử lý hướng đi xéo cho nhân vật chính.\nThực hành lập trình cho các nhân vật phụ cho trò chơi."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "HÀNH TRÌNH BÍ NGÔ (PHẦN 2)\nTìm hiểu về hiệu ứng hover và công dụng của hiệu ứng hover.\nThực hành lập trình tạo hiệu ứng Hover cho các nút tại giao diện Menu.\nThực hành tạo cơ chế điểm số cho dự án và sự kiện kết thúc trò chơi.\nThực hành tạo các hiệu ứng di chuyển cho các nhân vật.\nÔn tập và thực hiện tạo hiệu ứng ẩn hiện cho các nhân vật."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "HÀNH TRÌNH BÍ NGÔ (PHẦN 3)\nTìm hiểu về List (Danh sách) và cấu tạo của List\nTìm hiểu về các thẻ lệnh tương tác với List.\nThực hành lập trình thêm xóa sửa các phần tử trong List.\nThực hành tạo bảng xếp hạng cho dự án.\nThực hành tạo lưu lại điểm số cho dự án và chức năng tìm ra người chơi có điểm số cao nhất.\nThực hành xử lý âm thanh nền và âm thanh va chạm cho dự án.\nThực hành tạo giao diện Setting."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "WORKSHOP KỸ NĂNG\nTìm hiểu về Trí tuệ nhân tạo (AI).\nTìm hiểu về ứng dụng của Al trong cuộc sống.\nTìm hiểu về Teachable Machine và cách để training model Al.\nTìm hiểu về Dataset, tầm quan trọng của Dataset và các tiêu chí của Dataset giúp\ntraining model Al tốt hơn.\nThực hành training model Al với dataset được lấy từ webcam.\nThực hiện checkpoint 1."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "CHINH PHỤC VŨ MÔN (PHẦN 1)\nTìm hiểu về văn hoá \"Cá chép vượt Vũ Môn\".\nTìm hiểu về dự án \"Chinh phục Vũ Môn\".\nThực hiện tranining model Al điều khiển nhân vật cá chép.\nThực hành sử dụng các thông số trả về từ model Al để lập trình điều khiển nhân vật cá chép."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "CHINH PHỤC VŨ MÔN (PHẦN 2)\nÔn tập cách viết prompt hiệu quả.\nThực hành tìm kiếm, xây dựng các tài nguyên cho dự án.\nThực hành lập trình cho các chướng ngại vật.\nThực hành xử lý va chạm cho các chướng ngại vật."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "CHINH PHỤC VŨ MÔN (PHẦN 3)\nThực hành lập trình tăng tiến độ khó cho trò chơi.\nThực hành thêm các vật phẩm khác cho trò chơi.\nThực hành tạo giao diện và đóng gói trò chơi."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "CÔNG XƯỞNG PHÁT MINH\nTìm hiểu về tiêu chỉ đánh giá sản phẩm cuối khoá.\nThực hiện tìm kiếm ý tưởng xây dựng dự án cá nhân.\nThực hiện checkpoint 2."
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 1)\nThực hiện lập trình cho dự án."
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 2)\nThực hiện lập trình cho dự án."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 3)\nThực hiện lập trình cho dự án."
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nThiết kế slide thuyết trình dự án.\nThực hiện thuyết trình thử dự án\nĐóng góp ý kiến và sửa lỗi dự án.\nThuyết trình giới thiệu dự án cuối khoá."
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHOẢ\nNhận xét, đánh giá và trao giải."
+            }
+        ]
+    },
+    {
+        "name": "SI",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "AI TRONG HỌC TẬP\nGiới thiệu tổng quan khoá học Scratch Intensive, các mốc thời gian quan trọng và nhắc lại nội quy của lớp học.\nThực hiện ôn tập các kiến thức cơ bản về Scratch.\nTìm hiểu các công cụ AI hỗ trợ xây dựng dự án từ hỗ trợ ý tưởng đến xây dựng các tài nguyên cho dự án."
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "CÔNG XƯỞNG PHÁT MINH\nTìm hiểu về quy trình tạo ra một sản phẩm Scratch.\nVận dụng các công cụ AI để hỗ trợ Tìm kiếm ý tưởng cho dự án cá nhân.\nTìm hiểu về bảng tiêu chí đánh giá dự án cá nhân.\nThực hiện Tìm kiếm ý tưởng cho sản phẩm cuối khóa.\nTìm hiểu các công cụ hỗ trợ quản lý dự án và xây dựng timeline cho dự án."
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "TÀI NGUYÊN CHO DỰ ÁN\nThực hiện lên kế hoạch, liệt kê các tài nguyên cần dùng cho dự án.\nTìm hiểu về các nguồn cung cấp các tài nguyên cho dự án.\nTìm hiểu về cách viết prompt hiệu quả để model AI có thể generate hình ảnh tốt hơn.\nThực hiện tìm kiếm, tạo ra các tài nguyên cho dự án cá nhân.\nLập tình các tính năng chính cho dự án."
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "GIAO DIỆN CHO DỰ ÁN\nTìm hiểu về vai trò của sơ dồ giao diện dự án.\nThực hiện phác thảo sơ đồ giao diện với các thành phần cơ bản như Guide, Màn chơi chính, ...\nThực hiện lập trình giao diện bắt đầu cho dự án.\nTìm hiểu về hiệu ứng nhấn chuột được thao tác trên giao diện bắt đầu.\nThực hiện lập trình hiệu ứng nhấn chuột cho giao diện."
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "BÁO CÁO TIẾN ĐỘ LẦN 1\nĐánh giá tiến độ dự án.\nThẩm định độ khả thi của sản phẩm."
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "TEXT TO SPEECH\nTìm hiểu về extension Text to Speech.\nỨng dụng Text to Speech để tạo hiệu ứng âm thanh bắt đầu kết thúc, phần hướng dẫn cho dự án, storyline của dự án,\nLập trình các tính năng chính của dự án."
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "HIỆU ỨNG PHÁ HUỶ\nÔn tập về cơ chế phát tin – nhận tin.\nÔn tập về cơ chế tạo bản sao.\nÔn tập các hiệu ứng ẩn nhân vật.\nTìm hiểu về các cách xử lý hiệu ứng để ẩn nhân vật.\nThực hiện lập trình tạo hiệu ứng phá huỷ nhân vật."
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "HIỆU ỨNG BẮT ĐẦU KẾT THÚC\nTìm hiểu về thông báo bắt đầu trò chơi và kết thúc trò chơi.\nThực hành lập trình tạo thông báo bắt đầu và kết thúc trò chơi.\nLập trình các tính năng chính của dự án."
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "BÁO CÁO TIẾN ĐỘ LẦN 2\nĐánh giá tiến độ dự án.\nThẩm định độ khả thi của sản phẩm."
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 1)\nThực hiện các chức năng nâng cao của dự án."
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 2)\nThực hiện các chức năng nâng cao của dự án."
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "DỰ ÁN CỦA EM (PHẦN 3)\nThực hiện các chức năng nâng cao của dự án."
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "NGHIỆM THU SẢN PHẨM\nThiết kế slide thuyết trình sản phẩm.\nThuyết trình thử sản phẩm.\nGóp ý và sửa lỗi."
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH CUỐI KHOÁ\nThuyết trình giới thiệu sản phẩm cuối khóa.\nNhận xét, đánh giá và trao giải."
+            }
+        ]
+    },
+    {
+        "name": "ROBB",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "NGƯỜI BẠN ROBOT\nPhổ biến quy định lớp học Robot\nTìm hiểu cơ bản về khái niệm Robot và cách Robot hỗ trợ trong cuộc sống\nTham gia trò chơi \"Đóng giả Robot\"\nLàm quen và nhận biết màu sắc của các khối gạch trong bộ Kit Spike Essential\nLựa chọn các khối gạch và xây dựng mô hình Robot hình người đơn giản dựa trên hướng dẫn"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "CHIẾC ĐÈN PIN KỲ DIỆU\nTìm hiểu về ánh sáng, ý nghĩa của ánh sáng trong cuộc sống\nTham gia trò chơi \"Bật tắt ánh sáng\"\nLàm quen với hình dạng thiết bị LED trong bộ Kit\nLàm quen với Light Block lập trình cho thiết bị LED phát sáng\nXây dựng mô hình đèn Pin với LED đơn giản với khả năng chiếu sáng trong bóng tối\nVận dụng các Block lệnh làm đèn Pin sáng"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "PHIÊU LƯU CÙNG CỐI XAY GIÓ\nTìm hiểu về gió, ý nghĩa của gió trong cuộc sống\nTham gia trò chơi \"Gió thổi gió thổi\"\nLàm quen với các thành phần và ý nghĩa cơ bản của cối xay gió\nLàm quen với thiết bị động cơ và Motor Block\nXây dựng mô hình cối xay gió sử dụng 1 động cơ, có thể xoay theo 2 chiều kim đồng hồ"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "THẾ GIỚI SẮC MÀU KỲ DIỆU\nTìm hiểu về cầu vồng\nTham gia trò chơi \"Đoản màu vỗ tay\"\nLàm quen với Random Light Block và Wait\nXây dựng mô hình Đèn lồng từ các khối gạch, sử dụng đèn LED phát sáng để thay đổi màu sắc ngẫu nhiên\nVận dụng Block lập trình mô hình thay đổi màu đa dạng"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập về kiến thức đã học từ các buổi trước\nTìm hiểu tín hiệu đèn giao thông\nTham gia trò chơi \"Đèn giao thông\"\nTiếp cận tới khái niệm lập trình tuần tự\nXây dựng mô hình cột đèn giao thông với khả năng thay đổi tín hiệu đèn"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "ĐÈN CẢNH BÁO ĐỘNG VẬT\nTìm hiểu về biển cảnh báo và màu sắc của chúng (đỏ, xanh, vàng)\nTham gia trò chơi \"Động vật và tín hiệu cảnh báo\"\nLàm quen với hình dạng của cảm biến màu sắc\nLàm quen với Sound Effect Block và Color Sensor Block\nXây dựng mô hình sử dụng cảm biến màu sắc với khả năng phát âm thanh cảnh báo khi phát hiện động vật hoang dã"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "ROBOT LẮNG NGHE\nTìm hiểu về cảm biến âm thanh trong bộ não Robot\nTham gia trò chơi \"Robot học sinh\"\nLàm quen với Sound Sensor Block để lập trình cho cảm biến âm thanh\nXây dựng mô hình Robot đánh gôn với 1 động cơ thực hiện hành động đánh bóng khi phát hiện âm thanh vỗ tay"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "SIÊU XE KHÁM PHÁ ĐƯỜNG HẦM\nTìm hiểu cơ bản các thành phần của xe khám phá đường hầm, hang động (đèn phát sáng, bánh xe di chuyển)\nTham gia trò chơi \"Đoàn xe\"\nTìm hiểu về hình dạng của bánh xe và chuyển động quay\nXây dựng mô hình xe khám phá đường hầm với đèn LED phát sáng trong đường hầm tối"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập kiến thức từ các buổi học trước về cảm biến màu sắc, cảm biến âm thanh và các Block lệnh của cảm biến\nSáng tạo xây dựng mô hình với 1 động cơ\nVận dụng kiến thức lập trình mô hình hoạt động"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "THẾ GIỚI ĐỘNG VẬT\nTìm hiểu về thói quen của một số loài động vật\nTham gia trò chơi \"Đoản loài vật\"\nXây dựng mô hình mô phỏng hươu cao cổ với cảm biến màu sắc và đèn LED, thay đổi màu sắc của đèn LED khi hươu cao cổ phát hiện lá cây\nVận dụng thẻ lệnh lập trình mô hình hoạt động"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "THÀNH PHỐ TRONG MƠ\nTìm hiểu cơ bản về thành phố gồm các tòa nhà cao tầng\nTham gia trò chơi \"Ai sống ở đâu\"\nSáng tạo xây dựng các tòa nhà cao tầng bằng khối gạch có các công trình sử dụng động cơ và đèn LED, tạo nên thành phố hiện đại\nVận dụng các Block đã học lập trình các công trình có động cơ và đèn LED hoạt động"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "CÔNG VIÊN GIẢI TRÍ\nTìm hiểu về công viên và các thành phần cơ bản trong công viên (cây cối, xích đu, khu vực chơi cát, đường đi bộ,..)\nTham gia trò chơi \"Tàu lượn siêu tốc\"\nXây dựng mô hình trò chơi trong công viên, có thể thay đổi tốc độ như bấp bênh, đu quay."
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "DEMO ROBOT\nHọc viên thực hành dự án cuối khóa\nÔn tập kiến thức đã học\nDemo Robot hoạt động\nThuyết trình giới thiệu về dự án của nhóm"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH ROBOT\nThuyết trình cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "ROBA",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "HÀNH TRÌNH KHÁM PHÁ SỞ THÚ\nTìm hiểu về sở thú, nơi bảo tồn các loài vật hoang dã\nTham gia trò chơi \"Đoán hướng của vật\"\nÔn tập tên và hình dạng của các thiết bị điện tử\nLàm quen với Movement Block điều khiến 2 động cơ\nXây dựng mô hình xe bus với thiết kế có không gian cho du khách tham quan với 2 động cơ giúp xe di chuyến"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "THỎ CON NHẢY NHÓT\nTìm hiểu hình dáng, đặc điểm nổi bật của loài thỏ (tai dài và sự nhanh nhẹn)\nTìm hiểu sự co giần của dây chun\nTham gia trò chơi \"Con thỏ ăn có\"\nXây dựng mô hình chú thỏ với 1 động cơ mô phỏng lại cách di chuyến của loài thỏ"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "CHÚ KHỈ TINH NGHỊCH\nTìm hiểu về đặc điểm và hình dạng của loài khỉ (sống trên cây, có thể leo trèo linh hoạt...)\nTham gia trò chơi \"Khỉ nhảy múa\"\nLàm quen với Forever Loop và Record Sound\nXây dựng mô hình chú Khỉ với 2 động cơ để mô phỏng lại cách di chuyển trên mặt đất của loài khỉ\nVận dụng Block lệnh lập trình mô hình chú khỉ di chuyển và phát âm thanh theo chuỗi hành động"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "NGƯỜI BẠN NHỎ TRONG CÒ\nTìm hiểu về đặc điểm của loài Dế (tiếng kêu đặc trưng)\nLắng nghe câu chuyện \"Dế mèn phiêu lưu: Bênh vực kẻ yếu\nXây dựng mô hình bạn Dề với 2 động cơ để mô phỏng lại cách di chuyển của loài để"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập kiến thức, công dụng các Block lệnh từ các buổi trước và chủ đề đã học\nSáng tạo xây dựng mô hình mô phỏng loài vật, xe bus\nCùng các nhóm trong lớp tạo thành sở thú mini"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "NHẢY NHÓT CÙNG BẠN CỦA\nTìm hiểu về đặc điểm và hình dạng của loài cua (cách di chuyển đặc trưng, đôi càng cua)\nLàm quen với cảm biến nghiêng trong bộ não Robot\nTham gia trò chơi \"Dáng đi của chú cua\"\nXây dựng mô hình gồm 2 động cơ kết hợp với cảm biến nghiêng để mô phỏng lại cách di chuyển của loài cua"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "CHÚ CHIM VÙNG NAM CỰC\nTìm hiểu về loài chim cánh cụt và môi trường sống khắc nghiệt của chúng (bộ lông giúp loài chim giữ ẩm)\nTham gia trò chơi \"Dì chuyển như chim cánh cụt\"\nXây dựng mô hình gồm 2 động cơ để mô phỏng lại cách di chuyển của loài chim cánh cụt"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "CHƠI ĐÙA CÙNG HẢI CẦU\nTìm hiểu về loài Hải cấu\nTham gia trò chơi lớp học \"Gương soi\"\nXây dựng mô hình mô phỏng Hải cẩu\n-Vận dụng Block lệnh lập trình mô hình hoạt động"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập các kiến thức đã học\nSáng tạo dựa trên các mô hình đã học từ khối gạch, động cơ và cảm biến\nTham gia hoạt động \"Sở thú thử thách\" giữa các nhóm trong lớp"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "CHÚ VOI CON Ở BẢN ĐÔN\nTìm hiểu về loài voi và môi trường sống của loài Voi\nTham gia trò chơi \"Dùng vòi lấy vật\"\nXây dựng mô hình mô phỏng loài Voi với 1 động cơ kết hợp với cảm biến màu sắc"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "HƯƠU CAO CỔ TÌM THỨC ĂN\nTìm hiểu về đặc điểm và hình dạng của loài Hươu cao cổ\nTham gia trò chơi \"Cao-Thấp\"\nXây dựng mô hình mô phỏng loài Hươu cao cổ với 1 động cơ thực hiện hành động ăn lá cây trên cao"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "NGƯỜI BẠN CỦA MỌI NHÀ\nTìm hiểu về loài chó và sự trung thành\nTham gia trò chơi \"Đoán cảm xúc\"\nXây dựng mô hình chú chó có sử dụng 2 động cơ hỗ trợ di chuyển và có thể phát âm thanh\nVận dụng Movement Block để chú chó có thể di chuyển các hướng các nhau"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "DEMO ROBOT\nHọc viên thực hành dự án cuối khóa\nÔn tập kiến thức đã học\nDemo Robot hoạt động\nThuyết trình giới thiệu về dự án của nhóm"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH ROBOT\nThuyết trình cuối khóa"
+            }
+        ]
+    },
+    {
+        "name": "ROBI",
+        "date": "2026",
+        "CAR": [
+            {
+                "section": "Buổi 1",
+                "lession_content": "ĐÀI PHÁT THANH\nTìm hiểu khái niệm về sự truyền tin\nTham gia trò chơi \"Tôi nói-Bạn nghe\"\nLàm quen với Send message Block và Receive message Block\nXây dựng mô hình truyền tin\nVận dụng kiến thức lập trình mô hình hoạt động nhờ sự truyền tin"
+            },
+            {
+                "section": "Buổi 2",
+                "lession_content": "SIÊU NHÂN DỌN DẸP\nTìm hiểu về một số biện pháp bảo vệ môi trường\nTham gia trò chơi \"Robot dọn dẹp\"\nXây dựng mô hình Robot có hầm thu gom rác, sử dụng 2 động cơ để di chuyển nhiều hướng khác nhau\nVận dụng kiến thức lập trình Robot dọn dẹp\nTham gia thi đua lớp học"
+            },
+            {
+                "section": "Buổi 3",
+                "lession_content": "CỖ XE VẬN CHUYẾN\nKhái niệm về sự vận chuyến\nTham gia trò chơi \"Xe bus đón khách\"\nXây dựng mô hình xe vận chuyển sử dụng 2 động cơ di chuyển, có khả năng vận chuyển đồ vật\nVận dụng kiến thức lập trình xe vận chuyển"
+            },
+            {
+                "section": "Buổi 4",
+                "lession_content": "CHÚ ONG THỢ SIÊNG NĂNG\nTìm hiểu về tập tính loài ong và sự kiên trì, cần cù\nTham gia trò chơi \"Chủ ong chăm chỉ\"\nÔn tập Color Sensor Block, Sound effect Block\nXây dựng mô hình mô phỏng chú ong từ gạch LEGO\nVận dụng kiến thức Block lệnh lập trình mô phỏng tập tính của loài ong"
+            },
+            {
+                "section": "Buổi 5",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập kiến thức các Block đã học điều khiến 2 động cơ và LED, Block lệnh truyền tin.\nSáng tạo xây dựng và nâng cấp mô hình từ các bài trước\nVận dụng các Block lệnh đã học lập trình mô hình hoạt động"
+            },
+            {
+                "section": "Buổi 6",
+                "lession_content": "CUỘC ĐUA KỲ THÚ\nTìm hiểu khái niệm về tốc độ và các loại xe đua\nTham gia trò chơi \"Cuộc đua tiếp sức\"\nLàm quen Block lệnh thay đổi tốc độ của 2 động cơ\nXây dựng mô hình xe đua sử dụng 2 động cơ có thể di chuyến được nhiều hướng\nTham gia thi đua trong lớp học"
+            },
+            {
+                "section": "Buổi 7",
+                "lession_content": "NÔNG DÂN CHĂM CHỈ\nTìm hiểu về người nông dân và công việc làm nông\nTham gia trò chơi \"Trồng cây\"\nLuyện tập tập kiến thức về Light Block và Motor Block\nXây dựng mô hình mô phỏng sử dụng 1 động cơ mô phỏng lại hành động người nông dân đang làm việc trên cánh đồng"
+            },
+            {
+                "section": "Buổi 8",
+                "lession_content": "HỌA SĨ NHÍ\nTìm hiểu về người họa sĩ và tranh vẽ\nTham gia trò chơi \"Vẽ bằng xúc giác\"\nXây dựng mô hình robot vẽ tranh với 2 động cơ kết hợp với vòng lặp để vẽ tranh cơ bản"
+            },
+            {
+                "section": "Buổi 9",
+                "lession_content": "CÔNG XƯỞNG SÁNG TẠO\nÔn tập kiến thức đã học về vòng lặp và các Block lệnh\nSáng tạo xây dựng và nâng cấp mô hình từ các bài trước\nVận dụng các Block lệnh đã học lập trình cho mô hình"
+            },
+            {
+                "section": "Buổi 10",
+                "lession_content": "CHIẾC THUYỀN RA KHƠI\nTìm hiểu khái niệm về thuyền tàu, cách tàu thuyền có thể nổi trên mặt nước\nTìm hiểu đèn báo hiệu\nTham gia trò chơi \"Thuyền nổi, thuyền chìm\"\nXây dựng mô hình mô phỏng lại chiếc thuyền chuẩn bị ra khơi với đèn LED báo hiệu thời tiết"
+            },
+            {
+                "section": "Buổi 11",
+                "lession_content": "MẶT ĐẤT RUNG CHUYỂN\nTìm hiểu về khái niệm động đất và các việc nên làm khi xảy ra động đất\nTham gia trò chơi \"Mặt đất di chuyển\"\nXây dựng mô hình có sử dụng 1 động cơ mô phỏng lại chuyển động của mặt đất và sự rung lắc của đồ vật"
+            },
+            {
+                "section": "Buổi 12",
+                "lession_content": "TRỰC THĂNG GIẢI CỨU\nTìm hiểu về cấu trúc cơ bản của máy bay trực thăng (chức năng của các cánh quạt trên máy bay)\nTham gia trò chơi \"Phi công điều khiển\"\nXây dựng mô hình máy bay trực thăng với 2 động cơ, có thể đổi chiều xoay dựa trên cảm biến nghiêng"
+            },
+            {
+                "section": "Buổi 13",
+                "lession_content": "DEMO ROBOT\nHọc viên thực hành dự án cuối khóa\nÔn tập kiến thức đã học\nDemo Robot hoạt động\nThuyết trình giới thiệu về dự án của nhóm"
+            },
+            {
+                "section": "Buổi 14",
+                "lession_content": "THUYẾT TRÌNH ROBOT\nThuyết trình cuối khóa"
+            }
+        ]
+    }
+]

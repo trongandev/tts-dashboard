@@ -27,6 +27,10 @@ const RANKS_RATE = {
     T4: 140000,
     T5: 150000,
 }
+const DEFAULT_USER_SETTINGS = {
+    nxAutoBt: false,
+    nxAutoSb: false,
+}
 
 const zalo = new Zalo({
     selfListen: false,
@@ -35,6 +39,7 @@ const zalo = new Zalo({
 })
 
 const cookie = JSON.parse(fs.readFileSync('./cookie.json', 'utf-8'))
+const nxDatabase = JSON.parse(fs.readFileSync('./database/database.json', 'utf-8'))
 
 const api = await zalo.login({
     cookie,
@@ -69,6 +74,238 @@ function parseLoginArgs(args) {
     if (legacySyntax) return { email: legacySyntax[1].trim(), password: legacySyntax[2].trim() }
 
     return null
+}
+
+function parseNxArgs(command) {
+    const tokens = [command.path, command.args].filter(Boolean).join(' ').trim().split(/\s+/).filter(Boolean)
+    if (!tokens.length) return { showHelp: true }
+    if (tokens.length < 2) return null
+
+    const lessonNumber = Number(tokens[1])
+    if (!Number.isInteger(lessonNumber) || lessonNumber < 1) return null
+
+    const flags = new Set(tokens.slice(2).map((token) => token.toLowerCase()))
+    return {
+        className: tokens[0].toLowerCase(),
+        lessonNumber,
+        isBt: flags.has('bt'),
+        isSb: flags.has('sb'),
+    }
+}
+
+function getUserSettings(user) {
+    return {
+        ...DEFAULT_USER_SETTINGS,
+        ...(user?.settings || {}),
+    }
+}
+
+function formatSettingStatus(value) {
+    return value ? 'ON' : 'OFF'
+}
+
+function parseSettingArgs(command) {
+    const tokens = [command.path, command.args].filter(Boolean).join(' ').trim().toLowerCase().split(/\s+/).filter(Boolean)
+    if (!tokens.length) return null
+
+    const item = Number(tokens[0])
+    if (!Number.isInteger(item) || item < 1 || item > 4) return null
+
+    if (!['on', 'off'].includes(tokens[1])) return null
+    return { item, enabled: tokens[1] === 'on' }
+}
+
+function formatNxHelp(user) {
+    const settings = getUserSettings(user)
+
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG TẠO NỘI DUNG NHẬN XÉT',
+        '',
+        'Cấu trúc: nx mã_lớp buổi [bt] [sb]',
+        'VD: nx jsb 5',
+        'VD: nx jsb 5 bt sb',
+        '',
+        'Giải thích:',
+        '- mã_lớp: mã khóa trong database, ví dụ jsb, gb, sb',
+        '- buổi: số buổi học, ví dụ 5',
+        '- bt: thêm phần nhắc bài tập Denise',
+        '- sb: thêm link Student Book',
+        '',
+        'CÁC MÃ LỚP HỖ TRỢ:',
+        nxDatabase
+            .map((item) => item.name)
+            .join('  -  ')
+            .toUpperCase(),
+        '',
+        `Cài đặt tự động hiện tại: bt ${formatSettingStatus(settings.nxAutoBt)}, sb ${formatSettingStatus(settings.nxAutoSb)}`,
+        'Bật/tắt tự động: setting 3 on, setting 3 off, setting 4 on, setting 4 off',
+    ].join('\n')
+}
+
+function formatMainHelp() {
+    return [
+        'CÁC NHÓM LỆNH HỖ TRỢ',
+        '',
+        'Tài khoản:',
+        '- login',
+        '- setting',
+        '- logout',
+        '',
+        'Công lương:',
+        '- sal (gõ salary để xem chi tiết cú pháp)',
+        '- rank - set rank',
+        '- check',
+        '',
+        'Nhận xét & thông báo:',
+        '- nx',
+        '- lms',
+        '- lmsta',
+        '',
+        'Gõ tên lệnh để xem hướng dẫn chi tiết. VD: salary, rank, check, lms, lmsta, nx',
+        'Theo dõi lương trực quan hơn qua trang web:\nhttps://tts.lrm.io.vn',
+    ].join('\n')
+}
+
+function formatSalaryHelp() {
+    const m = new Date().getMonth() + 1
+    const y = new Date().getFullYear()
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG XEM LƯƠNG',
+        '',
+        'Cú pháp lệnh sal:',
+        '- sal now           → xem lương tháng hiện tại',
+        '- sal <tháng>       → xem lương theo tháng',
+        '- sal <tháng-tháng> → xem tổng lương khoảng tháng',
+        '- sal <tháng/năm>   → xem lương tháng cụ thể',
+        '- sal all           → xem tất cả lương',
+        '',
+        'Ví dụ:',
+        `- sal now    → lương tháng ${m}/${y}`,
+        `- sal 3      → lương tháng 3/${y}`,
+        `- sal 3-5    → tổng lương tháng 3/${y} đến 5/${y}`,
+        `- sal 3/2025 → lương tháng 3/2025`,
+        '- sal all    → toàn bộ lịch sử lương',
+        '',
+        'Gõ salary để xem hướng dẫn này.',
+    ].join('\n')
+}
+
+function formatRankHelp() {
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG SET RANK',
+        '',
+        'Cấu trúc:',
+        '- rank số_rank',
+        '- setrank số_rank',
+        '- setrank tháng_bắt_đầu tháng_kết_thúc số_rank',
+        '',
+        'Ví dụ:',
+        '- rank 3',
+        '- rank/5',
+        `- setrank 3: set rank T3 cho tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+        '- setrank 03/2025 08/2025 3',
+    ].join('\n')
+}
+
+function formatCheckHelp() {
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG CHECK CÔNG',
+        '',
+        'Cấu trúc:',
+        '- check now',
+        '- check tháng',
+        '',
+        'Ví dụ:',
+        `- check now: check công tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+        '- check 5',
+    ].join('\n')
+}
+
+async function formatLmsHelp(message) {
+    const notificationSettings = await getNotificationSettings(message)
+    const notiStatus = notificationSettings.lmsEnabled
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG LMS',
+        '',
+        '=== THÔNG BÁO TỰ ĐỘNG ===',
+        `Trạng thái: ${notiStatus ? 'ON ✅' : 'OFF ❌'}`,
+        `Bật thông báo : setting 1 on`,
+        `Tắt thông báo : setting 1 off`,
+        `(Bot sẽ nhắc lúc 9h sáng nếu lớp hôm trước còn thiếu nhận xét)`,
+        '',
+        '=== CÁC LỆNH ===',
+        '- lms check        → kiểm tra nhận xét tuần trước',
+        '- lms noti         → đăng ký nhận thông báo',
+        '- lms noti test    → test thông báo ngay sau 1 phút',
+        '- lms noti destroy → hủy đăng ký thông báo',
+    ].join('\n')
+}
+
+async function formatLmstaHelp(message) {
+    const notificationSettings = await getNotificationSettings(message)
+    const notiStatus = notificationSettings.lmstaEnabled
+    return [
+        'BẠN ĐANG CHỌN TÍNH NĂNG LMSTA',
+        `Cơ sở: ${LMSTA_CENTRE_NAME}`,
+        '',
+        '=== THÔNG BÁO TỰ ĐỘNG ===',
+        `Trạng thái: ${notiStatus ? 'ON ✅' : 'OFF ❌'}`,
+        `Bật thông báo : setting 2 on`,
+        `Tắt thông báo : setting 2 off`,
+        `(Bot sẽ báo cáo lúc 9h sáng mỗi ngày)`,
+        '',
+        '=== CÁC LỆNH ===',
+        '- lmsta check        → kiểm tra nhận xét tuần trước',
+        '- lmsta noti         → đăng ký nhận thông báo',
+        '- lmsta noti test    → test thông báo ngay sau 1 phút',
+        '- lmsta noti destroy → hủy đăng ký thông báo',
+    ].join('\n')
+}
+
+function getSettingLabel(item) {
+    return {
+        1: 'LMS notification',
+        2: 'LMSTA notification',
+        3: 'Tự động thêm bài tập Denise cho nx',
+        4: 'Tự động thêm Student Book cho nx',
+    }[item]
+}
+
+function formatNxContent(lesson, nxArgs, isBt, isSb) {
+    const { lessonNumber, className } = nxArgs
+    const lessonLines = String(lesson.lession_content || '')
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+    const title = (lessonLines[0] || lesson.section || `Buổi ${lessonNumber}`).toUpperCase()
+    const details = lessonLines
+        .slice(1)
+        .map((line) => `- ${line}`)
+        .join('\n')
+    const section = lesson.section || `Buổi ${lessonNumber}`
+
+    const parts = [`KÍNH CHÀO PHỤ HUYNH, EM XIN PHÉP GỬI NỘI DUNG\n\n${section}: ${title}${details ? `\n${details}` : ''}`]
+
+    if (isBt) {
+        parts.push('Bài tập có sẵn trên Denise, quý phụ huynh hỗ trợ thầy nhắc nhở bạn thực hiện trước buổi học tiếp theo.\nTrang làm bài tập: https://denise.mindx.edu.vn')
+    }
+
+    const studentBookLinks = {
+        s: 'https://drive.google.com/drive/folders/14MgvToBTTQUu_Fcm0BiyL1zRTSMKZx2v?usp=drive_link',
+        g: 'https://drive.google.com/drive/folders/1unV-GdgQnnj9ozqLCVKAvaDE45hOPSDe?usp=drive_link',
+        a: 'https://drive.google.com/drive/folders/1BJTTX8mq0KJ-jenqzNFKBwyXzlmZgA3F?usp=drive_link',
+        w: 'https://drive.google.com/drive/folders/14MgvToBTTQUu_Fcm0BiyL1zRTSMKZx2v?usp=drive_link',
+        c: 'https://drive.google.com/drive/folders/1unV-GdgQnnj9ozqLCVKAvaDE45hOPSDe?usp=drive_link',
+    }
+
+    if (isSb) {
+        const coursePrefix = className[0]?.toLowerCase()
+        parts.push(`Student Book (Sách xem lại các kiến thức thầy hướng dẫn trong buổi học):\n${studentBookLinks[coursePrefix] || studentBookLinks.s}`)
+    }
+
+    parts.push('Nếu có bất kỳ thắc mắc nào về bài học, quý phụ huynh và bạn có thể liên hệ với thầy/cô để được hỗ trợ nhé!\n\nCảm ơn quý phụ huynh và các bạn đã đọc!')
+
+    return parts.join('\n\n')
 }
 
 function parseRank(value) {
@@ -173,6 +410,50 @@ async function getUserSession(message) {
     const user = doc.data()
     users.set(sessionKey, user)
     return user
+}
+
+async function isNotificationEnabled(message, collectionName, memoryStore) {
+    const sessionKey = getSessionKey(message)
+    const cached = memoryStore.get(sessionKey)
+    if (cached) return cached.enabled === true
+
+    if (!state.db) return false
+
+    const doc = await state.db.collection(collectionName).doc(getDocId(sessionKey)).get()
+    if (!doc.exists) return false
+
+    const registration = doc.data()
+    if (registration.enabled === true) memoryStore.set(sessionKey, registration)
+    return registration.enabled === true
+}
+
+async function getNotificationSettings(message) {
+    const [lmsEnabled, lmstaEnabled] = await Promise.all([
+        isNotificationEnabled(message, LMS_NOTIFICATION_COLLECTION, lmsNotificationUsers),
+        isNotificationEnabled(message, LMSTA_NOTIFICATION_COLLECTION, lmstaNotificationUsers),
+    ])
+
+    return { lmsEnabled, lmstaEnabled }
+}
+
+async function formatSettings(message, user) {
+    const settings = getUserSettings(user)
+    const notificationSettings = await getNotificationSettings(message)
+
+    return [
+        `Tên đăng nhập: ${user.displayName || 'Chưa có'}`,
+        `Email: ${user.email}`,
+        `Rank hiện tại: ${user.rankId || DEFAULT_RANK}`,
+        '',
+        '=== CÀI ĐẶT ===',
+        `1. LMS notification: ${formatSettingStatus(notificationSettings.lmsEnabled)}`,
+        `2. LMSTA notification: ${formatSettingStatus(notificationSettings.lmstaEnabled)}`,
+        `3. Tự động thêm bài tập Denise cho nx: ${formatSettingStatus(settings.nxAutoBt)}`,
+        `4. Tự động thêm Student Book cho nx: ${formatSettingStatus(settings.nxAutoSb)}`,
+        '',
+        'Bật/tắt: setting số_mục on/off',
+        'VD: setting 3 on',
+    ].join('\n')
 }
 
 async function ensureFreshToken(message, user) {
@@ -976,7 +1257,7 @@ async function handleLmstaNotification(message, user, isTest = false) {
         return
     }
 
-    await reply(message, 'Đã đăng ký nhận thông báo LMSTA. Bot sẽ báo cáo lúc 9h sáng mỗi ngày.')
+    await reply(message, 'Đã đăng ký nhận thông báo LMSTA. Bot sẽ báo cáo lúc 9h sáng mỗi ngày.\nBạn có muốn test thử không? Gõ: lmsta noti test')
 }
 
 async function handleLmsta(message, command) {
@@ -992,6 +1273,11 @@ async function handleLmsta(message, command) {
     }
 
     const args = (command.args || command.path || '').trim().toLowerCase()
+    if (!args) {
+        await reply(message, await formatLmstaHelp(message))
+        return
+    }
+
     if (args === 'noti destroy') {
         await destroyLmstaNotificationRegistration(message)
         await reply(message, 'Đã hủy đăng ký nhận thông báo LMSTA cho cuộc trò chuyện này.')
@@ -1005,8 +1291,8 @@ async function handleLmsta(message, command) {
         await handleLmstaNotification(message, user, true)
         return
     }
-    if (args) {
-        await reply(message, 'Cú pháp LMSTA hợp lệ:\nlmsta\nlmsta noti\nlmsta noti test\nlmsta noti destroy')
+    if (args !== 'check') {
+        await reply(message, await formatLmstaHelp(message))
         return
     }
 
@@ -1176,7 +1462,8 @@ function parseSalaryRequest(command) {
     const currentYear = now.getFullYear()
     const value = (command.path || command.args || '').toLowerCase()
 
-    if (!value) return { type: 'month', month: currentMonth, year: currentYear }
+    if (!value) return null
+    if (value === 'now') return { type: 'month', month: currentMonth, year: currentYear }
     if (value === 'all') return { type: 'all', fromMonth: 1, fromYear: 2020, toMonth: currentMonth, toYear: currentYear }
 
     const rangeMatch = value.match(/^(\d{1,2})-(\d{1,2})$/)
@@ -1194,6 +1481,15 @@ function parseSalaryRequest(command) {
 function parseCheckRequest(command) {
     const now = new Date()
     const monthValue = command.path || command.args
+    if (!monthValue) return null
+    if (String(monthValue).trim().toLowerCase() === 'now') {
+        return {
+            month: now.getMonth() + 1,
+            year: now.getFullYear(),
+            isCurrentMonth: true,
+        }
+    }
+
     const month = monthValue ? Number(monthValue) : now.getMonth() + 1
     if (!Number.isInteger(month) || month < 1 || month > 12) return null
 
@@ -1388,20 +1684,26 @@ async function handleLogin(message, args) {
 
         if (!customAttributes.id) throw new Error('Không tìm thấy thông tin giáo viên.')
 
-        const oldUser = await getUserSession(message)
-        const user = {
-            displayName: data.displayName,
-            email: data.email,
-            localId: data.localId,
-            id: customAttributes.id,
-            idToken: data.idToken,
-            refreshToken: data.refreshToken,
-            expiresAt: Date.now() + Number(data.expiresIn || 3600) * 1000,
-            rankId: oldUser?.rankId || DEFAULT_RANK,
-        }
+        const client = createClient(data.idToken)
+        const res = await client.request(FIND_INFO_QUERY, { payload: { id: customAttributes.id } })
+        if (res) {
+            const oldUser = await getUserSession(message)
+            const infoData = res.users.findInfoInRoleById[0].info
 
-        await saveUserSession(message, user)
-        await reply(message, `Đăng nhập thành công: ${user.displayName || user.email}\nEmail: ${user.email}\nRank hiện tại: ${user.rankId}\nGõ help để xem các lệnh hỗ trợ.`)
+            const user = {
+                displayName: infoData.fullName,
+                email: infoData.email,
+                localId: data.localId,
+                id: infoData._id,
+                idToken: data.idToken,
+                refreshToken: data.refreshToken,
+                expiresAt: Date.now() + Number(data.expiresIn || 3600) * 1000,
+                rankId: oldUser?.rankId || DEFAULT_RANK,
+                settings: getUserSettings(oldUser),
+            }
+            await saveUserSession(message, user)
+            await reply(message, `Đăng nhập thành công: ${user.displayName || user.email}\nEmail: ${user.email}\nRank hiện tại: ${user.rankId}\nGõ help để xem các lệnh hỗ trợ.`)
+        }
     } catch (error) {
         console.error(error)
         await reply(message, error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
@@ -1417,7 +1719,7 @@ async function handleRank(message, command) {
 
     const rankId = parseRank(command.path || command.args)
     if (!rankId) {
-        await reply(message, 'Cú pháp đúng: rank số_rank\nVD: rank 3 hoặc rank/5')
+        await reply(message, formatRankHelp())
         return
     }
 
@@ -1449,7 +1751,7 @@ async function handleSetRank(message, command) {
     const rankId = parseRank(rankValue)
 
     if (!from || !to || !rankId || to.year < from.year || (to.year === from.year && to.month < from.month)) {
-        await reply(message, 'Cú pháp đúng: setrank thời_gian_bắt_đầu thời_gian_kết_thúc rank\nVD: setrank 03/2025 08/2025 3')
+        await reply(message, formatRankHelp())
         return
     }
 
@@ -1466,7 +1768,7 @@ async function handleSalary(message, command) {
 
     const request = parseSalaryRequest(command)
     if (!request || !isValidMonthRange(request)) {
-        await reply(message, 'Cú pháp lương hợp lệ:\nsalary\nsalary 3\nsalary 3-5\nsalary 3/2025\nsalary all')
+        await reply(message, formatSalaryHelp())
         return
     }
 
@@ -1493,7 +1795,7 @@ async function handleCheck(message, command) {
 
     const request = parseCheckRequest(command)
     if (!request) {
-        await reply(message, 'Cú pháp check hợp lệ:\ncheck\ncheck 5')
+        await reply(message, formatCheckHelp())
         return
     }
 
@@ -1511,7 +1813,7 @@ async function handleLmsNotification(message, user, isTest = false) {
         return
     }
 
-    await reply(message, 'Đã đăng ký nhận thông báo LMS. Bot sẽ nhắc lúc 9h sáng nếu lớp hôm trước còn thiếu nhận xét.')
+    await reply(message, 'Đã đăng ký nhận thông báo LMS. Bot sẽ nhắc lúc 9h sáng nếu lớp hôm trước còn thiếu nhận xét.\nBạn có muốn test thử không? Gõ: lms noti test')
 }
 
 async function handleLms(message, command) {
@@ -1520,8 +1822,12 @@ async function handleLms(message, command) {
         await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
-
     const args = (command.args || command.path || '').trim().toLowerCase()
+    if (!args) {
+        await reply(message, await formatLmsHelp(message))
+        return
+    }
+
     if (args === 'noti destroy') {
         await destroyLmsNotificationRegistration(message)
         await reply(message, 'Đã hủy đăng ký nhận thông báo LMS cho cuộc trò chuyện này.')
@@ -1535,8 +1841,8 @@ async function handleLms(message, command) {
         await handleLmsNotification(message, user, true)
         return
     }
-    if (args) {
-        await reply(message, 'Cú pháp LMS hợp lệ:\nlms\nlms noti\nlms noti test\nlms noti destroy')
+    if (args !== 'check') {
+        await reply(message, await formatLmsHelp(message))
         return
     }
 
@@ -1549,14 +1855,48 @@ async function handleLms(message, command) {
     await reply(message, formatLmsReviewResult(items, range))
 }
 
-async function handleMe(message) {
+async function handleSetting(message, command) {
     const user = await getUserSession(message)
     if (!user) {
         await reply(message, 'Bạn chưa đăng nhập. Gõ login email mật_khẩu để bắt đầu.')
         return
     }
 
-    await reply(message, [`Tên đăng nhập: ${user.displayName || 'Chưa có'}`, `Email: ${user.email}`, `Rank hiện tại: ${user.rankId || DEFAULT_RANK}`].join('\n'))
+    const settingArgs = parseSettingArgs(command)
+    if (!settingArgs) {
+        await reply(message, await formatSettings(message, user))
+        return
+    }
+
+    if (settingArgs.item === 1) {
+        if (settingArgs.enabled) await saveLmsNotificationRegistration(message, user)
+        else await destroyLmsNotificationRegistration(message)
+    }
+
+    if (settingArgs.item === 2) {
+        if (settingArgs.enabled && !isLmstaAuthorized(user)) {
+            await reply(message, 'Bạn không có quyền bật LMSTA notification.')
+            return
+        }
+
+        if (settingArgs.enabled) await saveLmstaNotificationRegistration(message, user)
+        else await destroyLmstaNotificationRegistration(message)
+    }
+
+    if (settingArgs.item === 3 || settingArgs.item === 4) {
+        const settings = getUserSettings(user)
+        const nextUser = {
+            ...user,
+            settings: {
+                ...settings,
+                ...(settingArgs.item === 3 ? { nxAutoBt: settingArgs.enabled } : { nxAutoSb: settingArgs.enabled }),
+            },
+        }
+        await saveUserSession(message, nextUser)
+    }
+
+    await reply(message, `Đã ${settingArgs.enabled ? 'bật' : 'tắt'} mục ${settingArgs.item}: ${getSettingLabel(settingArgs.item)}.`)
+    await reply(message, await formatSettings(message, settingArgs.item >= 3 ? await getUserSession(message) : user))
 }
 
 async function handleMessage(message) {
@@ -1564,7 +1904,9 @@ async function handleMessage(message) {
 
     await sendTyping(message)
 
+    // console.log(message.data.content)
     const command = parseCommand(message.data.content)
+
     if (!command) {
         await reply(message, 'Gõ help để xem các lệnh hỗ trợ.')
         return
@@ -1572,45 +1914,7 @@ async function handleMessage(message) {
 
     switch (command.name) {
         case 'help':
-            await reply(
-                message,
-                [
-                    'Các lệnh hỗ trợ:',
-                    'login email mật_khẩu - Đăng nhập MindX',
-                    'me - Xem tên, email và rank',
-                    'logout - Đăng xuất',
-                    '',
-                    'rank 3 - Set rank mặc định T3',
-                    `setrank 3 - Set rank T3 cho tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
-                    'setrank 03/2025 08/2025 3 - Set rank theo khoảng thời gian',
-                    '',
-                    `salary - Xem lương và chi tiết tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
-                    `salary 3 - Xem lương và chi tiết tháng 3/${new Date().getFullYear()}`,
-                    `salary 3-5 - Xem tổng lương tháng 3/${new Date().getFullYear()} đến 5/${new Date().getFullYear()}`,
-                    'salary 3/2025 - Xem lương tháng 3/2025',
-                    'salary all - Xem tất cả lương',
-                    '',
-
-                    `check - Check công tháng ${new Date().getMonth() + 1}/${new Date().getFullYear()} theo ngày`,
-                    'check 5 - Check công tháng 5 theo ngày',
-                    '',
-                    'lms - Kiểm tra nhận xét các lớp đang dạy trong tuần trước',
-                    'lms noti - Đăng ký nhận thông báo khi có lớp và học viên chưa nhận xét',
-                    'lms noti test - Gửi thông báo LMS test sau 1 phút',
-                    'lms noti destroy - Hủy đăng ký nhận thông báo LMS',
-
-                    '',
-                    'lmsta - Kiểm tra nhận xét các lớp tại Đồng Nai - 253 Phạm Văn Thuận trong tuần trước (chỉ dành cho TE)',
-                    'lmsta noti - Đăng ký nhận báo cáo LMSTA mỗi ngày lúc 9h',
-                    'lmsta noti test - Gửi thông báo LMSTA test sau 1 phút',
-                    'lmsta noti destroy - Hủy đăng ký nhận thông báo LMSTA',
-
-                    '',
-                    'Tất cả tin nhắn bạn nhắn tin cho bot đều được bảo mật tuyệt đối, tin nhắn sẽ xóa ngay sau khi trả lời cho bạn và không lưu lại trên server dưới bất kỳ hình thức nào. Bạn có thể yên tâm sử dụng các lệnh trên mà không lo bị lộ thông tin cá nhân hay tài khoản.',
-                    '',
-                    'Theo dõi lương trực quan hơn qua trang web:\nhttps://tts.lrm.io.vn',
-                ].join('\n'),
-            )
+            await reply(message, formatMainHelp())
             break
         case 'login':
             await handleLogin(message, command.args)
@@ -1621,8 +1925,11 @@ async function handleMessage(message) {
         case 'setrank':
             await handleSetRank(message, command)
             break
-        case 'salary':
+        case 'sal':
             await handleSalary(message, command)
+            break
+        case 'salary':
+            await reply(message, formatSalaryHelp())
             break
         case 'check':
             await handleCheck(message, command)
@@ -1643,10 +1950,45 @@ async function handleMessage(message) {
             await reply(message, 'Đã đăng xuất.')
             break
         case 'me':
-            await handleMe(message)
+            await handleSetting(message, command)
+            break
+        case 'setting':
+            await handleSetting(message, command)
+            break
+        case 'nx':
+            {
+                const user = await getUserSession(message)
+                const nxArgs = parseNxArgs(command)
+                if (nxArgs?.showHelp) {
+                    await reply(message, formatNxHelp(user))
+                    break
+                }
+
+                if (!nxArgs) {
+                    await reply(message, formatNxHelp(user))
+                    break
+                }
+
+                const nxClass = nxDatabase.find((item) => String(item.name || '').toLowerCase() === nxArgs.className)
+                if (!nxClass) {
+                    await reply(message, `Không tìm thấy mã lớp "${nxArgs.className}" trong database.`)
+                    break
+                }
+
+                const lesson = nxClass.CAR?.[nxArgs.lessonNumber - 1]
+                if (!lesson) {
+                    await reply(message, `Không tìm thấy buổi ${nxArgs.lessonNumber} cho mã lớp "${nxArgs.className}".`)
+                    break
+                }
+
+                const settings = getUserSettings(user)
+                await reply(message, formatNxContent(lesson, nxArgs, nxArgs.isBt || settings.nxAutoBt, nxArgs.isSb || settings.nxAutoSb))
+            }
             break
         default:
-            await reply(message, 'Lệnh không hợp lệ. Gõ help để xem các lệnh hỗ trợ.')
+            // await reply(message, 'Lệnh không hợp lệ. Gõ help để xem các lệnh hỗ trợ.')
+            // nhại lại người dùng
+            await reply(message, `Bạn vừa gõ: ${message.data.content}`)
     }
 }
 
