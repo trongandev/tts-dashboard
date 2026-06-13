@@ -177,6 +177,7 @@ function formatSalaryHelp() {
         '- sal <tháng>       → xem lương theo tháng',
         '- sal <tháng-tháng> → xem tổng lương khoảng tháng',
         '- sal <tháng/năm>   → xem lương tháng cụ thể',
+        '- sal <tháng/năm> <tháng/năm> → xem tổng lương từ tháng này đến tháng kia',
         '- sal all           → xem tất cả lương',
         '- sal reload        → làm mới lại lương (xoá cache)',
         '',
@@ -185,6 +186,7 @@ function formatSalaryHelp() {
         `- sal 3      → lương tháng 3/${y}`,
         `- sal 3-5    → tổng lương tháng 3/${y} đến 5/${y}`,
         `- sal 3/2025 → lương tháng 3/2025`,
+        `- sal 2/2025 3/2026 → tổng lương từ 2/2025 đến 3/2026`,
         '- sal all    → toàn bộ lịch sử lương',
         '- sal reload → tải lại dữ liệu mới nhất',
         '',
@@ -1384,12 +1386,24 @@ function calculateItemSalary(item, rankRate) {
     return 0
 }
 
-async function calculateSalary(message, user, fromMonth, fromYear, toMonth, toYear) {
+async function calculateSalary(message, user, request) {
+    const { type, forceReload } = request
+    const fromMonth = request.fromMonth || request.month
+    const fromYear = request.fromYear || request.year
+    const toMonth = request.toMonth || request.month
+    const toYear = request.toYear || request.year
+    
     const freshUser = await ensureFreshToken(message, user)
     const cacheKey = `chatbot_${freshUser.id}_${fromMonth}_${fromYear}_${toMonth}_${toYear}`
-    const cached = await getSalaryFromCache(cacheKey)
-    if (cached) return cached
 
+    if (!forceReload) {
+        const cached = await getSalaryFromCache(cacheKey)
+        if (cached) return cached
+    }
+    
+    if (type === 'all' || type === 'range_years') {
+        await reply(message, 'Quá trình tính toán dữ liệu lớn có thể mất từ 15 ~ 30s. Bạn chờ mình tổng hợp chút nhé!')
+    }
     const client = createClient(getAuthHeader(freshUser))
     const rawData = await client.request(GET_TIMESHEET_QUERY, {
         teacherId: freshUser.id,
@@ -1471,10 +1485,14 @@ function parseSalaryRequest(command) {
 
     if (!value) return null
     if (value === 'now') return { type: 'month', month: currentMonth, year: currentYear }
+    if (value === 'reload') return { type: 'month', month: currentMonth, year: currentYear, forceReload: true }
     if (value === 'all') return { type: 'all', fromMonth: 1, fromYear: 2020, toMonth: currentMonth, toYear: currentYear }
 
     const rangeMatch = value.match(/^(\d{1,2})-(\d{1,2})$/)
     if (rangeMatch) return { type: 'range', fromMonth: Number(rangeMatch[1]), fromYear: currentYear, toMonth: Number(rangeMatch[2]), toYear: currentYear }
+
+    const monthYearRangeMatch = value.match(/^(\d{1,2})\/(\d{4})\s+(\d{1,2})\/(\d{4})$/)
+    if (monthYearRangeMatch) return { type: 'range_years', fromMonth: Number(monthYearRangeMatch[1]), fromYear: Number(monthYearRangeMatch[2]), toMonth: Number(monthYearRangeMatch[3]), toYear: Number(monthYearRangeMatch[4]) }
 
     const monthYearMatch = value.match(/^(\d{1,2})\/(\d{4})$/)
     if (monthYearMatch) return { type: 'month', month: Number(monthYearMatch[1]), year: Number(monthYearMatch[2]) }
@@ -1779,17 +1797,25 @@ async function handleSalary(message, command) {
         return
     }
 
+    if (request.forceReload) {
+        await reply(message, 'Đang làm mới dữ liệu lương, bạn chờ một chút nhé...')
+    }
+
+
+
     if (request.type === 'month') {
-        const salary = await calculateSalary(message, user, request.month, request.year, request.month, request.year)
+        const salary = await calculateSalary(message, user, request)
         await reply(message, formatMonthSalary(user, salary, request.month, request.year))
         return
     }
 
-    const salary = await calculateSalary(message, user, request.fromMonth, request.fromYear, request.toMonth, request.toYear)
+    const salary = await calculateSalary(message, user, request)
     const title =
         request.type === 'all'
             ? `TẤT CẢ LƯƠNG TỪ ${request.fromMonth}/${request.fromYear} ĐẾN ${request.toMonth}/${request.toYear}`
-            : `TỔNG LƯƠNG THÁNG ${request.fromMonth}-${request.toMonth}/${request.fromYear}`
+            : (request.type === 'range_years' 
+                ? `TỔNG LƯƠNG TỪ ${request.fromMonth}/${request.fromYear} ĐẾN ${request.toMonth}/${request.toYear}`
+                : `TỔNG LƯƠNG THÁNG ${request.fromMonth}-${request.toMonth}/${request.fromYear}`)
     await reply(message, formatRangeSalary(salary, title))
 }
 
