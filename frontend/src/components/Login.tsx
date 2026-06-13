@@ -34,7 +34,7 @@ export default function Login() {
             }
 
             const data = await response.json()
-
+            console.log({ data })
             if (data.idToken) {
                 const expires = new Date()
                 expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000)
@@ -46,30 +46,32 @@ export default function Login() {
                 })
                 const resData = await refreshRes.json()
                 const customAttributes = JSON.parse(resData.users[0].customAttributes)
+                console.log(customAttributes)
                 if (customAttributes) {
-                    setUser({
+                    const newUser = {
                         displayName: data.displayName,
                         email: data.email,
                         localId: data.localId,
                         id: customAttributes.id,
-                        username: customAttributes.name,
-                    })
+                        username: customAttributes.username,
+                    }
+                    console.log(newUser)
+                    setUser(newUser)
                 }
-            }
-
-            if (data.refreshToken) {
-                localStorage.setItem("refreshToken", data.refreshToken)
-                const refreshRes = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/refresh-token`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ grant_type: "refresh_token", refresh_token: data.refreshToken }),
-                })
-                if (refreshRes.ok) {
-                    const refreshData = await refreshRes.json()
-                    if (refreshData.access_token) {
-                        const expires = new Date()
-                        expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000)
-                        document.cookie = `accessToken=${refreshData.access_token};expires=${expires.toUTCString()};path=/;Secure;SameSite=None`
+                if (data.refreshToken) {
+                    localStorage.setItem("refreshToken", data.refreshToken)
+                    const refreshRes = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/api/refresh-token`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ grant_type: "refresh_token", refresh_token: data.refreshToken }),
+                    })
+                    if (refreshRes.ok) {
+                        const refreshData = await refreshRes.json()
+                        if (refreshData.access_token) {
+                            const expires = new Date()
+                            expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000)
+                            document.cookie = `accessToken=${refreshData.access_token};expires=${expires.toUTCString()};path=/;Secure;SameSite=None`
+                        }
                     }
                 }
             }
@@ -77,7 +79,7 @@ export default function Login() {
             return data
         },
         onSuccess: () => {
-            navigate("/")
+            // navigate("/")
         },
         onError: (err: any) => {
             setError(err.message || "Có lỗi xảy ra")
